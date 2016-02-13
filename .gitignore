@@ -1,6 +1,11 @@
-#venv
+# Virtual environemtn
 venv/
 
-#idea
-.idea/
+# git temp file
+*.swp
 
+# User-specific files
+.idea/workspace.xml
+.idea/task.xml
+
+# ---- Hao 02/13/2016
