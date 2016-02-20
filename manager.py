@@ -8,5 +8,9 @@ org_info_parse = "Random"
 def login():
     return render_template('login.html', org=org_info_parse)
 
+@manager.route('/index.html', methods=['GET', 'POST'])
+def index():
+    return render_template('index.html', org=org_info_parse)
+
 if __name__ == '__main__':
     manager.run(debug=True)
