@@ -27,7 +27,7 @@ def index():
 
 @manager.route('/testing', methods=['POST'])
 def ajaxResponse():
-    return "greetings"
+    return str(getUserQuizHistory('test_user_name'))
 
 if __name__ == '__main__':
     manager.run(debug=True)
