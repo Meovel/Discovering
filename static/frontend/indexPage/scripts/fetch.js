@@ -1,10 +1,13 @@
-alert("hello");
 $(document).ready(
-	function sendAJAX(){
-	$.ajax({
-		method: 'POST',
-		url: 'testing',
-		context: document.body,
-		data: 'hello'
-	});
+	function(){
+		$.ajax({
+			url: "testing",
+			method: "POST",
+			dataType: "Text",
+			data: "stuff",
+		}).done(function(data) {
+			  alert( data );
+		});
+	}
 );
+
