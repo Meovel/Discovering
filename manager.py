@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for
 
 manager = Flask(__name__)
 
+org_info_parse = "Random"
 
 @manager.route('/', methods=['GET', 'POST'])
 def login():
