@@ -1,35 +1,76 @@
 // Load the Visualization API and the corechart package.
-google.charts.load('current', {'packages':['corechart']});
+// google.charts.load('current', {'packages':['corechart']});
 
 // Set a callback to run when the Google Visualization API is loaded.
-google.charts.setOnLoadCallback(drawChart);
+// google.charts.setOnLoadCallback(drawChart);
 
 // Callback that creates and populates a data table,
 // instantiates the pie chart, passes in the data and
 // draws it.
-function drawChart() {
 
-  // Create the data table.
-  var data = new google.visualization.DataTable();
-  data.addColumn('string', 'Topping');
-  data.addColumn('number', 'Slices');
-  data.addRows([
-    ['Mushrooms', 5],
-    ['Onions', 1],
-    ['Olives', 1],
-    ['Zucchini', 1],
-    ['Pepperoni', 2]
+// function drawChart() {
+//
+//   // Create the data table.
+//   var data = new google.visualization.DataTable();
+//   data.addColumn('string', 'Topping');
+//   data.addColumn('number', 'Slices');
+//   data.addRows([
+//     ['Mushrooms', 5],
+//     ['Onions', 1],
+//     ['Olives', 1],
+//     ['Zucchini', 1],
+//     ['Pepperoni', 2]
+//   ]);
+//
+//   // Set chart options
+//   var options = {'title':'How Much Pizza I Ate Last Night',
+//                  'width':400,
+//                  'height':300};
+//
+//   // Instantiate and draw our chart, passing in some options.
+//   var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+//   chart.draw(data, options);
+// }
+
+
+google.charts.load('current', {'packages':['bar']});
+google.charts.setOnLoadCallback(drawStuff);
+function drawStuff() {
+  /*
+  * This is the format we want to use to display student-score charts
+  */
+  var data = new google.visualization.arrayToDataTable([
+    ['Student', 'Percentage'],
+    ["Adam", 100],
+    ["Brian", 90],
+    ["Carter", 80],
+    ["Derrick", 95],
+    ['Everette', 85],
+    ["Adam", 100],
+    ["Brian", 90],
+    ["Carter", 80],
+    ["Derrick", 95],
+    ['Everette', 85]
   ]);
 
-  // Set chart options
-  var options = {'title':'How Much Pizza I Ate Last Night',
-                 'width':400,
-                 'height':300};
+  var options = {
+    title: 'Student Peformance',
+    width: 350,
+    height: 300,
+    legend: { position: 'none' },
+    chart: { subtitle: 'scores by percentage' },
+    axes: {
+      x: {
+        0: { side: 'top', label: 'Student Scores'} // Top x-axis.
+      }
+    },
+    bar: { groupWidth: "90%" }
+  };
 
-  // Instantiate and draw our chart, passing in some options.
-  var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-  chart.draw(data, options);
-}
+  var chart2 = new google.charts.Bar(document.getElementById('top_x_div'));
+  // Convert the Classic options to Material options.
+  chart2.draw(data, google.charts.Bar.convertOptions(options));
+};
 
 function riyadSpike() {
   var x = document.forms["chartBuilder"]["x-axis"].value;
