@@ -43,9 +43,9 @@ getQuizHistory(user)
 def login():
     return render_template('login.html', org=org_info_parse)
 
-@manager.route('/index.html', methods=['GET', 'POST'])
+@manager.route('/stats.html', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html', org=org_info_parse)
+    return render_template('stats.html', org=org_info_parse)
 
 @manager.route('/testing', methods=['POST'])
 def ajaxResponse():
