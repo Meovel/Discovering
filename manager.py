@@ -2,9 +2,9 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 from parse_rest.connection import register
 from parse_rest.datatypes import Object
 from parse_rest.user import User
-from pymongo import MongoClient
-import pymongo
-from bson import json_util
+# from pymongo import MongoClient
+# import pymongo
+# from bson import json_util
 # from flask.ext.login import login_user, login_required, logout_user, current_user
 
 # Parse setting
@@ -28,21 +28,6 @@ class _User(Object):
 org_info_parse = "Random"
 
 
-def getQuizHistory(userName):
-    results = QuestionPersonalStatistics.Query.filter(person=userName)
-    return
-
-def getMongoQuizHistory(userName):
-	stuff = []
-	client = MongoClient('localhost',27017)
-	db = client['discovering_user_db']
-	collection = db['test_user_name']
-	results = collection.find({'type':'quiz_result'}).sort([('time', pymongo.DESCENDING)])
-	for result in results:
-		stuff.append(json_util.dumps(result,default=json_util.default))
-	return str({'result':stuff})
-
-
 @manager.route('/', methods=['GET', 'POST'])
 def login():
     user = None
@@ -57,6 +42,34 @@ def login():
     return render_template('login.html')
 
 
+@manager.route('/organizations')
+def organizations():
+
+    # get all the organizations
+    organizations = _User.Query.all().filter(type="org")
+
+    # render page
+    return render_template("organizations/organizations.html",
+        organizations = organizations,
+        organizationsCount = len(organizations))
+
+
+def getQuizHistory(userName):
+    results = QuestionPersonalStatistics.Query.filter(person=userName)
+    return
+
+
+def getMongoQuizHistory(userName):
+    stuff = []
+    client = MongoClient('localhost',27017)
+    db = client['discovering_user_db']
+    collection = db['test_user_name']
+    results = collection.find({'type':'quiz_result'}).sort([('time', pymongo.DESCENDING)])
+    for result in results:
+        stuff.append(json_util.dumps(result,default=json_util.default))
+    return str({'result':stuff})
+
+
 @manager.route('/stats', methods=['GET', 'POST'])
 def stats():
     return render_template('stats.html', org=org_info_parse)
@@ -65,18 +78,6 @@ def stats():
 @manager.route('/testing', methods=['POST'])
 def ajaxResponse():
     return getMongoQuizHistory('test_user_name')
-
-# route /organizations
-@manager.route('/organizations')
-def organizations():
-
-    # get all the organizations
-    organizations = _User.Query.all().filter(type="org")
-
-    # render page
-    return render_template("organizations/organizations.html", 
-        organizations = organizations, 
-        organizationsCount = len(organizations))
 
 if __name__ == '__main__':
     manager.run(debug=True)
