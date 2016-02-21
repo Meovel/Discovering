@@ -12,7 +12,7 @@ google.charts.setOnLoadCallback(buildBarGraph);
 * @TODO Hook this up to the database (i.e. Mongo)
 * @TODO Hook this up to the front-end HTML form via GET/POST
 */
-function buildBarGraph(json) {
+function buildBarGraph(jobj) {
   var test_json = [{
     "student": "Adam",
     "score": 100
@@ -20,18 +20,17 @@ function buildBarGraph(json) {
   {
     "student": "Brian",
     "score": 95
-  }
-  ]
+  }]
 
   var data = new google.visualization.arrayToDataTable([
-    ['Student', 'Percentage'],
+    ['Quiz', 'Percentage'],
     [test_json[0].student, test_json[0].score],
     [test_json[1].student, test_json[1].score],
     [test_json[0].student, test_json[0].score]
   ]);
 
   var options = {
-    title: 'Student Peformance',
+    title: 'Peformance History',
     width: 350,
     height: 300,
     legend: { position: 'none' },
