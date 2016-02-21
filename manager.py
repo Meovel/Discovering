@@ -40,7 +40,7 @@ def login():
         except:
             flash('Incorrect username or password', 'info')
         # login_user(user)
-        return redirect(url_for(""))
+        return redirect(url_for("organizations"))
     return render_template('login.html')
 
 
@@ -55,7 +55,7 @@ def ajaxResponse():
 
 # route /organizations
 @manager.route('/organizations')
-def hello_world():
+def organizations():
 
     # get all the organizations
     organizations = _User.Query.all().filter(type="org")
