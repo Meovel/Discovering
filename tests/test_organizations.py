@@ -1,7 +1,13 @@
 import unittest
 from unittest import TestCase
+from parse_rest.connection import register
 from parse_rest.datatypes import Object
-from manager import hello_world
+# from manager import organizations
+
+# Parse setting
+application_id = 'PoSB6H1T3fxmdTEPngtYGaDnaFZsQnvBicUZt5Rc'
+rest_api_key = 'q5sYZvNdnAA6S58Dx1qqzVLOgWRJYbOqCBrqSngy'
+register(application_id, rest_api_key)
 
 
 class _User(Object):
