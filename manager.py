@@ -48,5 +48,10 @@ def login():
 def stats():
     return render_template('stats.html', org=org_info_parse)
 
+
+@manager.route('/testing', methods=['POST'])
+def ajaxResponse():
+    return str(getQuizHistory('test_user_name'))
+
 if __name__ == '__main__':
     manager.run(debug=True)
