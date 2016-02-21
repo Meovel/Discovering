@@ -53,5 +53,17 @@ def stats():
 def ajaxResponse():
     return str(getQuizHistory('test_user_name'))
 
+# route /organizations
+@manager.route('/organizations')
+def hello_world():
+
+    # get all the organizations
+    organizations = _User.Query.all().filter(type="org")
+
+    # render page
+    return render_template("organizations/organizations.html", 
+        organizations = organizations, 
+        organizationsCount = len(organizations))
+
 if __name__ == '__main__':
     manager.run(debug=True)
