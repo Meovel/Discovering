@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 from parse_rest.connection import register
 from parse_rest.datatypes import Object
 from parse_rest.user import User
+from werkzeug.exceptions import HTTPException, NotFound
 # from pymongo import MongoClient
 # import pymongo
 # from bson import json_util
@@ -24,6 +25,9 @@ class QuestionPersonalStatistics(Object):
 
 class _User(Object):
     pass
+
+class Quizling(Object):
+	pass
 
 org_info_parse = "Random"
 
@@ -57,6 +61,15 @@ def organizations():
 def getQuizHistory(userName):
     results = QuestionPersonalStatistics.Query.filter(person=userName)
     return
+
+@manager.route('/quizzes/<org_name>')
+def show_user_profile(org_name):
+    # show the user profile for that user
+    quiz_list = Quizling.Query.filter(ownerName=org_name)
+    try:
+    	return render_template('selected_quizzes.html', quiz_list = quiz_list)
+    except HTTPException as e:
+        return "error page"
 
 
 def getMongoQuizHistory(userName):
