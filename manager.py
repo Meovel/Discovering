@@ -41,6 +41,7 @@ def getMongoQuizHistory(userName):
 	for result in results:
 		stuff.append(json_util.dumps(result,default=json_util.default))
 	return str({'result':stuff})
+    # return str(stuff)
 
 
 @manager.route('/', methods=['GET', 'POST'])

@@ -9,9 +9,9 @@ client = MongoClient('localhost',27017)
 db = client['discovering_user_db']
 db.drop_collection('test_user_name')
 collection = db['test_user_name']
-dummyQuiz1 = {'name':'testQuizName1','score':90,'type':'quiz_result','time':1}
-dummyQuiz2 = {'name':'testQuizName2','score':80,'type':'quiz_result','time':2}
-dummyQuiz3 = {'name':'testQuizName3','score':99,'type':'quiz_result','time':3}
+dummyQuiz1 = {"name":"testQuizName1","score":90,"type":"quiz_result","time":1}
+dummyQuiz2 = {"name":"testQuizName2","score":80,"type":"quiz_result","time":2}
+dummyQuiz3 = {"name":"testQuizName3","score":99,"type":"quiz_result","time":3}
 stuff = [dummyQuiz1, dummyQuiz2, dummyQuiz3]
 # Test to ensure database connection was valid
 try:
