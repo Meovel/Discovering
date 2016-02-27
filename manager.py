@@ -3,10 +3,9 @@ from parse_rest.connection import register
 from parse_rest.datatypes import Object
 from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
-# from pymongo import MongoClient
 # import pymongo
+# from pymongo import MongoClient
 # from bson import json_util
-# from flask.ext.login import login_user, login_required, logout_user, current_user
 
 # Parse setting
 application_id = 'PoSB6H1T3fxmdTEPngtYGaDnaFZsQnvBicUZt5Rc'
@@ -26,8 +25,9 @@ class QuestionPersonalStatistics(Object):
 class _User(Object):
     pass
 
+
 class Quizling(Object):
-	pass
+    pass
 
 org_info_parse = "Random"
 
@@ -67,7 +67,7 @@ def show_user_profile(org_name):
     # show the user profile for that user
     quiz_list = Quizling.Query.filter(ownerName=org_name)
     try:
-    	return render_template('selected_quizzes.html', quiz_list = quiz_list)
+        return render_template('selected_quizzes.html', quiz_list = quiz_list)
     except HTTPException as e:
         return "error page"
 
