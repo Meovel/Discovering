@@ -53,7 +53,7 @@ def organizations():
     organizations = _User.Query.all().filter(type="org")
 
     # render page
-    return render_template("organizations/organizations.html",
+    return render_template("organizations.html",
         organizations = organizations,
         organizationsCount = len(organizations))
 
@@ -62,12 +62,13 @@ def getQuizHistory(userName):
     results = QuestionPersonalStatistics.Query.filter(person=userName)
     return
 
+
 @manager.route('/quizzes/<org_name>')
 def show_user_profile(org_name):
     # show the user profile for that user
     quiz_list = Quizling.Query.filter(ownerName=org_name)
     try:
-        return render_template('selected_quizzes.html', quiz_list = quiz_list)
+        return render_template('quizzes.html', quiz_list = quiz_list)
     except HTTPException as e:
         return "error page"
 
