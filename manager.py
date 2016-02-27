@@ -31,6 +31,8 @@ class Quizling(Object):
 
 org_info_parse = "Random"
 
+Quizzes = Quizling.Query.all().filter()
+
 
 @manager.route('/', methods=['GET', 'POST'])
 def login():
@@ -64,11 +66,11 @@ def getQuizHistory(userName):
 
 
 @manager.route('/quizzes/<org_name>')
-def show_user_profile(org_name):
-    # show the user profile for that user
-    quiz_list = Quizling.Query.filter(ownerName=org_name)
+def quizzes(org_name=None, quiz_list=None):
+    if org_name:
+        quiz_list = Quizling.Query.filter(ownerName=org_name)
     try:
-        return render_template('quizzes.html', quiz_list = quiz_list)
+        return render_template('quizzes.html', quiz_list=quiz_list)
     except HTTPException as e:
         return "error page"
 
@@ -87,6 +89,26 @@ def getMongoQuizHistory(userName):
 @manager.route('/stats', methods=['GET', 'POST'])
 def stats():
     return render_template('stats.html', org=org_info_parse)
+
+
+@manager.route('/search')
+def search():
+    keyword = request.query_string[6:]
+    quiz_list = searchKeyword(keyword)
+    return quizzes(quiz_list=quiz_list)
+
+
+def searchKeyword(keyword):
+    result = set()
+    for quiz in Quizzes:
+        if quiz.name:
+            if keyword in quiz.name:
+                result.add(quiz)
+        else:
+            if quiz.summary:
+                if keyword in quiz.summary:
+                    result.add(quiz)
+    return result
 
 
 @manager.route('/testing', methods=['POST'])
