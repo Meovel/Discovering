@@ -8,13 +8,13 @@ from werkzeug.exceptions import HTTPException, NotFound
 # from bson import json_util
 
 # Parse setting
-application_id = 'PoSB6H1T3fxmdTEPngtYGaDnaFZsQnvBicUZt5Rc'
-rest_api_key = 'q5sYZvNdnAA6S58Dx1qqzVLOgWRJYbOqCBrqSngy'
+application_id = '1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD'
+rest_api_key = 'SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5'
 register(application_id, rest_api_key)
 
 # Flask setting
 manager = Flask(__name__)
-# manager.secret_key = 'discoveringfalsksecretkey2016'
+manager.secret_key = 'discoveringfalsksecretkey2016'
 
 
 # Parse classes
