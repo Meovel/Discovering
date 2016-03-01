@@ -169,7 +169,9 @@
 							<div class="portlet light">
 								<div class="portlet-title">
 									<div class="caption font-purple-plum">
+										{% if organizations[loop.index0].avatar %}
 										<img class="organization_avatar" src="{{organizations[loop.index0].avatar.url}}">
+										{% endif %}
 										<span class="caption-subject bold uppercase">{{organizations[loop.index0].username}}</span>
 									</div>
 									<div class="actions">
@@ -202,7 +204,9 @@
 							<div class="portlet light">
 								<div class="portlet-title">
 									<div class="caption font-purple-plum">
+										{% if organizations[loop.index0+1].avatar %}
 										<img class="organization_avatar" src="{{organizations[loop.index0+1].avatar.url}}">
+										{% endif %}
 										<span class="caption-subject bold uppercase">{{organizations[loop.index0+1].username}}</span>
 									</div>
 									<div class="actions">
@@ -236,7 +240,9 @@
 							<div class="portlet light">
 								<div class="portlet-title">
 									<div class="caption font-purple-plum">
+										{% if organizations[loop.index0+2].avatar %}
 										<img class="organization_avatar" src="{{organizations[loop.index0+2].avatar.url}}">
+										{% endif %}
 										<span class="caption-subject bold uppercase">{{organizations[loop.index0+2].username}}</span>
 									</div>
 									<div class="actions">
