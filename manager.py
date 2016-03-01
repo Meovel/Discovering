@@ -29,9 +29,14 @@ class _User(Object):
 class Quizling(Object):
     pass
 
+
+class LearnningAreas(Object):
+    pass
+
 org_info_parse = "Random"
 
 Quizzes = Quizling.Query.all().filter()
+result = []
 
 
 @manager.route('/', methods=['GET', 'POST'])
@@ -66,11 +71,11 @@ def getQuizHistory(userName):
 
 
 @manager.route('/quizzes/<org_name>')
-def quizzes(org_name=None, quiz_list=None):
+def quizzes(org_name=None, quiz_list=None, keyword=None):
     if org_name:
         quiz_list = Quizling.Query.filter(ownerName=org_name)
     try:
-        return render_template('quizzes.html', quiz_list=quiz_list)
+        return render_template('quizzes.html', quiz_list=quiz_list, keyword=keyword)
     except HTTPException as e:
         return "error page"
 
@@ -95,20 +100,34 @@ def stats():
 def search():
     keyword = request.query_string[6:]
     quiz_list = searchKeyword(keyword)
-    return quizzes(quiz_list=quiz_list)
+    return quizzes(quiz_list=quiz_list, keyword=keyword)
 
 
 def searchKeyword(keyword):
-    result = set()
+    global result
+    result = []
+    keyword = keyword.lower()
     for quiz in Quizzes:
         if quiz.name:
-            if keyword in quiz.name:
-                result.add(quiz)
+            if keyword in quiz.name.lower():
+                result.append(quiz)
         else:
             if quiz.summary:
-                if keyword in quiz.summary:
-                    result.add(quiz)
+                if keyword in quiz.summary.lower():
+                    result.append(quiz)
     return result
+
+
+@manager.route('/filterArea')
+def filterArea(areaName):
+    global result
+    print request.query_string
+    area = LearnningAreas.Query.get(name=areaName)
+    filteredResult = []
+    for quiz in result:
+        if quiz.area == area:
+            filteredResult.append(quiz)
+    return quizzes(quiz_list=filteredResult)
 
 
 @manager.route('/testing', methods=['POST'])
