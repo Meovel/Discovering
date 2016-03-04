@@ -30,12 +30,13 @@ class Quizling(Object):
     pass
 
 
-class LearnningAreas(Object):
+class LearningAreas(Object):
     pass
 
 org_info_parse = "Random"
 
-Quizzes = Quizling.Query.all().filter()
+Quizzes = Quizling.Query.all().filter().limit(300)
+kw = ''
 result = []
 
 
@@ -104,7 +105,9 @@ def search():
 
 
 def searchKeyword(keyword):
+    global kw
     global result
+    kw = keyword
     result = []
     keyword = keyword.lower()
     for quiz in Quizzes:
@@ -121,15 +124,16 @@ def searchKeyword(keyword):
 @manager.route('/filterArea', methods=['POST'])
 def filterArea():
     areaName = request.form.keys()[0]
-    print areaName
+    global kw
     global result
     print request.query_string
-    area = LearnningAreas.Query.get(name=areaName)
+    area = LearningAreas.Query.get(objectId=areaName)
     filteredResult = []
     for quiz in result:
-        if quiz.area == area:
-            filteredResult.append(quiz)
-    return quizzes(quiz_list=filteredResult) 
+        if hasattr(quiz, 'area'):
+            if quiz.area.objectId == area.objectId:
+                filteredResult.append(quiz)
+    return render_template('quizzes.html', quiz_list=filteredResult, keyword=kw)
 
 
 @manager.route('/testing', methods=['POST'])
