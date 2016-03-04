@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
 from parse_rest.connection import register
 from parse_rest.datatypes import Object
 from parse_rest.user import User
@@ -133,7 +133,28 @@ def filterArea():
         if hasattr(quiz, 'area'):
             if quiz.area.objectId == area.objectId:
                 filteredResult.append(quiz)
-    return render_template('quizzes.html', quiz_list=filteredResult, keyword=kw)
+    return makeJSONquizzes(filteredResult, areaName)
+
+
+def makeJSONquizzes(quizzes, area):
+    response = dict()
+    data = dict()
+    index = 0
+    for quiz in quizzes:
+        qjson = dict()
+        qjson['id'] = quiz.objectId
+        qjson['name'] = quiz.name
+        qjson['owner'] = quiz.ownerName
+        qjson['quizType'] = quiz.quizType
+        qjson['summary'] = quiz.summary
+        if hasattr(quiz, 'questionCount'):
+            qjson['questionCount'] = quiz.questionCount
+        else:
+            qjson['questionCount'] = 0
+        qjson['area'] = area
+        data[index] = qjson
+    response['data'] = data
+    return jsonify(response)
 
 
 @manager.route('/testing', methods=['POST'])
