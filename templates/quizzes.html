@@ -37,7 +37,7 @@
                     <h1>Search result for "{{ keyword }}"</h1>
                 </div>
                 <select class="bs-select form-control input-small" data-style="blue" style="float: right"
-                        action="search" method="GET">
+                        action="search" method="GET" id="filter">
                     <option class="submit" value="literature">literature</option>
                     <option class="submit" value="humanities">humanities</option>
                     <option class="submit" value="stem">stem</option>
@@ -101,6 +101,7 @@
 </div>
 <!-- END FOOTER -->
 {% include "script.html" %}
+<script src="../static/frontend/pages/scripts/search.js" type="text/javascript"></script>
 <script>
     jQuery(document).ready(function () {
 //        // initiate layout and plugins

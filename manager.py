@@ -118,8 +118,10 @@ def searchKeyword(keyword):
     return result
 
 
-@manager.route('/filterArea')
-def filterArea(areaName):
+@manager.route('/filterArea', methods=['POST'])
+def filterArea():
+    areaName = request.form.keys()[0]
+    print areaName
     global result
     print request.query_string
     area = LearnningAreas.Query.get(name=areaName)
@@ -127,7 +129,7 @@ def filterArea(areaName):
     for quiz in result:
         if quiz.area == area:
             filteredResult.append(quiz)
-    return quizzes(quiz_list=filteredResult)
+    return quizzes(quiz_list=filteredResult) 
 
 
 @manager.route('/testing', methods=['POST'])
