@@ -3,6 +3,7 @@ from parse_rest.connection import register
 from parse_rest.datatypes import Object
 from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
+import json
 # import pymongo
 # from pymongo import MongoClient
 # from bson import json_util
@@ -138,23 +139,26 @@ def filterArea():
 
 def makeJSONquizzes(quizzes, area):
     response = dict()
-    data = dict()
+    data = []
     index = 0
     for quiz in quizzes:
         qjson = dict()
         qjson['id'] = quiz.objectId
         qjson['name'] = quiz.name
         qjson['owner'] = quiz.ownerName
-        qjson['quizType'] = quiz.quizType
+        if hasattr(quiz, 'quizType'):
+            qjson['quizType'] = quiz.quizType
+        else:
+            qjson['quizType'] = -1
         qjson['summary'] = quiz.summary
         if hasattr(quiz, 'questionCount'):
             qjson['questionCount'] = quiz.questionCount
         else:
             qjson['questionCount'] = 0
         qjson['area'] = area
-        data[index] = qjson
+        data.append(qjson)
     response['data'] = data
-    return jsonify(response)
+    return json.dumps(response)
 
 
 @manager.route('/testing', methods=['POST'])
