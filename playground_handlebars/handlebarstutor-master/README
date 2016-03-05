@@ -1,0 +1,18 @@
+Handlebars Tutor Project
+
+Handlebars introduction
+
+Handlebars provides the power necessary to let you build semantic templates effectively with no frustration.
+Mustache templates are compatible with Handlebars, so you can take a Mustache template, import it into Handlebars, and start taking advantage of the extra Handlebars features.
+
+Getting Started
+In this tutorial, you will learn to use handlebars from begining, including expressions, precompilation, block expressions, block helpers, with, each, if, unless, handlerpbars paths, and user defined helpers. 
+
+Examples list:
+01: expressions demo
+02: helpers demo
+03: block expressions demo
+04: with expressions demo
+05: each helper demo
+06: if helper demo
+07: Partials Demo
