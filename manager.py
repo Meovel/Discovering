@@ -1,15 +1,14 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, jsonify, render_template, redirect, url_for, request, flash
 from parse_rest.connection import register
 from parse_rest.datatypes import Object
 from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
-# import pymongo
-# from pymongo import MongoClient
-# from bson import json_util
+import json
+
 
 # Parse setting
-application_id = 'PoSB6H1T3fxmdTEPngtYGaDnaFZsQnvBicUZt5Rc'
-rest_api_key = 'q5sYZvNdnAA6S58Dx1qqzVLOgWRJYbOqCBrqSngy'
+application_id = '1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD'
+rest_api_key = 'SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5'
 register(application_id, rest_api_key)
 
 # Flask setting
@@ -28,6 +27,13 @@ class _User(Object):
 
 class Quizling(Object):
     pass
+        
+
+class myQuizling:
+    def __init__(self, objectId, name, ownerName):
+        self.objectId = objectId
+        self.name = name
+        self.ownerName = ownerName
 
 org_info_parse = "Random"
 
@@ -55,10 +61,40 @@ def organizations():
     organizations = _User.Query.all().filter(type="org")
 
     # render page
-    return render_template("organizations.html",
-        organizations = organizations,
-        organizationsCount = len(organizations))
+    return render_template("organizations/organizations.html",
+        organizations = organizations)
 
+@manager.route('/quiz/<organizationName>')
+def quiz(organizationName = None):
+    quizzes = Quizling.Query.all().filter(ownerName = organizationName)
+    print "============="
+
+    if(len(quizzes) == 0):
+        return jsonify(result = None)
+    else:
+        return jsonify(result = serialize(quizzes))
+
+@manager.route("/follow/<organizationId>")
+def follow(organizationName = None):
+    organizationName = organizationId;
+
+
+
+
+
+# serialize ParseObject so that it can be jsonify
+def serialize(quizzes):
+    ret = dict()
+
+    for quiz in quizzes:
+        temp = dict()
+        temp["ownerName"] = quiz.ownerName
+        temp["name"] = quiz.name
+        temp["summary"] = quiz.summary
+
+        ret[quiz.objectId] = temp
+
+    return ret
 
 def getQuizHistory(userName):
     results = QuestionPersonalStatistics.Query.filter(person=userName)
