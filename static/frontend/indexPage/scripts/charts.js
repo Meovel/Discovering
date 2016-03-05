@@ -4,35 +4,53 @@
 * @iteration 2
 */
 
+Parse.initialize("1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD", "kRyIxZkeC08jvlwSwbUdmBysWL9j6bLi0lB9RUan");
+
 google.charts.load('current', {'packages':['bar']});
 google.charts.setOnLoadCallback(buildBarGraph);
+oogle.charts.setOnLoadCallback(buildBarGraph);
 
-var fetched_json;
+// template-code taken from the docs: https://parse.com/docs/js/guide#queries
+function queryToChart() {
+	var data_json = {}
+	console.log("In queryToChart")
+	var ChartData = Parse.Object.extend("QuizPersonalStatistics");
+	//var ChartData = Parse.Object.extend("LearningAreas");
+	var UserData = Parse.Object.extend("User");
+	var query = new Parse.Query(ChartData);
 
-/**
-* @description This chunk of code shall run first, fetching and saving
-* the data from the database in a global variable.
-*
-*/
-$(document).ready(
-	function fetchData(){
-		$.ajax({
-			url: "testing",
-			method: "POST",
-			dataType: "Text",
-			data: "stuff",
-		}).done(function(data) {
-        fetched_json = data;
-			  // buildBarGraph( data );
-		});
-	}
-);
-
-/**
-* @description Used for basic testing, to check validity of data from Jasmine.js
-*/
-function getFetchedData() {
-	return fetched_json;
+	var user_dev10_objectId = "WrWZRnIDbv"
+	// query.equalTo("user", user_dev10_objectId)
+	query.equalTo("user", {
+        __type: "Pointer",
+        className: "_User",
+        objectId: user_dev10_objectId
+    });
+	query.limit(100);
+	query.include("user");
+	// query.equalTo("objectId", "95aSXQ3xMo")
+	// query.equalTo("objectId", {
+	// 	"__type": "Pointer",
+	// 	"className": "ChartData",
+	// 	"objectId": "WrWZRnIDbv"
+	// });
+	query.find({
+	  success: function(results) {
+	    alert("Successfully retrieved " + results.length + " entries.");
+			console.log(results)
+			// Do something with the returned Parse.Object values
+	    for (var i = 0; i < results.length; i++) {
+	      var object = results[i];
+				// data_json.push({user: object.get('user'), quizling: object.get('quizling'), averageScore: object.get('averageScore')})
+				var myUser = object.get('user')
+	      console.log(object.id + ' - ' + object.get('averageScore') + ' - ' + (object.get('user')).get('username') ) ;
+	    }
+			console.log(data_json)
+	  },
+	  error: function(error) {
+	    alert("Error: " + error.code + " " + error.message);
+	  }
+	});
 }
 
 /**
@@ -52,45 +70,9 @@ function JSONize(str) {
 * @TODO Hook this up to the database (i.e. Mongo)
 * @TODO Hook this up to the front-end HTML form via GET/POST
 */
-function buildBarGraph(jobj) {
+function buildBarGraph(json) {
 
-  // alert("data in buildBarGraph is: " + jobj);
-  // alert("fetched_json is: " + fetched_json);//[0]["name"]);
-
-	// fetched_json = fetched_json.replace(/'/, '"').replace(/'/, '"')
-
-	// alert(fetched_json)
-
-	// fetched_json = JSON.parse(fetched_json.result[0])
-
-	// obj = eval(fetched_json);
-	// fetched_json = JSON.parse({fetched_json})
-
-	// fetched_json = JSON.parse(fetched_json);
-
-	// var result = '{"time": 3, "_id": {"$oid": "56cbadf81bad1a44954a2575"}, "type": "quiz_result", "score": 99, "name": "testQuizName3"}', '{"time": 2, "_id": {"$oid": "56cbadf81bad1a44954a2574"}, "type": "quiz_result", "score": 80, "name": "testQuizName2"}', '{"time": 1, "_id": {"$oid": "56cbadf81bad1a44954a2573"}, "type": "quiz_result", "score": 90, "name": "testQuizName1"}'
-
-	// var jresult = JSON.parse(result);
-
-	// alert("result is " + result);
-
-	// alert("fetched_json[0]: " + fetched_json[0]);
-
-	var jstring = "{\'name\':\'testQuizName1\',\'score\':90,\'type\':\'quiz_result\',\'time\':1}";
-
-	var jstring3 = '{"name":"testQuizName1","score":90,"type":"quiz_result","time":1}';
-
-	jstring3 = JSON.parse(jstring3);
-
-	// alert("jstring3 is " + jstring3.name);
-
-
-	// JSON.parse(jstring);
-	// alert(jstring);
-
-  // for(var i = 0; i < fetched_json.length; i++) {
-  //   alert(fetched_json[i].name)
-  // }
+	queryToChart()
 
   var test_json = [{
     "student": "Adam",

@@ -3,9 +3,9 @@ from parse_rest.connection import register
 from parse_rest.datatypes import Object
 from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
-# import pymongo
-# from pymongo import MongoClient
-# from bson import json_util
+import pymongo
+from pymongo import MongoClient
+from bson import json_util
 
 # Parse setting
 application_id = '1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD'
@@ -68,6 +68,7 @@ def organizations():
 
 def getQuizHistory(userName):
     results = QuestionPersonalStatistics.Query.filter(person=userName)
+    print results
     return
 
 

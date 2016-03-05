@@ -6,16 +6,17 @@
 * for the time being, and to keep things simple.
 */
 
-// $(document).ready(
-// 	function(){
-// 		$.ajax({
-// 			url: "testing",
-// 			method: "POST",
-// 			dataType: "Text",
-// 			data: "stuff",
-// 		}).done(function(data) {
-// 			  // alert( data );
-// 				loadScript("charts.js", buildBarGraph(data));
-// 		});
-// 	}
-// );
+$(document).ready(
+	function(){
+		$.ajax({
+			url: "testing",
+			method: "POST",
+			dataType: "Text",
+			data: "stuff",
+		}).done(function(data) {
+			  // alert( data );
+				// loadScript("charts.js", buildBarGraph(data));
+				loadScript("charts.js", queryToChart());
+		});
+	}
+);
