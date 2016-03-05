@@ -4,6 +4,8 @@
 * @iteration 2
 */
 
+Parse.initialize("1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD", "kRyIxZkeC08jvlwSwbUdmBysWL9j6bLi0lB9RUan");
+
 google.charts.load('current', {'packages':['bar']});
 google.charts.setOnLoadCallback(buildBarGraph);
 
@@ -27,6 +29,40 @@ $(document).ready(
 		});
 	}
 );
+
+// template-code taken from the docs: https://parse.com/docs/js/guide#queries
+function queryToChart() {
+	var data_json = {}
+	// alert("In queryToChart()")
+	console.log("In queryToChart")
+	var ChartData = Parse.Object.extend("QuizPersonalStatistics");
+	var query = new Parse.Query(ChartData);
+
+	var user_dev10_objectId = "WrWZRnIDbv"
+	query.equalTo("user", ChartData)
+	// query.include("user")
+	// query.equalTo("user", {
+	// 	"__type": "Pointer",
+	// 	"className": "ChartData",
+	// 	"objectId": "WrWZRnIDbv"
+	// });
+	query.find({
+	  success: function(results) {
+	    alert("Successfully retrieved " + results.length + " entries.");
+	    // Do something with the returned Parse.Object values
+	    for (var i = 0; i < results.length; i++) {
+	      var object = results[i];
+				data_json.push({user: object.get('user'), quizling: object.get('quizling'), averageScore: object.get('averageScore')})
+	      // alert(object.id + ' - ' + object.get('averageScore'));
+	    }
+			console.log(data_json)
+	  },
+	  error: function(error) {
+	    alert("Error: " + error.code + " " + error.message);
+	  }
+	});
+}
+
 
 /**
 * @description Used for basic testing, to check validity of data from Jasmine.js
@@ -53,6 +89,8 @@ function JSONize(str) {
 * @TODO Hook this up to the front-end HTML form via GET/POST
 */
 function buildBarGraph(jobj) {
+
+	queryToChart()
 
   // alert("data in buildBarGraph is: " + jobj);
   // alert("fetched_json is: " + fetched_json);//[0]["name"]);

@@ -22,7 +22,9 @@ class TestQuizHistory(TestCase):
     def test_quizHistory(self):
         user = _User.Query.get(objectId='RGzYAhZZN2')
         # Pass certain parameters to see if the result matches expectation
-        self.assertEqual(getQuizHistory(user), [])
+        # self.assertEqual(getQuizHistory(user), [])
+        self.assertEqual(getQuizHistory(user), None)
+
 
 if __name__ == '__main__':
     unittest.main()
