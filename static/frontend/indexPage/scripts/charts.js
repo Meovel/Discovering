@@ -36,12 +36,14 @@ function queryToChart() {
 	// alert("In queryToChart()")
 	console.log("In queryToChart")
 	var ChartData = Parse.Object.extend("QuizPersonalStatistics");
+	var UserData = Parse.Object.extend("User");
 	var query = new Parse.Query(ChartData);
 
 	var user_dev10_objectId = "WrWZRnIDbv"
-	query.equalTo("user", ChartData)
-	// query.include("user")
-	// query.equalTo("user", {
+	// query.equalTo("user", user_dev10_objectId)
+	query.include("name")
+	query.equalTo("objectId", "95aSXQ3xMo")
+	// query.equalTo("objectId", {
 	// 	"__type": "Pointer",
 	// 	"className": "ChartData",
 	// 	"objectId": "WrWZRnIDbv"
@@ -49,7 +51,8 @@ function queryToChart() {
 	query.find({
 	  success: function(results) {
 	    alert("Successfully retrieved " + results.length + " entries.");
-	    // Do something with the returned Parse.Object values
+			console.log(results)
+			// Do something with the returned Parse.Object values
 	    for (var i = 0; i < results.length; i++) {
 	      var object = results[i];
 				data_json.push({user: object.get('user'), quizling: object.get('quizling'), averageScore: object.get('averageScore')})
