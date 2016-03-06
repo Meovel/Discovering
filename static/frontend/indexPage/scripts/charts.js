@@ -6,7 +6,9 @@
 
 Parse.initialize("1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD", "kRyIxZkeC08jvlwSwbUdmBysWL9j6bLi0lB9RUan");
 
-
+/**
+* @description Initializes the Google Charts API object, so that chart can be drawn
+*/
 function initializeGoogleCharts(array, divId) {
 	google.charts.load('current', {'packages':['bar']});
 	// google.charts.setOnLoadCallback(buildBarGraph([], divId));
@@ -15,17 +17,21 @@ function initializeGoogleCharts(array, divId) {
 initializeGoogleCharts([], "top_x_div");
 
 // template-code taken from the docs: https://parse.com/docs/js/guide#queries
+/**
+* @description Queries Parse database for relevent data
+* @summary Calls a method to build the graph, sending an Array of JSON objects
+* @param str – should relevant parameterization for queryToChart to correctly handle
+* @TODO Generalize queryToChart to extract relevant data based on its input parameter
+*/
 function queryToChart(str) {
 	console.log("queryToChart str is: " + str)
 	var data_array = []
 	console.log("In queryToChart")
 	var ChartData = Parse.Object.extend("QuizPersonalStatistics");
-	//var ChartData = Parse.Object.extend("LearningAreas");
 	var UserData = Parse.Object.extend("User");
 	var query = new Parse.Query(ChartData);
 
 	var user_dev10_objectId = "WrWZRnIDbv"
-	// query.equalTo("user", user_dev10_objectId)
 	query.equalTo("user", {
         __type: "Pointer",
         className: "_User",
@@ -50,6 +56,9 @@ function queryToChart(str) {
 	    }
 			console.log(data_array)
 			buildBarGraph(data_array, "quizling", "averageScore")
+			console.log("hello, this is the line after calling buildBarGraph in queryToChart")
+			// computeStats(data_array)
+			return data_array // simply for front-end testing
 	  },
 	  error: function(error) {
 	    alert("Error: " + error.code + " " + error.message);
@@ -58,28 +67,16 @@ function queryToChart(str) {
 }
 
 /**
-* from http://stackoverflow.com/questions/9036429/convert-object-string-to-json_array
-*/
-function JSONize(str) {
-  return str
-    // wrap keys without quote with valid double quote
-    .replace(/([\$\w]+)\s*:/g, function(_, $1){return '"'+$1+'":'})
-    // replacing single quote wrapped ones to double quote
-    .replace(/'([^']+)'/g, function(_, $1){return '"'+$1+'"'})
-}
-
-/**
 * @description This should simply build the bar graph (i.e. of student-score data)
 * @param json_array – This should be passed in from the database
-* @TODO Hook this up to the database (i.e. Mongo)
-* @TODO Hook this up to the front-end HTML form via GET/POST
+* @TODO Consider creating a generalized graph-builder wrapper
 */
 function buildBarGraph(json_array, key1, key2, divId) {
 
 	divId = "chart_div"
 
 	var charts_array = []
-	charts_array.push(['Quiz', 'Percentage'])
+	charts_array.push(['Quiz', 'Score'])
 	for(var i = 0; i < json_array.length; i++) {
 		charts_array.push(
 			[json_array[i][key1.toString()], json_array[i][key2.toString()]]
@@ -93,7 +90,7 @@ function buildBarGraph(json_array, key1, key2, divId) {
     width: 350,
     height: 300,
     legend: { position: 'none' },
-    chart: { subtitle: 'scores by percentage' }
+    chart: { subtitle: 'scores by points' }
   };
 
 	var divBlah = "top_x_div"
