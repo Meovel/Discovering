@@ -41,6 +41,7 @@ a:hover{
 
 /*organizations*/
 
+
 #organizations-wrapper{
 	width: 100%;
 	height: auto;
@@ -48,24 +49,22 @@ a:hover{
 
 #organizations{
 	margin-top: 50px;
-	margin-left: 5%;
+	margin-left: 10%;
 	width: 80%;
 	height: auto;
 	padding-bottom: 80px;
 }
 
 .organization-card{
-	height: 300px;
-	width: 20%;
-	margin-left: 200px;
+	height: 260px;
 	margin-top: 50px;
-	float: left;
+	margin-left: 40px;
 }
 
 .organization-card .front-face{
 	position: absolute;
-	height: 300px;
-	width: 20%;
+	height: 260px;
+	width: 100%;
 	background-color: #ffffff;
 	-webkit-transform: perspective(600px) rotateY(0deg);
 	-webkit-backface-visibility: hidden;
@@ -75,25 +74,25 @@ a:hover{
 }
 
 .organization-card .front-face img{
-	height: 150px;
-	width: 150px;
+	height: 120px;
+	width: 120px;
 	margin: 0 auto;
 	margin-top: 30px;
-	border-radius: 75px;
+	border-radius: 60px;
 }
 
 
 
 .organization-card .front-face p{
-	font-size: 26px;
+	font-size: 18px;
 	font-family: fantasy;
 	margin-top: 20px;
 }
 
 .organization-card .back-face{
 	position: absolute;
-	width: 20%;
-	height: 300px;	
+	height: 260px;	
+	width: 100%;
 	background-color: #ffffff;
 	-webkit-transform: perspective(600px) rotateY(180deg);
 	-webkit-backface-visibility: hidden;
@@ -107,7 +106,7 @@ a:hover{
 }
 
 .organization-card .back-face .organization-intro{
-	height: 200px;
+	height: 160px;
 	margin-top: 30px;
 	font-size: 20px;
 	font-family: fantasy;

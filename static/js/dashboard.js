@@ -1,6 +1,36 @@
-$(".follow-button").click(function(){
-	alert($(this).attr("id"));
+$(".follow-btn").click(function(){
+	event.preventDefault();
+
+	var followBtn = $(this);
+	var organizationId = $(this).attr("id");
+	var path = "/follow/" + organizationId;
+
+	if(followBtn.hasClass("follow-btn")){
+		$.getJSON(path,{
+			type: "follow"
+			}, function(data){
+				if(data.result == "success"){
+					followBtn.removeClass("follow-btn");
+					followBtn.addClass("cancel-btn");
+					followBtn.html("<i class=\"fa fa-minus\"></i> Cancel");
+			}
+		});
+	}
+
+	else if(followBtn.hasClass("cancel-btn")){
+		$.getJSON(path,{
+			type: "cancel"
+			}, function(data){
+				if(data.result == "success"){
+					followBtn.removeClass("follow-btn");
+					followBtn.addClass("cancel-btn");
+					followBtn.html("<i class=\"fa fa-plus\"></i> Follow");
+			}
+		});
+	}
 });
+
+
 
 
 $(".organization-card").click(function(){

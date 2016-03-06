@@ -28,6 +28,8 @@ class _User(Object):
 class Quizling(Object):
     pass
         
+class Following(Object):
+    pass
 
 class myQuizling:
     def __init__(self, objectId, name, ownerName):
@@ -54,6 +56,9 @@ def login():
     return render_template('login.html')
 
 
+
+############################### Dashboard ###############################
+
 @manager.route('/organizations')
 def organizations():
 
@@ -75,11 +80,31 @@ def quiz(organizationName = None):
         return jsonify(result = serialize(quizzes))
 
 @manager.route("/follow/<organizationId>")
-def follow(organizationName = None):
-    organizationName = organizationId;
+def follow(organizationId = None):
+    print("=======================")
 
+    organizationId = organizationId
+    subscriberId = "seGQaKSk1O"
+    #find subscriber and organization
+    organization = _User.Query.get(objectId = organizationId)
+    subscriber = _User.Query.get(objectId = subscriberId)
 
+    type = request.args.get('type', 0, type=str)    
 
+    # save the follow relation
+    if type == "follow":
+        following = Following()
+        following.subscriber = subscriber
+        following.user = organization
+
+        following.save()
+
+    # cancel follow relation
+    elif type == "cancel":
+        following = Following.Query.get(subscriber = subscriber, user = organization)
+        following.delete()
+
+    return jsonify(result = "success")
 
 
 # serialize ParseObject so that it can be jsonify
@@ -95,6 +120,9 @@ def serialize(quizzes):
         ret[quiz.objectId] = temp
 
     return ret
+
+
+############################### End Of Dashboard ###############################
 
 def getQuizHistory(userName):
     results = QuestionPersonalStatistics.Query.filter(person=userName)
