@@ -70,13 +70,14 @@
 									<p>
 										{% if quiz.summary %}
 										{{quiz.summary}}
-										{% endif %}
+                                        {% else %}
+                                        Description
+                                        {% endif %}
 									</p>
 								</div>
 							</div>
 							<div style="height:25px; margin-top:25px">
-								<a class="button" style="float:left">Follow</a>
-								<a class="button" style="float:right">Quiz</a>
+								<button class="btn blue btn-block">Play</button>
 							</div>
 						</div>
 						<!-- END PORTLET-->
