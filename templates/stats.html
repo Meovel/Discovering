@@ -138,6 +138,23 @@
 				</li>
 			</ul>
 			<!-- END PAGE BREADCRUMB -->
+			<div id="list">Hey, this is the area that we want the ...</div>
+			{% raw %}
+			<script id="people-template" type="text/x-handlebars-template">
+					{{#people}}
+						<div class="person">
+							<h2>{{first_name}} {{last_name}}</h2>
+							<div class="phone">{{phone}}</div>
+							<div class="email"><a href="mailto:{{email}}">{{email}}</a></div>
+							<div class="since">User since {{member_since}}</div>
+						</div>
+					{{/people}}
+			</script>
+			{% endraw %}
+
+			<script src="../static/global/plugins/jquery.min.js" type="text/javascript"></script>
+			<script src="../static/frontend/indexPage/scripts/generate_people.js" type="text/javascript"></script>
+
 			<!-- BEGIN PAGE CONTENT INNER -->
 			<div class="row margin-top-10">
 			</div>
@@ -177,6 +194,7 @@
 								</form>
 							</div>
 						</div>
+						<!-- <div id="list">Hey, this is the area that we want the ...</div> -->
 						<div class="portlet-body">
 							<div class="task-content">
 								<div class="scroller" style="height: 282px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
@@ -190,10 +208,9 @@
 							    <div id="top_x_div"></div>
 
 
-									<div id="list">
-							    </div>
+									<!-- <div id="list">Hey, this is the area that we want the ...</div> -->
 									<!-- {% raw %} -->
-										<script id="people-template" type="text/x-handlebars-template">
+										<!-- <script id="people-template" type="text/x-handlebars-template">
 								      {{#people}}
 								        <div class="person">
 								          <h2>{{first_name}} {{last_name}}</h2>
@@ -202,30 +219,10 @@
 								          <div class="since">User since {{member_since}}</div>
 								        </div>
 								      {{/people}}
-								    </script>
+								    </script> -->
 									<!-- {% endraw %} -->
 
 							    <!-- <script src="static/generate_people.js" type="text/javascript"></script> -->
-									<script>
-										$(document).ready(function() {
-
-											// compile our template
-											var template = Handlebars.compile($("#people-template").html());
-
-											var data = {
-												people: [
-													{ first_name: "Alan", last_name: "Johnson", phone: "1234567890", email: "alan@test.com", member_since: "Mar 25, 2011" },
-													{ first_name: "Allison", last_name: "House", phone: "0987654321", email: "allison@test.com", member_since: "Jan 13, 2011" },
-													{ first_name: "Nick", last_name: "Pettit", phone: "9836592272", email: "nick@test.com", member_since: "Apr 9, 2009" },
-													{ first_name: "Jim", last_name: "Hoskins", phone: "7284927150", email: "jim@test.com", member_since: "May 21, 2010" },
-													{ first_name: "Ryan", last_name: "Carson", phone: "8263729224", email: "ryan@test.com", member_since: "Nov 1, 2008" }
-												]
-											};
-
-											$('#list').html(template(data));
-										});
-									</script>
-
 
 									<!-- END START TASK LIST -->
 								</div>
@@ -295,7 +292,7 @@
 <script src="../static/admin/pages/scripts/tasks.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <!-- Handlebars for dynamically generating charts onto the page -->
-<script type="text/javascript" src="script/handlebars-1.0.0.beta.6.js" type="text/javascript"></script>
+<script type="text/javascript" src="../static/global/plugins/handlebars/handlebars-v4.0.5.js" type="text/javascript"></script>
 <!-- <script src="../static/frontend/indexPage/scripts/fetch.js" type="text/javascript"></script> -->
 <!--Load the AJAX API-->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
