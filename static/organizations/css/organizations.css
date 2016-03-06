@@ -6,21 +6,3 @@
 	-moz-border-radius: 50%;
 	border: 3px solid #cccccc;
 }
-
-.button{
-	padding-top: 5px;
-	padding-bottom: 5px;
-	background-color: #66cccc;
-	width: 45%;
-	font-style: bold;
-	text-align: center;
-	color: #ffffff;
-	display: inline;
-	border-radius: 5px;
-	text-decoration: none;
-}
-
-.button:hover{
-	text-decoration: none;
-	color: #ffffff;
-}
