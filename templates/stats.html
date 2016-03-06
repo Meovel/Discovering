@@ -138,23 +138,6 @@
 				</li>
 			</ul>
 			<!-- END PAGE BREADCRUMB -->
-			<div id="list">Hey, this is the area that we want the ...</div>
-			{% raw %}
-			<script id="people-template" type="text/x-handlebars-template">
-					{{#people}}
-						<div class="person">
-							<h2>{{first_name}} {{last_name}}</h2>
-							<div class="phone">{{phone}}</div>
-							<div class="email"><a href="mailto:{{email}}">{{email}}</a></div>
-							<div class="since">User since {{member_since}}</div>
-						</div>
-					{{/people}}
-			</script>
-			{% endraw %}
-
-			<script src="../static/global/plugins/jquery.min.js" type="text/javascript"></script>
-			<script src="../static/frontend/indexPage/scripts/generate_people.js" type="text/javascript"></script>
-
 			<!-- BEGIN PAGE CONTENT INNER -->
 			<div class="row margin-top-10">
 			</div>
@@ -175,18 +158,18 @@
 
 									x-axis:
 									<select name="x-axis">
-										<option value="students">students</option>
-										<option value="scores">scores</option>
-										<option value="blah1">blah1</option>
-										<option value="blah2">blah2</option>
+										<option value="Quiz">Quiz</option>
+										<option value="Score">Score</option>
+										<option value="Average Score">Average Score</option>
+										<option value="Ranking">Ranking</option>
 									</select>
 
 									y-axis:
 									<select name="y-axis">
-										<option value="students">students</option>
-										<option value="scores">scores</option>
-										<option value="blah1">blah1</option>
-										<option value="blah2">blah2</option>
+										<option value="Quiz">Quiz</option>
+										<option value="Score">Score</option>
+										<option value="Average Score">Average Score</option>
+										<option value="Ranking">Ranking</option>
 									</select>
 
 									<input type="submit" value="Submit">
@@ -201,7 +184,7 @@
 									<!-- START TASK LIST -->
 
 									<!--Div that will hold the pie chart-->
-							    <div id="chart_div"></div>
+							    <!-- <div id="chart_div"></div> -->
 
 
 									<!--Div that will hold the bar chart-->
@@ -238,6 +221,115 @@
 				</div>
 			</div>
 			<!-- END PAGE CONTENT INNER -->
+
+			<!-- BEGIN PAGE CONTENT INNER -->
+			<div class="row margin-top-10">
+			</div>
+			<div class="row">
+			</div>
+			<div class="row">
+				<div class="col-md-6 col-sm-12">
+					<!-- BEGIN PORTLET-->
+
+					<div class="portlet light tasks-widget">
+						<div class="portlet-title">
+							<div class="caption caption-md">
+								<i class="icon-bar-chart theme-font-color hide"></i>
+								<span class="caption-subject theme-font-color bold uppercase">CHARTS</span>
+								<span class="caption-helper">1 chart</span>
+								<!-- Drop-down form -->
+								<form name="chartBuilder" action="static/frontend/indexPage/scripts/fetch.js" method="get" onsubmit="return riyadSpike()">
+
+									x-axis:
+									<select name="x-axis">
+										<option value="Quiz">Quiz</option>
+										<option value="Score">Score</option>
+										<option value="Average Score">Average Score</option>
+										<option value="Ranking">Ranking</option>
+									</select>
+
+									y-axis:
+									<select name="y-axis">
+										<option value="Quiz">Quiz</option>
+										<option value="Score">Score</option>
+										<option value="Average Score">Average Score</option>
+										<option value="Ranking">Ranking</option>
+									</select>
+
+									<input type="submit" value="Submit">
+
+								</form>
+							</div>
+						</div>
+						<!-- <div id="list">Hey, this is the area that we want the ...</div> -->
+						<div class="portlet-body">
+							<div class="task-content">
+								<div class="scroller" style="height: 282px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+									<!-- START TASK LIST -->
+
+									<!--Div that will hold the pie chart-->
+							    <div id="chart_div"></div>
+
+
+									<!--Div that will hold the bar chart-->
+							    <!-- <div id="top_x_div"></div> -->
+
+
+									<!-- <div id="list">Hey, this is the area that we want the ...</div> -->
+									<!-- {% raw %} -->
+										<!-- <script id="people-template" type="text/x-handlebars-template">
+								      {{#people}}
+								        <div class="person">
+								          <h2>{{first_name}} {{last_name}}</h2>
+								          <div class="phone">{{phone}}</div>
+								          <div class="email"><a href="mailto:{{email}}">{{email}}</a></div>
+								          <div class="since">User since {{member_since}}</div>
+								        </div>
+								      {{/people}}
+								    </script> -->
+									<!-- {% endraw %} -->
+
+							    <!-- <script src="static/generate_people.js" type="text/javascript"></script> -->
+
+									<!-- END START TASK LIST -->
+								</div>
+							</div>
+							<div class="task-footer">
+								<div class="btn-arrow-link pull-right">
+									<a href="javascript:;">See All Tasks</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- END PORTLET-->
+				</div>
+			</div>
+			<!-- END PAGE CONTENT INNER -->
+
+
+			<button type="button" onclick=queryToChart("helloFromStatsHTMLButton")>Click to Add Chart</button>
+
+
+			<!-- BEGIN HANDLEBARS SPIKE -->
+			<div id="list">Hey, this is the area that we want the ...</div>
+			{% raw %}
+			<script id="people-template" type="text/x-handlebars-template">
+					{{#people}}
+						<div class="person">
+							<h2>{{first_name}} {{last_name}}</h2>
+							<div class="phone">{{phone}}</div>
+							<div class="email"><a href="mailto:{{email}}">{{email}}</a></div>
+							<div class="since">User since {{member_since}}</div>
+						</div>
+					{{/people}}
+			</script>
+			{% endraw %}
+
+			<script src="../static/global/plugins/jquery.min.js" type="text/javascript"></script>
+			<script src="../static/frontend/indexPage/scripts/generate_people.js" type="text/javascript"></script>
+			<!-- END HANDLEBARS SPIKE -->
+
+
 		</div>
 	</div>
 	<!-- END CONTENT -->

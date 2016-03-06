@@ -6,13 +6,18 @@
 
 Parse.initialize("1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD", "kRyIxZkeC08jvlwSwbUdmBysWL9j6bLi0lB9RUan");
 
-google.charts.load('current', {'packages':['bar']});
-// google.charts.setOnLoadCallback(buildBarGraph({}, "top_x_div"));
-google.charts.setOnLoadCallback(buildBarGraph);
+
+function initializeGoogleCharts(array, divId) {
+	google.charts.load('current', {'packages':['bar']});
+	// google.charts.setOnLoadCallback(buildBarGraph([], divId));
+	google.charts.setOnLoadCallback(queryToChart);
+}
+initializeGoogleCharts([], "top_x_div");
 
 // template-code taken from the docs: https://parse.com/docs/js/guide#queries
-function queryToChart() {
-	var data_json = {}
+function queryToChart(str) {
+	console.log("queryToChart str is: " + str)
+	var data_array = []
 	console.log("In queryToChart")
 	var ChartData = Parse.Object.extend("QuizPersonalStatistics");
 	//var ChartData = Parse.Object.extend("LearningAreas");
@@ -42,11 +47,12 @@ function queryToChart() {
 			// Do something with the returned Parse.Object values
 	    for (var i = 0; i < results.length; i++) {
 	      var object = results[i];
-				// data_json.push({user: object.get('user'), quizling: object.get('quizling'), averageScore: object.get('averageScore')})
+				data_array.push({user: object.get('user'), quizling: object.get('quizling'), averageScore: object.get('averageScore')})
 				var myUser = object.get('user')
 	      console.log(object.id + ' - ' + object.get('averageScore') + ' - ' + (object.get('user')).get('username') ) ;
 	    }
-			console.log(data_json)
+			console.log(data_array)
+			buildBarGraph(data_array)
 	  },
 	  error: function(error) {
 	    alert("Error: " + error.code + " " + error.message);
@@ -71,9 +77,11 @@ function JSONize(str) {
 * @TODO Hook this up to the database (i.e. Mongo)
 * @TODO Hook this up to the front-end HTML form via GET/POST
 */
-function buildBarGraph(json, divId) {
+function buildBarGraph(json, key1, key2, divId) {
 
 	// queryToChart()
+
+	console.log("json is: " + json)
 
   var test_json = [{
     "student": "Adam",
@@ -84,11 +92,14 @@ function buildBarGraph(json, divId) {
     "score": 95
   }]
 
+	key1 = "student"
+	key2 = "score"
+
   var data = new google.visualization.arrayToDataTable([
     ['Quiz', 'Percentage'],
-    [test_json[0].student, test_json[0].score],
-    [test_json[1].student, test_json[1].score],
-    [test_json[0].student, test_json[0].score]
+    [test_json[0][key1.toString()], test_json[0][key2.toString()]],
+    [test_json[1][key1.toString()], test_json[1][key2.toString()]],
+    [test_json[0][key1.toString()], test_json[0][key2.toString()]]
   ]);
 
   var options = {
@@ -103,6 +114,8 @@ function buildBarGraph(json, divId) {
   var chart2 = new google.charts.Bar(document.getElementById(divBlah.toString()))//getElementById(divId.toString()));
   // Convert the Classic options to Material options.
   chart2.draw(data, google.charts.Bar.convertOptions(options));
+	var chart3 = new google.charts.Bar(document.getElementById("chart_div"))//getElementById(divId.toString()));
+  chart3.draw(data, google.charts.Bar.convertOptions(options));
 };
 
 function riyadSpike() {

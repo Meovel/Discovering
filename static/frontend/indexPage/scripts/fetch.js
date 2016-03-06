@@ -16,7 +16,7 @@ $(document).ready(
 		}).done(function(data) {
 			  // alert( data );
 				// loadScript("charts.js", buildBarGraph(data));
-				loadScript("charts.js", queryToChart());
+				// loadScript("charts.js", queryToChart());
 		});
 	}
 );
