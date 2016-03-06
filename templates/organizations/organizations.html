@@ -502,6 +502,7 @@
 							{{organizations[loop.index0].username}}</p>
 						</div>
 						
+			
 						<div class="back-face portlet portlet-sortable box red-sunglo" >
 								<div class="portlet-title">
 									<div class="caption" style="font-size:16px;">
@@ -512,21 +513,23 @@
 										<i class="fa fa-plus"></i> Follow </a>
 									</div>
 								</div>
+								<a href="#quizzes-wrapper">
 								<div class="portlet-body" style="height: 220px;">
+									<a href="#quizzes-wrapper">
 									<p style="font-size: 18px;">
 										 Introduction goes here.
 									</p>
+									</a>
 								</div>
 						</div>
 				</div>
-
 				{% if loop.index0 % 3 == 2 %}
 					</div>
 				{% endif %}
 			{% endfor %}
 		</div>
 	</div>
-	<div id="quizes-wrapper">
+	<div id="quizzes-wrapper">
 		<div id="quiz-search-result">		
 			<div id="quizzes-list">
 			</div>
