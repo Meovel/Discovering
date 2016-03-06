@@ -1,3 +1,4 @@
+// taken as example code, straight from https://github.com/DaweiCheng/handlebarstutor
 $(document).ready(function() {
 
   // compile our template
