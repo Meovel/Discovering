@@ -7,8 +7,8 @@
 Parse.initialize("1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD", "kRyIxZkeC08jvlwSwbUdmBysWL9j6bLi0lB9RUan");
 
 google.charts.load('current', {'packages':['bar']});
+// google.charts.setOnLoadCallback(buildBarGraph({}, "top_x_div"));
 google.charts.setOnLoadCallback(buildBarGraph);
-oogle.charts.setOnLoadCallback(buildBarGraph);
 
 // template-code taken from the docs: https://parse.com/docs/js/guide#queries
 function queryToChart() {
@@ -70,9 +70,9 @@ function JSONize(str) {
 * @TODO Hook this up to the database (i.e. Mongo)
 * @TODO Hook this up to the front-end HTML form via GET/POST
 */
-function buildBarGraph(json) {
+function buildBarGraph(json, divId) {
 
-	queryToChart()
+	// queryToChart()
 
   var test_json = [{
     "student": "Adam",
@@ -98,7 +98,8 @@ function buildBarGraph(json) {
     chart: { subtitle: 'scores by percentage' }
   };
 
-  var chart2 = new google.charts.Bar(document.getElementById('top_x_div'));
+	var divBlah = "top_x_div"
+  var chart2 = new google.charts.Bar(document.getElementById(divBlah.toString()))//getElementById(divId.toString()));
   // Convert the Classic options to Material options.
   chart2.draw(data, google.charts.Bar.convertOptions(options));
 };
