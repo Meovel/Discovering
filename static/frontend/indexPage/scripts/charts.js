@@ -34,12 +34,6 @@ function queryToChart(str) {
 	query.limit(100);
 	query.include("user");
 	query.include("quizling");
-	// query.equalTo("objectId", "95aSXQ3xMo")
-	// query.equalTo("objectId", {
-	// 	"__type": "Pointer",
-	// 	"className": "ChartData",
-	// 	"objectId": "WrWZRnIDbv"
-	// });
 	query.find({
 	  success: function(results) {
 	    alert("Successfully retrieved " + results.length + " entries.");
@@ -47,12 +41,15 @@ function queryToChart(str) {
 			// Do something with the returned Parse.Object values
 	    for (var i = 0; i < results.length; i++) {
 	      var object = results[i];
-				data_array.push({user: object.get('user'), quizling: object.get('quizling'), averageScore: object.get('averageScore')})
+				if(object.get('quizling') == null) continue
+				// console.log("results[i].get('quizling'): " + results[i].get('quizling'))
+				// console.log("results[i].toJson: " + results[i].toJson)
+				data_array.push({user: object.get('user').get('username'), quizling: object.get('quizling').get('name'), averageScore: object.get('averageScore')})
 				var myUser = object.get('user')
 	      console.log(object.id + ' - ' + object.get('averageScore') + ' - ' + (object.get('user')).get('username') ) ;
 	    }
 			console.log(data_array)
-			buildBarGraph(data_array)
+			buildBarGraph(data_array, "quizling", "averageScore")
 	  },
 	  error: function(error) {
 	    alert("Error: " + error.code + " " + error.message);
@@ -61,7 +58,7 @@ function queryToChart(str) {
 }
 
 /**
-* from http://stackoverflow.com/questions/9036429/convert-object-string-to-json
+* from http://stackoverflow.com/questions/9036429/convert-object-string-to-json_array
 */
 function JSONize(str) {
   return str
@@ -73,34 +70,23 @@ function JSONize(str) {
 
 /**
 * @description This should simply build the bar graph (i.e. of student-score data)
-* @param json – This should be passed in from the database
+* @param json_array – This should be passed in from the database
 * @TODO Hook this up to the database (i.e. Mongo)
 * @TODO Hook this up to the front-end HTML form via GET/POST
 */
-function buildBarGraph(json, key1, key2, divId) {
+function buildBarGraph(json_array, key1, key2, divId) {
 
-	// queryToChart()
+	divId = "chart_div"
 
-	console.log("json is: " + json)
+	var charts_array = []
+	charts_array.push(['Quiz', 'Percentage'])
+	for(var i = 0; i < json_array.length; i++) {
+		charts_array.push(
+			[json_array[i][key1.toString()], json_array[i][key2.toString()]]
+		)
+	}
 
-  var test_json = [{
-    "student": "Adam",
-    "score": 100
-  },
-  {
-    "student": "Brian",
-    "score": 95
-  }]
-
-	key1 = "student"
-	key2 = "score"
-
-  var data = new google.visualization.arrayToDataTable([
-    ['Quiz', 'Percentage'],
-    [test_json[0][key1.toString()], test_json[0][key2.toString()]],
-    [test_json[1][key1.toString()], test_json[1][key2.toString()]],
-    [test_json[0][key1.toString()], test_json[0][key2.toString()]]
-  ]);
+	var data = new google.visualization.arrayToDataTable(charts_array);
 
   var options = {
     title: 'Peformance History',
@@ -114,7 +100,7 @@ function buildBarGraph(json, key1, key2, divId) {
   var chart2 = new google.charts.Bar(document.getElementById(divBlah.toString()))//getElementById(divId.toString()));
   // Convert the Classic options to Material options.
   chart2.draw(data, google.charts.Bar.convertOptions(options));
-	var chart3 = new google.charts.Bar(document.getElementById("chart_div"))//getElementById(divId.toString()));
+	var chart3 = new google.charts.Bar(document.getElementById(divId.toString()))
   chart3.draw(data, google.charts.Bar.convertOptions(options));
 };
 
