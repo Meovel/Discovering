@@ -51,9 +51,10 @@ def login():
         except:
             flash('Incorrect username or password', 'info')
         # login_user(user)
-        return redirect(url_for("organizations"))
+        return redirect(url_for("/organizations/organizations"))
     return render_template('login.html')
 
+############################### Dashboard ###############################
 
 @manager.route('/organizations')
 def organizations():
@@ -62,9 +63,63 @@ def organizations():
     organizations = _User.Query.all().filter(type="org")
 
     # render page
-    return render_template("organizations.html",
-        organizations = organizations,
-        organizationsCount = len(organizations))
+    return render_template("organizations/organizations.html",
+        organizations = organizations)
+
+@manager.route('/quiz/<organizationName>')
+def quiz(organizationName = None):
+    quizzes = Quizling.Query.all().filter(ownerName = organizationName)
+    print "============="
+
+    if(len(quizzes) == 0):
+        return jsonify(result = None)
+    else:
+        return jsonify(result = serialize(quizzes))
+
+@manager.route("/follow/<organizationId>")
+def follow(organizationId = None):
+    print("=======================")
+
+    organizationId = organizationId
+    subscriberId = "seGQaKSk1O"
+    #find subscriber and organization
+    organization = _User.Query.get(objectId = organizationId)
+    subscriber = _User.Query.get(objectId = subscriberId)
+
+    type = request.args.get('type', 0, type=str)    
+
+    # save the follow relation
+    if type == "follow":
+        following = Following()
+        following.subscriber = subscriber
+        following.user = organization
+
+        following.save()
+
+    # cancel follow relation
+    elif type == "cancel":
+        following = Following.Query.get(subscriber = subscriber, user = organization)
+        following.delete()
+
+    return jsonify(result = "success")
+
+
+# serialize ParseObject so that it can be jsonify
+def serialize(quizzes):
+    ret = dict()
+
+    for quiz in quizzes:
+        temp = dict()
+        temp["ownerName"] = quiz.ownerName
+        temp["name"] = quiz.name
+        temp["summary"] = quiz.summary
+
+        ret[quiz.objectId] = temp
+
+    return ret
+
+
+############################### End Of Dashboard ###############################
 
 
 def getQuizHistory(userName):
