@@ -28,6 +28,7 @@ function queryToChart() {
     });
 	query.limit(100);
 	query.include("user");
+	query.include("quizling");
 	// query.equalTo("objectId", "95aSXQ3xMo")
 	// query.equalTo("objectId", {
 	// 	"__type": "Pointer",
