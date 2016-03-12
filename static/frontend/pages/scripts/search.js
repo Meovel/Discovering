@@ -31,6 +31,17 @@ $(document).ready(function(){
 				$("#quizList").html(quizListToHTML(JSON.parse(data)));
 			});
 		});
+		$( "#filter-age" ).change(function () {
+			var val = $( "#filter-age option:selected" ).attr("value");
+			$.ajax({
+				url: "/filterAge",
+				method: "POST",
+				dataType: "Text",
+				data: val
+			}).done(function(data){
+				$("#quizList").html(quizListToHTML(JSON.parse(data)));
+			});
+		});
 	}
 );
 

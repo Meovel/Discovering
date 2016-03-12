@@ -37,6 +37,17 @@
                     <h1>Search result for "{{ keyword }}"</h1>
                 </div>
                 <select class="bs-select form-control input-small" data-style="blue" style="float: right"
+                        action="search" method="GET" id="filter-age">
+                    <option class="submit" value="I04ixPfRWc">All ages</option>
+                    <option class="submit" value="VSPu1uuEkA">College</option>
+                    <option class="submit" value="Vtg619ROOD">Lote</option>
+                    <option class="submit" value="2RAYY4HHog">Special Ed</option>
+                    <option class="submit" value="ql2ZRMPwFO">10 - 12</option>
+                    <option class="submit" value="eKz3CmF3yz">7 - 9</option>
+                    <option class="submit" value="hmVk0zfWeJ">4 - 6</option>
+                    <option class="submit" value="6iWGrYG6G4">K - 3</option>
+                </select>
+                <select class="bs-select form-control input-small" data-style="blue" style="float: right"
                         action="search" method="GET" id="filter">
                     <option class="submit" value="95aSXQ3xMo">Literature</option>
                     <option class="submit" value="B27UMxa7DN">Humanities</option>
@@ -77,7 +88,9 @@
 								</div>
 							</div>
 							<div style="height:25px; margin-top:25px">
-								<button class="btn blue btn-block">Play</button>
+                                <a href="http://webplay.quizlingapp.com/app#/quizzes/{{quiz.objectId}}">
+								<button class="btn blue btn-block">Play
+                                </button></a>
 							</div>
 						</div>
 						<!-- END PORTLET-->
