@@ -34,6 +34,10 @@ class Quizling(Object):
 class LearningAreas(Object):
     pass
 
+
+class LearningStage(Object):
+    pass
+
 org_info_parse = "Random"
 
 Quizzes = Quizling.Query.all().filter().limit(300)
@@ -183,17 +187,30 @@ def filterArea():
     areaName = request.form.keys()[0]
     global kw
     global result
-    print request.query_string
     area = LearningAreas.Query.get(objectId=areaName)
     filteredResult = []
     for quiz in result:
         if hasattr(quiz, 'area'):
             if quiz.area.objectId == area.objectId:
                 filteredResult.append(quiz)
-    return makeJSONquizzes(filteredResult, areaName)
+    return makeJSONquizzes(filteredResult)
 
 
-def makeJSONquizzes(quizzes, area):
+@manager.route('/filterAge', methods=['POST'])
+def filterAge():
+    ageId = request.form.keys()[0]
+    global kw
+    global result
+    age = LearningStage.Query.get(objectId=ageId)
+    filteredResult = []
+    for quiz in result:
+        if hasattr(quiz, 'stage'):
+            if quiz.stage.objectId == age.objectId:
+                filteredResult.append(quiz)
+    return makeJSONquizzes(filteredResult)
+
+
+def makeJSONquizzes(quizzes):
     response = dict()
     data = []
     index = 0
@@ -211,7 +228,6 @@ def makeJSONquizzes(quizzes, area):
             qjson['questionCount'] = quiz.questionCount
         else:
             qjson['questionCount'] = 0
-        qjson['area'] = area
         data.append(qjson)
     response['data'] = data
     return json.dumps(response)
