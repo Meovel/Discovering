@@ -41,8 +41,14 @@ class LearningStage(Object):
 org_info_parse = "Random"
 
 Quizzes = Quizling.Query.all().filter().limit(300)
+for q in Quizzes:
+    if not hasattr(q, 'averageScore'):
+        q.averageScore = 0
+    if not hasattr(q, 'playCount'):
+        q.playCount = 0
 kw = ''
 result = []
+filteredResult = []
 
 
 @manager.route('/', methods=['GET', 'POST'])
@@ -187,6 +193,7 @@ def filterArea():
     areaName = request.form.keys()[0]
     global kw
     global result
+    global filteredResult
     area = LearningAreas.Query.get(objectId=areaName)
     filteredResult = []
     for quiz in result:
@@ -231,6 +238,26 @@ def makeJSONquizzes(quizzes):
         data.append(qjson)
     response['data'] = data
     return json.dumps(response)
+
+
+@manager.route('/sortQuizzes', methods=['POST'])
+def sort():
+    global result
+    global filteredResult
+    if not filteredResult:
+        filteredResult = result
+
+    attr = request.form.keys()[0]
+    if attr == 'name':
+        filteredResult.sort(key=lambda x: x.name, reverse=True)
+    if attr == 'updatedAt':
+        filteredResult.sort(key=lambda x: x.updatedAt, reverse=True)
+    if attr == 'averageScore':
+        filteredResult.sort(key=lambda x: x.averageScore, reverse=True)
+    if attr == 'playCount':
+        filteredResult.sort(key=lambda x: x.playCount, reverse=True)
+
+    return makeJSONquizzes(filteredResult)
 
 
 @manager.route('/testing', methods=['POST'])

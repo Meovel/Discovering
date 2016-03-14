@@ -36,28 +36,47 @@
                 <div class="page-title">
                     <h1>Search result for "{{ keyword }}"</h1>
                 </div>
-                <select class="bs-select form-control input-small" data-style="blue" style="float: right"
-                        action="search" method="GET" id="filter-age">
-                    <option class="submit" value="I04ixPfRWc">All ages</option>
-                    <option class="submit" value="VSPu1uuEkA">College</option>
-                    <option class="submit" value="Vtg619ROOD">Lote</option>
-                    <option class="submit" value="2RAYY4HHog">Special Ed</option>
-                    <option class="submit" value="ql2ZRMPwFO">10 - 12</option>
-                    <option class="submit" value="eKz3CmF3yz">7 - 9</option>
-                    <option class="submit" value="hmVk0zfWeJ">4 - 6</option>
-                    <option class="submit" value="6iWGrYG6G4">K - 3</option>
-                </select>
-                <select class="bs-select form-control input-small" data-style="blue" style="float: right"
-                        action="search" method="GET" id="filter">
-                    <option class="submit" value="95aSXQ3xMo">Literature</option>
-                    <option class="submit" value="B27UMxa7DN">Humanities</option>
-                    <option class="submit" value="jiOhl8H1AD">STEM</option>
-                    <option class="submit" value="gFuZJIxNOX">Arts & Music</option>
-                    <option class="submit" value="20a1SGKdV6">General Knowledge</option>
-                    <option class="submit" value="yXP2YI0cLN">Civics</option>
-                    <option class="submit" value="3ZtI62iDmf">Sport & Health</option>
-                    <option class="submit" value="QGSYXQTaly">Pop-Culture</option>
-                </select>
+                <div class="btn-group" style="float: right">
+                    <button type="button" class="btn blue">Age</button>
+                    <button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
+                    <ul class="dropdown-menu" role="menu" data-style="blue" style="float: right"
+                            action="search" method="GET" id="filter-age">
+                        <li class="submit" value="I04ixPfRWc"><a href="javascript:;">All ages</a></li>
+                        <li class="submit" value="VSPu1uuEkA"><a href="javascript:;">College</a></li>
+                        <li class="submit" value="Vtg619ROOD"><a href="javascript:;">Lote</a></li>
+                        <li class="submit" value="2RAYY4HHog"><a href="javascript:;">Special Ed</a></li>
+                        <li class="submit" value="ql2ZRMPwFO"><a href="javascript:;">10 - 12</a></li>
+                        <li class="submit" value="eKz3CmF3yz"><a href="javascript:;">7 - 9</a></li>
+                        <li class="submit" value="hmVk0zfWeJ"><a href="javascript:;">4 - 6</a></li>
+                        <li class="submit" value="6iWGrYG6G4"><a href="javascript:;">K - 3</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group" style="float: right">
+                    <button type="button" class="btn blue">Area</button>
+                    <button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
+                    <ul class="dropdown-menu" role="menu" data-style="blue" style="float: right"
+                            action="search" method="GET" id="filter">
+                        <li class="submit" value="95aSXQ3xMo"><a href="javascript:;">Literature</a></li>
+                        <li class="submit" value="B27UMxa7DN"><a href="javascript:;">Humanities</a></li>
+                        <li class="submit" value="jiOhl8H1AD"><a href="javascript:;">STEM</a></li>
+                        <li class="submit" value="gFuZJIxNOX"><a href="javascript:;">Arts & Music</a></li>
+                        <li class="submit" value="20a1SGKdV6"><a href="javascript:;">General Knowledge</a></li>
+                        <li class="submit" value="yXP2YI0cLN"><a href="javascript:;">Civics</a></li>
+                        <li class="submit" value="3ZtI62iDmf"><a href="javascript:;">Sport & Health</a></li>
+                        <li class="submit" value="QGSYXQTaly"><a href="javascript:;">Pop-Culture</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group" style="float: right">
+                    <button type="button" class="btn green">Sort</button>
+                    <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
+                    <ul class="dropdown-menu" role="menu" data-style="green" style="float: right"
+                            action="sort" method="GET" id="sort">
+                        <li class="submit" value="name"><a href="javascript:;">Name</a></li>
+                        <li class="submit" value="updatedAt"><a href="javascript:;">Time</a></li>
+                        <li class="submit" value="averageScore"><a href="javascript:;">Average</a></li>
+                        <li class="submit" value="playCount"><a href="javascript:;">Popularity</a></li>
+                    </ul>
+                </div>
             </div>
 			<div id="quizList">
             <!-- BEGIN QUIZ SHOW-->
@@ -99,6 +118,7 @@
 				</div>
             {% endif %}
             {% endfor %}
+            </div>
             <!-- END QUIZ SHOW-->
         </div>
     </div>
@@ -120,10 +140,11 @@
 <script>
     jQuery(document).ready(function () {
 //        // initiate layout and plugins
-//        Metronic.init(); // init metronic core components
+        Metronic.init(); // init metronic core components
         Layout.init(); // init current layout
-//        Demo.init(); // init demo features
+        Demo.init(); // init demo features
 //        ComponentsContextMenu.init(); // init context menu demo
+        UIGeneral.init();
     });
 </script>
 <!-- END GOOGLE RECAPTCHA -->
