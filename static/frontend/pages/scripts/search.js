@@ -20,8 +20,10 @@ function quizListToHTML(jobj){
 
 
 $(document).ready(function(){
-		$( "#filter" ).change(function () {
-			var val = $( "#filter option:selected" ).attr("value");
+		$( "#areaFilter" ).children(".dropdown-menu").children(".submit").click(function () {
+			var val = $(this).attr("data-value");
+			var name = $(this).children().html();
+			$("#areaFilter").children("#dropDownDisplay").html(name);
 			$.ajax({
 				url: "/filterArea",
 				method: "POST",
@@ -31,10 +33,25 @@ $(document).ready(function(){
 				$("#quizList").html(quizListToHTML(JSON.parse(data)));
 			});
 		});
-		$( "#filter-age" ).change(function () {
-			var val = $( "#filter-age option:selected" ).attr("value");
+		$( "#ageFilter" ).children(".dropdown-menu").children(".submit").click(function () {
+			var val = $(this).attr("data-value");
+			var name = $(this).children().html();
+			$("#ageFilter").children("#dropDownDisplay").html(name);
 			$.ajax({
 				url: "/filterAge",
+				method: "POST",
+				dataType: "Text",
+				data: val
+			}).done(function(data){
+				$("#quizList").html(quizListToHTML(JSON.parse(data)));
+			});
+		});
+		$("#sortResult").children(".dropdown-menu").children(".submit").click(function(){
+			var val = $(this).attr("data-value");
+			var name = $(this).children().html();
+			$("#sortResult").children("#dropDownDisplay").html(name);
+			$.ajax({
+				url: "/sortQuizzes",
 				method: "POST",
 				dataType: "Text",
 				data: val
