@@ -37,10 +37,10 @@
                     <h1>Search result for "{{ keyword }}"</h1>
                 </div>
                 <div class="btn-group" style="float: right" id="ageFilter">
-                    <button type="button" class="btn blue" id="dropDownDisplay">Age</button>
-                    <button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
-                    <ul class="dropdown-menu" role="menu" data-style="blue" style="float: right"
-                            action="search" method="GET" id="filter-age">
+                    <button type="button" class="btn purple" id="dropDownDisplay">Age</button>
+                    <button type="button" class="btn purple dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
+                    <ul class="dropdown-menu" role="menu" data-style="purple" style="float: right"
+                            action="" method="GET" id="filter-age">
                         <li class="submit" data-value="I04ixPfRWc"><a href="javascript:;">All ages</a></li>
                         <li class="submit" data-value="VSPu1uuEkA"><a href="javascript:;">College</a></li>
                         <li class="submit" data-value="Vtg619ROOD"><a href="javascript:;">Lote</a></li>
@@ -52,10 +52,10 @@
                     </ul>
                 </div>
                 <div class="btn-group" style="float: right" id="areaFilter">
-                    <button type="button" class="btn blue" id="dropDownDisplay">Area</button>
-                    <button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
-                    <ul class="dropdown-menu" role="menu" data-style="blue" style="float: right"
-                            action="search" method="GET" id="filter">
+                    <button type="button" class="btn purple" id="dropDownDisplay">Area</button>
+                    <button type="button" class="btn purple dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
+                    <ul class="dropdown-menu" role="menu" data-style="purple" style="float: right"
+                            action="" method="GET" id="filter">
                         <li class="submit" data-value="95aSXQ3xMo"><a href="javascript:;">Literature</a></li>
                         <li class="submit" data-value="B27UMxa7DN"><a href="javascript:;">Humanities</a></li>
                         <li class="submit" data-value="jiOhl8H1AD"><a href="javascript:;">STEM</a></li>
@@ -80,6 +80,7 @@
             </div>
 			<div id="quizList">
             <!-- BEGIN QUIZ SHOW-->
+                <br/>
 				{% for quiz in quiz_list %}
 				{% if loop.index % 3 == 0 %}
 				<div class="row">
@@ -141,7 +142,7 @@
     jQuery(document).ready(function () {
 //        // initiate layout and plugins
         Metronic.init(); // init metronic core components
-        //Layout.init(); // init current layout
+        Layout.init(); // init current layout
         //Demo.init(); // init demo features
 //        ComponentsContextMenu.init(); // init context menu demo
         //UIGeneral.init();
@@ -151,5 +152,5 @@
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->
-A
+
 </html>
