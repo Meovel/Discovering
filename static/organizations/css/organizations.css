@@ -6,3 +6,7 @@
 	-moz-border-radius: 50%;
 	border: 3px solid #cccccc;
 }
+
+.btn-group {
+	margin-left: 5px;
+}
