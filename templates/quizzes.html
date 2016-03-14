@@ -36,45 +36,45 @@
                 <div class="page-title">
                     <h1>Search result for "{{ keyword }}"</h1>
                 </div>
-                <div class="btn-group" style="float: right">
-                    <button type="button" class="btn blue">Age</button>
+                <div class="btn-group" style="float: right" id="ageFilter">
+                    <button type="button" class="btn blue" id="dropDownDisplay">Age</button>
                     <button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
                     <ul class="dropdown-menu" role="menu" data-style="blue" style="float: right"
                             action="search" method="GET" id="filter-age">
-                        <li class="submit" value="I04ixPfRWc"><a href="javascript:;">All ages</a></li>
-                        <li class="submit" value="VSPu1uuEkA"><a href="javascript:;">College</a></li>
-                        <li class="submit" value="Vtg619ROOD"><a href="javascript:;">Lote</a></li>
-                        <li class="submit" value="2RAYY4HHog"><a href="javascript:;">Special Ed</a></li>
-                        <li class="submit" value="ql2ZRMPwFO"><a href="javascript:;">10 - 12</a></li>
-                        <li class="submit" value="eKz3CmF3yz"><a href="javascript:;">7 - 9</a></li>
-                        <li class="submit" value="hmVk0zfWeJ"><a href="javascript:;">4 - 6</a></li>
-                        <li class="submit" value="6iWGrYG6G4"><a href="javascript:;">K - 3</a></li>
+                        <li class="submit" data-value="I04ixPfRWc"><a href="javascript:;">All ages</a></li>
+                        <li class="submit" data-value="VSPu1uuEkA"><a href="javascript:;">College</a></li>
+                        <li class="submit" data-value="Vtg619ROOD"><a href="javascript:;">Lote</a></li>
+                        <li class="submit" data-value="2RAYY4HHog"><a href="javascript:;">Special Ed</a></li>
+                        <li class="submit" data-value="ql2ZRMPwFO"><a href="javascript:;">10 - 12</a></li>
+                        <li class="submit" data-value="eKz3CmF3yz"><a href="javascript:;">7 - 9</a></li>
+                        <li class="submit" data-value="hmVk0zfWeJ"><a href="javascript:;">4 - 6</a></li>
+                        <li class="submit" data-value="6iWGrYG6G4"><a href="javascript:;">K - 3</a></li>
                     </ul>
                 </div>
-                <div class="btn-group" style="float: right">
-                    <button type="button" class="btn blue">Area</button>
+                <div class="btn-group" style="float: right" id="areaFilter">
+                    <button type="button" class="btn blue" id="dropDownDisplay">Area</button>
                     <button type="button" class="btn blue dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
                     <ul class="dropdown-menu" role="menu" data-style="blue" style="float: right"
                             action="search" method="GET" id="filter">
-                        <li class="submit" value="95aSXQ3xMo"><a href="javascript:;">Literature</a></li>
-                        <li class="submit" value="B27UMxa7DN"><a href="javascript:;">Humanities</a></li>
-                        <li class="submit" value="jiOhl8H1AD"><a href="javascript:;">STEM</a></li>
-                        <li class="submit" value="gFuZJIxNOX"><a href="javascript:;">Arts & Music</a></li>
-                        <li class="submit" value="20a1SGKdV6"><a href="javascript:;">General Knowledge</a></li>
-                        <li class="submit" value="yXP2YI0cLN"><a href="javascript:;">Civics</a></li>
-                        <li class="submit" value="3ZtI62iDmf"><a href="javascript:;">Sport & Health</a></li>
-                        <li class="submit" value="QGSYXQTaly"><a href="javascript:;">Pop-Culture</a></li>
+                        <li class="submit" data-value="95aSXQ3xMo"><a href="javascript:;">Literature</a></li>
+                        <li class="submit" data-value="B27UMxa7DN"><a href="javascript:;">Humanities</a></li>
+                        <li class="submit" data-value="jiOhl8H1AD"><a href="javascript:;">STEM</a></li>
+                        <li class="submit" data-value="gFuZJIxNOX"><a href="javascript:;">Arts & Music</a></li>
+                        <li class="submit" data-value="20a1SGKdV6"><a href="javascript:;">General Knowledge</a></li>
+                        <li class="submit" data-value="yXP2YI0cLN"><a href="javascript:;">Civics</a></li>
+                        <li class="submit" data-value="3ZtI62iDmf"><a href="javascript:;">Sport & Health</a></li>
+                        <li class="submit" data-value="QGSYXQTaly"><a href="javascript:;">Pop-Culture</a></li>
                     </ul>
                 </div>
-                <div class="btn-group" style="float: right">
-                    <button type="button" class="btn green">Sort</button>
+                <div class="btn-group" style="float: right" id="sortResult">
+                    <button type="button" class="btn green" id="dropDownDisplay">Sort</button>
                     <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
                     <ul class="dropdown-menu" role="menu" data-style="green" style="float: right"
                             action="sort" method="GET" id="sort">
-                        <li class="submit" value="name"><a href="javascript:;">Name</a></li>
-                        <li class="submit" value="updatedAt"><a href="javascript:;">Time</a></li>
-                        <li class="submit" value="averageScore"><a href="javascript:;">Average</a></li>
-                        <li class="submit" value="playCount"><a href="javascript:;">Popularity</a></li>
+                        <li class="submit" data-value="name"><a href="javascript:;">Name</a></li>
+                        <li class="submit" data-value="updatedAt"><a href="javascript:;">Time</a></li>
+                        <li class="submit" data-value="averageScore"><a href="javascript:;">Average</a></li>
+                        <li class="submit" data-value="playCount"><a href="javascript:;">Popularity</a></li>
                     </ul>
                 </div>
             </div>
@@ -141,14 +141,15 @@
     jQuery(document).ready(function () {
 //        // initiate layout and plugins
         Metronic.init(); // init metronic core components
-        Layout.init(); // init current layout
-        Demo.init(); // init demo features
+        //Layout.init(); // init current layout
+        //Demo.init(); // init demo features
 //        ComponentsContextMenu.init(); // init context menu demo
-        UIGeneral.init();
+        //UIGeneral.init();
     });
 </script>
 <!-- END GOOGLE RECAPTCHA -->
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->
+A
 </html>

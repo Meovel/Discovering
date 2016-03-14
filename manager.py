@@ -260,9 +260,5 @@ def sort():
     return makeJSONquizzes(filteredResult)
 
 
-@manager.route('/testing', methods=['POST'])
-def ajaxResponse():
-    return getMongoQuizHistory('test_user_name')
-
 if __name__ == '__main__':
     manager.run(debug=True)
