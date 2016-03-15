@@ -139,11 +139,11 @@ def getQuizHistory(userName):
 
 
 @manager.route('/quizzes/<org_name>')
-def quizzes(org_name=None, quiz_list=None, keyword=None):
+def quizzes(org_name=None, user_list=None, quiz_list=None, keyword=None):
     if org_name:
         quiz_list = Quizling.Query.filter(ownerName=org_name)
     try:
-        return render_template('quizzes.html', quiz_list=quiz_list, keyword=keyword)
+        return render_template('quizzes.html', user_list=user_list, quiz_list=quiz_list, keyword=keyword)
     except HTTPException as e:
         return "error page"
 
@@ -168,7 +168,9 @@ def stats():
 def search():
     keyword = request.query_string[6:]
     quiz_list = searchKeyword(keyword)
-    return quizzes(quiz_list=quiz_list, keyword=keyword)
+    users = _User.Query.filter(username=keyword)
+    return quizzes(user_list=users, quiz_list=quiz_list, keyword=keyword)
+
 
 
 def searchKeyword(keyword):
