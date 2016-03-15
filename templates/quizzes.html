@@ -21,7 +21,7 @@
 <!-- END HEAD -->
 
 <!-- BEGIN BODY -->
-<body class="page-md page-header-fixed">
+<body class="page-md page-header-fixed page-sidebar-closed-hide-logo">
 <!-- BEGIN HEADER -->
 {% include "navbar.html" %}
 <!-- END HEADER -->
@@ -31,7 +31,7 @@
 <div class="page-container">
     <!-- BEGIN CONTENT -->
     <div class="page-content-wrapper">
-        <div class="page-content">
+        <div class="page-content" style="margin-left: 0">
             <div class="page-head">
                 <div class="page-title">
                     <h1>Search result for "{{ keyword }}"</h1>
@@ -78,11 +78,51 @@
                     </ul>
                 </div>
             </div>
+                <br/>
+            <hr/>
+                {% if user_list %}
+            <h2>User</h2>
+                {% for user in user_list %}
+				{% if loop.index % 3 == 1 %}
+				<div class="row">
+					{% endif %}
+                    <div class="col-md-4">
+                <!-- BEGIN PORTLET-->
+						<div class="portlet light" style="min-height: 0">
+							<div class="portlet-title">
+								<div class="caption font-purple-plum">
+									<img class="organization_avatar" src="../../static/admin/layout/img/avatar9.jpg">
+									<span class="caption-subject bold uppercase">{{user.username}}</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div id="context" data-toggle="context" data-target="#context-menu">
+                                    <p>
+									</p>
+								</div>
+							</div>
+							<div>
+                                <a href="" style="text-decoration: none;">
+								<button class="btn green btn-block">Follow
+                                </button></a>
+							</div>
+						</div>
+						<!-- END PORTLET-->
+                        </div>
+                    {% if loop.index % 3 == 0 %}
+				</div>
+            {% endif %}
+                {% endfor %}
+</div>
+        <hr/>
+                {% endif %}
+
+<h2>Quiz</h2>
 			<div id="quizList">
             <!-- BEGIN QUIZ SHOW-->
                 <br/>
 				{% for quiz in quiz_list %}
-				{% if loop.index % 3 == 0 %}
+				{% if loop.index % 3 == 1 %}
 				<div class="row">
 					{% endif %}
 					<div class="col-md-4">
@@ -98,6 +138,14 @@
 							</div>
 							<div class="portlet-body">
 								<div id="context" data-toggle="context" data-target="#context-menu">
+                                    <p>
+                                        <span class="creator">Creator</span>: {{quiz.ownerName}}
+                                    </p>
+                                    <p>
+                                        <span>Plays: {{quiz.playCount}}</span>
+                                        <span style="float: right">Avg: {{quiz.averageScore}}</span>
+                                    </p>
+                                    <hr/>
 									<p>
 										{% if quiz.summary %}
 										{{quiz.summary}}
@@ -107,8 +155,8 @@
 									</p>
 								</div>
 							</div>
-							<div style="height:25px; margin-top:25px">
-                                <a href="http://webplay.quizlingapp.com/app#/quizzes/{{quiz.objectId}}">
+							<div class="playButton">
+                                <a href="http://webplay.quizlingapp.com/app#/quizzes/{{quiz.objectId}}" style="text-decoration: none;">
 								<button class="btn blue btn-block">Play
                                 </button></a>
 							</div>
