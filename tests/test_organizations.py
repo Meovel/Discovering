@@ -8,6 +8,7 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 from manager import quiz
+from manager import serialize
 # from manager import organizations
 
 # Parse setting
@@ -41,8 +42,20 @@ class TestOrganizations(unittest.TestCase):
 		self.assertEqual(quiz1.name, "Mathematics")	
 		self.assertEqual(quiz2.name, "Science")
 		self.assertEqual(quiz5.name, "Weird Animals are Weird")	
-	
-	def test_organizations3(self):
+		# find the follow organizations
+		organizationName = "dtl"
+		quizzes = Quizling.Query.all().filter(ownerName = organizationName)
+		result = serialize(quizzes)
+		self.assertFalse(result.has_key("BibkfMywdy"))
+		self.assertFalse(result.has_key("9dpqwKxgze"))
+		self.assertFalse(result.has_key("khiIVpFi8C"))
+		
+		organizationName = "dev10"
+		quizzes = Quizling.Query.all().filter(ownerName = organizationName)
+		result = serialize(quizzes)
+		self.assertFalse(result.has_key("BibkfMywdy"))
+		self.assertFalse(result.has_key("9dpqwKxgze"))
+		self.assertFalse(result.has_key("khiIVpFi8C"))		
 			
 
 if __name__ == '__main__':
