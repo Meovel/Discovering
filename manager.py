@@ -38,6 +38,11 @@ class LearningAreas(Object):
 class LearningStage(Object):
     pass
 
+
+class Following(Object):
+    pass
+
+
 org_info_parse = "Random"
 
 Quizzes = Quizling.Query.all().filter().limit(300)
@@ -57,6 +62,99 @@ def login():
         # login_user(user)
         return redirect(url_for("organizations"))
     return render_template('login.html')
+
+
+############################### Index ###############################
+'''
+    1. show recommanded quizzes
+        a. find the follow organizations
+        b. find the quizzes of the organizations
+        c. find top 3 category of quizzes
+        d. recommanded from the top 3 category
+    2. show channels
+        a. render channels
+        b. show quizzes of organzations when organizations clicked
+'''
+
+@manager.route('/index')
+def index():
+    print "================ Index ================"
+
+    # return variables
+    categories = []
+    retQuizzes = []
+
+
+    # get the current user
+    clientId = "tWv8MQspc5"
+    client = _User.Query.get(objectId = clientId)
+
+    print "client name: " + client.username
+
+    # find the follow organizations
+    follows = Following.Query.all().filter(subscriber = client)
+    print "follow length: " + str(len(follows))
+
+    followedOrgs = []
+    for follow in follows:
+        followedOrgs.append(follow.user)
+
+    
+    # get the quiz category dictionary
+    quizzesCount = quizzesOfFollowedOrgs(followedOrgs)
+    #quizzesCount = dict()
+
+    count = 0
+    for categoryId in sorted(quizzesCount, key=quizzesCount.get, reverse=True):
+        if count == 3:
+            break
+
+        category = LearningAreas.Query.get(objectId = categoryId)
+
+        # add to categories
+        categories.append(category.name)
+
+        # find the quizzes of this category
+        quizzesTemp = Quizling.Query.all().filter(area = category).limit(8)
+        retQuizzes.append(quizzesTemp)
+
+        count += 1
+
+    print "========================================"
+
+    return render_template("index.html",
+        categories = categories,
+        quizzes = retQuizzes,
+        lengthOne = len(retQuizzes[0]),
+        lengthTwo = len(retQuizzes[1]),
+        lengthThree = len(retQuizzes[2]));
+
+
+def quizzesOfFollowedOrgs(followedOrgs):
+    quizzesCount = dict()
+
+    count = 0
+    for org in followedOrgs:
+        quizzes = Quizling.Query.all().filter(ownerName = org.username)
+
+        if(len(quizzes) != 0):
+            count += 1
+
+        if count == 5:
+            break
+
+        for quiz in quizzes:
+            if hasattr(quiz, "area"):
+                if quiz.area.name not in quizzesCount:
+                    quizzesCount[quiz.area.objectId] = 1
+                else:
+                    quizzesCount[quiz.area.objectId] += 1
+
+    return quizzesCount
+
+# def getChannels():
+
+############################### End of Index ###############################
 
 ############################### Dashboard ###############################
 
