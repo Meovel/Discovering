@@ -123,7 +123,7 @@ def serialize(quizzes):
         temp["ownerName"] = quiz.ownerName
         temp["name"] = quiz.name
         temp["summary"] = quiz.summary
-
+		
         ret[quiz.objectId] = temp
 
     return ret
@@ -237,6 +237,7 @@ def makeJSONquizzes(quizzes):
             qjson['questionCount'] = quiz.questionCount
         else:
             qjson['questionCount'] = 0
+        qjson['avgScore'] = quiz.averageScore
         data.append(qjson)
     response['data'] = data
     return json.dumps(response)
