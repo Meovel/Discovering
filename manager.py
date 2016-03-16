@@ -66,7 +66,7 @@ def login():
         except:
             flash('Incorrect username or password', 'info')
         # login_user(user)
-        return redirect(url_for("organizations"))
+        return redirect(url_for("index"))
     return render_template('login.html')
 
 
