@@ -94,13 +94,19 @@
 													</div>
 													<div class="actions">
 														<a href="" class="follow-btn btn btn-default btn-sm">
-														<i class="fa fa-plus"></i> Follow </a>
+														Take Quiz </a>
 													</div>
 											</div>
 											<a href="#quizzes-wrapper">
 												<div class="portlet-body" style="height: 220px;">
 													<a href="#quizzes-wrapper">
-													<p style="font-size: 18px;">Introduction goes here.</p></a>
+													<p style="font-size: 18px;">
+														{% if quiz.summary %}
+															{{quiz.summary}}
+														{% else %}
+															This quiz currently has no introduction
+														{% endif %}
+													</p></a>
 												</div>
 											</div>
 											
@@ -125,13 +131,19 @@
 													</div>
 													<div class="actions">
 														<a href="" class="follow-btn btn btn-default btn-sm">
-														<i class="fa fa-plus"></i> Follow </a>
+														Take Quiz </a>
 													</div>
 											</div>
 											<a href="#quizzes-wrapper">
 												<div class="portlet-body" style="height: 220px;">
 													<a href="#quizzes-wrapper">
-													<p style="font-size: 18px;">Introduction goes here.</p></a>
+													<p style="font-size: 18px;">
+														{% if quiz.summary %}
+															{{quiz.summary}}
+														{% else %}
+															This quiz currently has no introduction
+														{% endif %}
+													</p></a>
 												</div>
 											</div>
 											
@@ -156,13 +168,19 @@
 													</div>
 													<div class="actions">
 														<a href="" class="follow-btn btn btn-default btn-sm">
-														<i class="fa fa-plus"></i> Follow </a>
+														Take Quiz</a>
 													</div>
 											</div>
 											<a href="#quizzes-wrapper">
 												<div class="portlet-body" style="height: 220px;">
 													<a href="#quizzes-wrapper">
-													<p style="font-size: 18px;">Introduction goes here.</p></a>
+													<p style="font-size: 18px;">
+														{% if quiz.summary %}
+															{{quiz.summary}}
+														{% else %}
+															This quiz currently has no introduction
+														{% endif %}
+													</p></a>
 												</div>
 											</div>
 											
@@ -180,7 +198,33 @@
 </div>
 
 <!-- super organizations -->
+<div id="channels-wrapper">
+	{% for channel in channels %}
+		{% if loop.index0 % 4 == 0 %} <div class="row">{% endif %}
+		<div class="col-md-3 col-sm-3 col-xs-12 channel">
+											<div class="portlet portlet-sortable box red-sunglo" >
+												<div class="portlet-title">
+													<div class="caption" style="font-size:16px;">
+														{{channel.username}}
+													</div>
+													<div class="actions">
+														<a href="" class="follow-btn btn btn-default btn-sm">
+														<i class="fa fa-plus"></i> Follow </a>
+													</div>
+											</div>
+											<a href="#quizzes-wrapper">
+												<div class="portlet-body" style="height: 220px;">
+													<a href="#quizzes-wrapper">
+													<p style="font-size: 18px;">Introduction goes here.</p></a>
+												</div>
+											</div>
+											
+										</div>
 
+
+		{% if loop.index0 % 4 == 3 %}</div>{% endif %}
+	{% endfor %}
+</div>
 
 <!-- END CONTAINER -->
 <!-- BEGIN FOOTER -->
