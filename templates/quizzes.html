@@ -21,7 +21,7 @@
 <!-- END HEAD -->
 
 <!-- BEGIN BODY -->
-<body class="page-md page-header-fixed">
+<body class="page-md page-header-fixed page-sidebar-closed-hide-logo">
 <!-- BEGIN HEADER -->
 {% include "navbar.html" %}
 <!-- END HEADER -->
@@ -31,38 +31,98 @@
 <div class="page-container">
     <!-- BEGIN CONTENT -->
     <div class="page-content-wrapper">
-        <div class="page-content">
+        <div class="page-content" style="margin-left: 0">
             <div class="page-head">
                 <div class="page-title">
                     <h1>Search result for "{{ keyword }}"</h1>
                 </div>
-                <select class="bs-select form-control input-small" data-style="blue" style="float: right"
-                        action="search" method="GET" id="filter-age">
-                    <option class="submit" value="I04ixPfRWc">All ages</option>
-                    <option class="submit" value="VSPu1uuEkA">College</option>
-                    <option class="submit" value="Vtg619ROOD">Lote</option>
-                    <option class="submit" value="2RAYY4HHog">Special Ed</option>
-                    <option class="submit" value="ql2ZRMPwFO">10 - 12</option>
-                    <option class="submit" value="eKz3CmF3yz">7 - 9</option>
-                    <option class="submit" value="hmVk0zfWeJ">4 - 6</option>
-                    <option class="submit" value="6iWGrYG6G4">K - 3</option>
-                </select>
-                <select class="bs-select form-control input-small" data-style="blue" style="float: right"
-                        action="search" method="GET" id="filter">
-                    <option class="submit" value="95aSXQ3xMo">Literature</option>
-                    <option class="submit" value="B27UMxa7DN">Humanities</option>
-                    <option class="submit" value="jiOhl8H1AD">STEM</option>
-                    <option class="submit" value="gFuZJIxNOX">Arts & Music</option>
-                    <option class="submit" value="20a1SGKdV6">General Knowledge</option>
-                    <option class="submit" value="yXP2YI0cLN">Civics</option>
-                    <option class="submit" value="3ZtI62iDmf">Sport & Health</option>
-                    <option class="submit" value="QGSYXQTaly">Pop-Culture</option>
-                </select>
+                <div class="btn-group" style="float: right" id="ageFilter">
+                    <button type="button" class="btn purple" id="dropDownDisplay">Age</button>
+                    <button type="button" class="btn purple dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
+                    <ul class="dropdown-menu" role="menu" data-style="purple" style="float: right"
+                            action="" method="GET" id="filter-age">
+                        <li class="submit" data-value="I04ixPfRWc"><a href="javascript:;">All ages</a></li>
+                        <li class="submit" data-value="VSPu1uuEkA"><a href="javascript:;">College</a></li>
+                        <li class="submit" data-value="Vtg619ROOD"><a href="javascript:;">Lote</a></li>
+                        <li class="submit" data-value="2RAYY4HHog"><a href="javascript:;">Special Ed</a></li>
+                        <li class="submit" data-value="ql2ZRMPwFO"><a href="javascript:;">10 - 12</a></li>
+                        <li class="submit" data-value="eKz3CmF3yz"><a href="javascript:;">7 - 9</a></li>
+                        <li class="submit" data-value="hmVk0zfWeJ"><a href="javascript:;">4 - 6</a></li>
+                        <li class="submit" data-value="6iWGrYG6G4"><a href="javascript:;">K - 3</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group" style="float: right" id="areaFilter">
+                    <button type="button" class="btn purple" id="dropDownDisplay">Area</button>
+                    <button type="button" class="btn purple dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
+                    <ul class="dropdown-menu" role="menu" data-style="purple" style="float: right"
+                            action="" method="GET" id="filter">
+                        <li class="submit" data-value="95aSXQ3xMo"><a href="javascript:;">Literature</a></li>
+                        <li class="submit" data-value="B27UMxa7DN"><a href="javascript:;">Humanities</a></li>
+                        <li class="submit" data-value="jiOhl8H1AD"><a href="javascript:;">STEM</a></li>
+                        <li class="submit" data-value="gFuZJIxNOX"><a href="javascript:;">Arts & Music</a></li>
+                        <li class="submit" data-value="20a1SGKdV6"><a href="javascript:;">General Knowledge</a></li>
+                        <li class="submit" data-value="yXP2YI0cLN"><a href="javascript:;">Civics</a></li>
+                        <li class="submit" data-value="3ZtI62iDmf"><a href="javascript:;">Sport & Health</a></li>
+                        <li class="submit" data-value="QGSYXQTaly"><a href="javascript:;">Pop-Culture</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group" style="float: right" id="sortResult">
+                    <button type="button" class="btn green" id="dropDownDisplay">Sort</button>
+                    <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
+                    <ul class="dropdown-menu" role="menu" data-style="green" style="float: right"
+                            action="sort" method="GET" id="sort">
+                        <li class="submit" data-value="name"><a href="javascript:;">Name</a></li>
+                        <li class="submit" data-value="updatedAt"><a href="javascript:;">Time</a></li>
+                        <li class="submit" data-value="averageScore"><a href="javascript:;">Average</a></li>
+                        <li class="submit" data-value="playCount"><a href="javascript:;">Popularity</a></li>
+                    </ul>
+                </div>
             </div>
+                <br/>
+            <hr/>
+                {% if user_list %}
+            <h2>User</h2>
+                {% for user in user_list %}
+				{% if loop.index % 3 == 1 %}
+				<div class="row">
+					{% endif %}
+                    <div class="col-md-4">
+                <!-- BEGIN PORTLET-->
+						<div class="portlet light" style="min-height: 0">
+							<div class="portlet-title">
+								<div class="caption font-purple-plum">
+									<img class="organization_avatar" src="../../static/admin/layout/img/avatar9.jpg">
+									<span class="caption-subject bold uppercase">{{user.username}}</span>
+								</div>
+							</div>
+							<div class="portlet-body">
+								<div id="context" data-toggle="context" data-target="#context-menu">
+                                    <p>
+									</p>
+								</div>
+							</div>
+							<div>
+                                <a href="" style="text-decoration: none;">
+								<button class="btn green btn-block">Follow
+                                </button></a>
+							</div>
+						</div>
+						<!-- END PORTLET-->
+                        </div>
+                    {% if loop.index % 3 == 0 %}
+				</div>
+            {% endif %}
+                {% endfor %}
+</div>
+        <hr/>
+                {% endif %}
+
+<h2>Quiz</h2>
 			<div id="quizList">
             <!-- BEGIN QUIZ SHOW-->
+                <br/>
 				{% for quiz in quiz_list %}
-				{% if loop.index % 3 == 0 %}
+				{% if loop.index % 3 == 1 %}
 				<div class="row">
 					{% endif %}
 					<div class="col-md-4">
@@ -78,6 +138,14 @@
 							</div>
 							<div class="portlet-body">
 								<div id="context" data-toggle="context" data-target="#context-menu">
+                                    <p>
+                                        <span class="creator">Creator</span>: {{quiz.ownerName}}
+                                    </p>
+                                    <p>
+                                        <span>Plays: {{quiz.playCount}}</span>
+                                        <span style="float: right">Avg: {{quiz.averageScore}}</span>
+                                    </p>
+                                    <hr/>
 									<p>
 										{% if quiz.summary %}
 										{{quiz.summary}}
@@ -87,8 +155,8 @@
 									</p>
 								</div>
 							</div>
-							<div style="height:25px; margin-top:25px">
-                                <a href="http://webplay.quizlingapp.com/app#/quizzes/{{quiz.objectId}}">
+							<div class="playButton">
+                                <a href="http://webplay.quizlingapp.com/app#/quizzes/{{quiz.objectId}}" style="text-decoration: none;">
 								<button class="btn blue btn-block">Play
                                 </button></a>
 							</div>
@@ -99,6 +167,7 @@
 				</div>
             {% endif %}
             {% endfor %}
+            </div>
             <!-- END QUIZ SHOW-->
         </div>
     </div>
@@ -120,14 +189,16 @@
 <script>
     jQuery(document).ready(function () {
 //        // initiate layout and plugins
-//        Metronic.init(); // init metronic core components
+        Metronic.init(); // init metronic core components
         Layout.init(); // init current layout
-//        Demo.init(); // init demo features
+        //Demo.init(); // init demo features
 //        ComponentsContextMenu.init(); // init context menu demo
+        //UIGeneral.init();
     });
 </script>
 <!-- END GOOGLE RECAPTCHA -->
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->
+
 </html>

@@ -46,8 +46,14 @@ class Following(Object):
 org_info_parse = "Random"
 
 Quizzes = Quizling.Query.all().filter().limit(300)
+for q in Quizzes:
+    if not hasattr(q, 'averageScore'):
+        q.averageScore = 0
+    if not hasattr(q, 'playCount'):
+        q.playCount = 0
 kw = ''
 result = []
+filteredResult = []
 
 
 @manager.route('/', methods=['GET', 'POST'])
@@ -215,7 +221,7 @@ def serialize(quizzes):
         temp["ownerName"] = quiz.ownerName
         temp["name"] = quiz.name
         temp["summary"] = quiz.summary
-
+		
         ret[quiz.objectId] = temp
 
     return ret
@@ -231,11 +237,11 @@ def getQuizHistory(userName):
 
 
 @manager.route('/quizzes/<org_name>')
-def quizzes(org_name=None, quiz_list=None, keyword=None):
+def quizzes(org_name=None, user_list=None, quiz_list=None, keyword=None):
     if org_name:
         quiz_list = Quizling.Query.filter(ownerName=org_name)
     try:
-        return render_template('quizzes.html', quiz_list=quiz_list, keyword=keyword)
+        return render_template('quizzes.html', user_list=user_list, quiz_list=quiz_list, keyword=keyword)
     except HTTPException as e:
         return "error page"
 
@@ -260,7 +266,9 @@ def stats():
 def search():
     keyword = request.query_string[6:]
     quiz_list = searchKeyword(keyword)
-    return quizzes(quiz_list=quiz_list, keyword=keyword)
+    users = _User.Query.filter(username=keyword)
+    return quizzes(user_list=users, quiz_list=quiz_list, keyword=keyword)
+
 
 
 def searchKeyword(keyword):
@@ -285,6 +293,7 @@ def filterArea():
     areaName = request.form.keys()[0]
     global kw
     global result
+    global filteredResult
     area = LearningAreas.Query.get(objectId=areaName)
     filteredResult = []
     for quiz in result:
@@ -326,14 +335,31 @@ def makeJSONquizzes(quizzes):
             qjson['questionCount'] = quiz.questionCount
         else:
             qjson['questionCount'] = 0
+        qjson['avgScore'] = quiz.averageScore
         data.append(qjson)
     response['data'] = data
     return json.dumps(response)
 
 
-@manager.route('/testing', methods=['POST'])
-def ajaxResponse():
-    return getMongoQuizHistory('test_user_name')
+@manager.route('/sortQuizzes', methods=['POST'])
+def sort():
+    global result
+    global filteredResult
+    if not filteredResult:
+        filteredResult = result
+
+    attr = request.form.keys()[0]
+    if attr == 'name':
+        filteredResult.sort(key=lambda x: x.name, reverse=True)
+    if attr == 'updatedAt':
+        filteredResult.sort(key=lambda x: x.updatedAt, reverse=True)
+    if attr == 'averageScore':
+        filteredResult.sort(key=lambda x: x.averageScore, reverse=True)
+    if attr == 'playCount':
+        filteredResult.sort(key=lambda x: x.playCount, reverse=True)
+
+    return makeJSONquizzes(filteredResult)
+
 
 if __name__ == '__main__':
     manager.run(debug=True)
