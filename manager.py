@@ -90,7 +90,7 @@ def follow(organizationId = None):
     organization = _User.Query.get(objectId = organizationId)
     subscriber = _User.Query.get(objectId = subscriberId)
 
-    type = request.args.get('type', 0, type=str)    
+    type = request.args.get('type', 0, type=str)
 
     # save the follow relation
     if type == "follow":
@@ -156,6 +156,10 @@ def getMongoQuizHistory(userName):
 @manager.route('/stats', methods=['GET', 'POST'])
 def stats():
     return render_template('stats.html', org=org_info_parse)
+
+@manager.route('/timeline', methods=['GET', 'POST'])
+def timeline():
+    return render_template('timeline.html', org=org_info_parse)
 
 
 @manager.route('/search')
