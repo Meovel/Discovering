@@ -23,7 +23,7 @@ initializeGoogleCharts([], "top_x_div");
 * @param str – should relevant parameterization for queryToChart to correctly handle
 * @TODO Generalize queryToChart to extract relevant data based on its input parameter
 */
-function queryToChart(str) {
+function queryToChart(obj_id, str) {
 	console.log("queryToChart str is: " + str)
 	var data_array = []
 	console.log("In queryToChart")

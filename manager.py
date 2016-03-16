@@ -1,8 +1,9 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
-from parse_rest.connection import register
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, make_response, session
+from parse_rest.connection import register, SessionToken
 from parse_rest.datatypes import Object
 from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
+from werkzeug.datastructures import ImmutableMultiDict
 import json
 # import pymongo
 # from pymongo import MongoClient
@@ -45,23 +46,37 @@ kw = ''
 result = []
 
 
+
+
+
 @manager.route('/', methods=['GET', 'POST'])
 def login():
-    user = None
+    print 'cookie in homepage: '
+    print request.cookies
     if request.method == 'POST':
         data = request.form
+
         try:
             user = User.login(data['username'], data['password'])
         except:
             flash('Incorrect username or password', 'info')
-        # login_user(user)
-        return redirect(url_for("organizations"))
-    return render_template('login.html')
+
+
+        resp = make_response(render_template('organizations/organizations.html'))
+        username = data.getlist('username')[0]
+        resp.set_cookie('username', username)
+        return resp
+
+
+    return make_response(render_template('login.html'))
 
 ############################### Dashboard ###############################
 
 @manager.route('/organizations')
 def organizations():
+
+    print 'cookie in organizations: '
+    print request.cookies
 
     # get all the organizations
     organizations = _User.Query.all().filter(type="org")
@@ -155,6 +170,24 @@ def getMongoQuizHistory(userName):
 
 @manager.route('/stats', methods=['GET', 'POST'])
 def stats():
+
+
+    print 'cookie in stats: '
+    print request.cookies
+
+    user = request.cookies.get('username')
+    # print "stats user: "
+    # print user
+    user_obj = _User.Query.all().filter().limit(300)
+    print len(user_obj)
+    obj_id = ''
+    for obj in user_obj:
+        # print obj.username
+        if obj.username == user:
+            obj_id = obj.objectId
+
+    print obj_id
+
     return render_template('stats.html', org=org_info_parse)
 
 @manager.route('/timeline', methods=['GET', 'POST'])
