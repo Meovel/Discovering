@@ -42,6 +42,8 @@ class LearningStage(Object):
 class Following(Object):
     pass
 
+class Channel(Object):
+    pass
 
 org_info_parse = "Random"
 
@@ -95,8 +97,11 @@ def index():
     clientId = "tWv8MQspc5"
     client = _User.Query.get(objectId = clientId)
 
-    print "client name: " + client.username
-
+    ''' 
+    ----------------------------
+        recommanded quizzes
+    ----------------------------
+    '''
     # find the follow organizations
     follows = Following.Query.all().filter(subscriber = client)
     print "follow length: " + str(len(follows))
@@ -108,7 +113,7 @@ def index():
     
     # get the quiz category dictionary
     quizzesCount = quizzesOfFollowedOrgs(followedOrgs)
-    #quizzesCount = dict()
+    # quizzesCount = dict()
 
     count = 0
     for categoryId in sorted(quizzesCount, key=quizzesCount.get, reverse=True):
@@ -126,6 +131,16 @@ def index():
 
         count += 1
 
+
+    ''' 
+    ----------------------------
+        channels
+    ----------------------------
+    '''
+    channels = getChannels()
+    # for channel in channels:
+    #     print channel
+
     print "========================================"
 
     return render_template("index.html",
@@ -133,7 +148,9 @@ def index():
         quizzes = retQuizzes,
         lengthOne = len(retQuizzes[0]),
         lengthTwo = len(retQuizzes[1]),
-        lengthThree = len(retQuizzes[2]));
+        lengthThree = len(retQuizzes[2]),
+        channels = channels)
+
 
 
 def quizzesOfFollowedOrgs(followedOrgs):
@@ -158,7 +175,18 @@ def quizzesOfFollowedOrgs(followedOrgs):
 
     return quizzesCount
 
-# def getChannels():
+
+
+def getChannels():
+    superOrgs = []
+
+    for channel in Channel.Query.all():
+        if hasattr(channel, 'user'):
+            if channel.user is not None:
+                print channel.channelName
+                superOrgs.append(channel.user)
+
+    return superOrgs
 
 ############################### End of Index ###############################
 
