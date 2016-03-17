@@ -179,6 +179,10 @@ def stats():
     # print "stats user: "
     # print user
     user_obj = _User.Query.all().filter().limit(300)
+    if user_obj is None:
+        print "Error: user_obj returned None"
+        return "Error"
+        exit()
     print len(user_obj)
     obj_id = ''
     for obj in user_obj:
