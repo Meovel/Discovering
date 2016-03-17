@@ -188,7 +188,7 @@ def stats():
 
     print obj_id
 
-    return render_template('stats.html', org=org_info_parse)
+    return render_template('stats.html', org=org_info_parse, objectId = obj_id)
 
 @manager.route('/timeline', methods=['GET', 'POST'])
 def timeline():
