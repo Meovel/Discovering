@@ -1,8 +1,9 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, jsonify
-from parse_rest.connection import register
+from flask import Flask, render_template, redirect, url_for, request, flash, jsonify, make_response, session
+from parse_rest.connection import register, SessionToken
 from parse_rest.datatypes import Object
 from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
+from werkzeug.datastructures import ImmutableMultiDict
 import json
 # import pymongo
 # from pymongo import MongoClient
@@ -58,18 +59,32 @@ result = []
 filteredResult = []
 
 
+
+
+
 @manager.route('/', methods=['GET', 'POST'])
 def login():
-    user = None
+    print 'cookie in homepage: '
+    print request.cookies
     if request.method == 'POST':
         data = request.form
+
         try:
             user = User.login(data['username'], data['password'])
         except:
             flash('Incorrect username or password', 'info')
         # login_user(user)
-        return redirect(url_for("index"))
-    return render_template('login.html')
+    #     return redirect(url_for("index"))
+    # return render_template('login.html')
+
+
+        resp = make_response(render_template('organizations/organizations.html'))
+        username = data.getlist('username')[0]
+        resp.set_cookie('username', username)
+        return resp
+
+
+    return make_response(render_template('login.html'))
 
 
 ############################### Index ###############################
@@ -97,7 +112,7 @@ def index():
     clientId = "tWv8MQspc5"
     client = _User.Query.get(objectId = clientId)
 
-    ''' 
+    '''
     ----------------------------
         recommanded quizzes
     ----------------------------
@@ -110,7 +125,7 @@ def index():
     for follow in follows:
         followedOrgs.append(follow.user)
 
-    
+
     # get the quiz category dictionary
     quizzesCount = quizzesOfFollowedOrgs(followedOrgs)
     # quizzesCount = dict()
@@ -132,7 +147,7 @@ def index():
         count += 1
 
 
-    ''' 
+    '''
     ----------------------------
         channels
     ----------------------------
@@ -195,6 +210,9 @@ def getChannels():
 @manager.route('/organizations')
 def organizations():
 
+    print 'cookie in organizations: '
+    print request.cookies
+
     # get all the organizations
     organizations = _User.Query.all().filter(type="org")
 
@@ -222,7 +240,7 @@ def follow(organizationId = None):
     organization = _User.Query.get(objectId = organizationId)
     subscriber = _User.Query.get(objectId = subscriberId)
 
-    type = request.args.get('type', 0, type=str)    
+    type = request.args.get('type', 0, type=str)
 
     # save the follow relation
     if type == "follow":
@@ -249,7 +267,7 @@ def serialize(quizzes):
         temp["ownerName"] = quiz.ownerName
         temp["name"] = quiz.name
         temp["summary"] = quiz.summary
-		
+
         ret[quiz.objectId] = temp
 
     return ret
@@ -287,7 +305,33 @@ def getMongoQuizHistory(userName):
 
 @manager.route('/stats', methods=['GET', 'POST'])
 def stats():
-    return render_template('stats.html', org=org_info_parse)
+
+
+    print 'cookie in stats: '
+    print request.cookies
+
+    user = request.cookies.get('username')
+    # print "stats user: "
+    # print user
+    user_obj = _User.Query.all().filter().limit(300)
+    if user_obj is None:
+        print "Error: user_obj returned None"
+        return "Error"
+        exit()
+    print len(user_obj)
+    obj_id = ''
+    for obj in user_obj:
+        # print obj.username
+        if obj.username == user:
+            obj_id = obj.objectId
+
+    print obj_id
+
+    return render_template('stats.html', org=org_info_parse, objectId = obj_id)
+
+@manager.route('/timeline', methods=['GET', 'POST'])
+def timeline():
+    return render_template('timeline.html', org=org_info_parse)
 
 
 @manager.route('/search')

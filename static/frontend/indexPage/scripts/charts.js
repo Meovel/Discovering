@@ -4,6 +4,7 @@
 * @iteration 2
 */
 
+// var $ = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js";
 Parse.initialize("1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD", "kRyIxZkeC08jvlwSwbUdmBysWL9j6bLi0lB9RUan");
 
 /**
@@ -12,7 +13,24 @@ Parse.initialize("1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD", "kRyIxZkeC08jvlwSwb
 function initializeGoogleCharts(array, divId) {
 	google.charts.load('current', {'packages':['bar']});
 	// google.charts.setOnLoadCallback(buildBarGraph([], divId));
+	console.log('hello, initializing Google Charts');
+	// function(obj_id) {
+	// 	$(function(obj_id) {
+	// 		$(document).ready(function(obj_id) {
+	// 			console.log('Document is ready');
+	// 		})
+	// 	})
+	// }
 	google.charts.setOnLoadCallback(queryToChart);
+	// google.charts.setOnLoadCallback(function() {
+	// 	$(function() {
+	// 		$(document).ready(function() {
+	// 			console.log('Document is ready');
+	// 			queryToChart;
+	// 		})
+	// 	})
+	// });
+
 }
 initializeGoogleCharts([], "top_x_div");
 
@@ -23,15 +41,32 @@ initializeGoogleCharts([], "top_x_div");
 * @param str – should relevant parameterization for queryToChart to correctly handle
 * @TODO Generalize queryToChart to extract relevant data based on its input parameter
 */
-function queryToChart(str) {
+function queryToChart(obj_id, str) {
 	console.log("queryToChart str is: " + str)
+	// console.log($('head'));
+	// $(document).ready(function() {
+	// 	console.log('Document is ready');
+	// })
+	// console.log('obj_id: '+$('#obj_id').get(0).innerHTML);
+	// document.addEventListener("DOMContentLoaded", function(event) {
+	//   //do work
+	// 	var obj = document.getElementById('obj_id');
+	// 	console.log('obj: ' + obj.innerHTML);
+	// });
+
+	var obj = document.getElementById('obj_id').innerHTML;
+	obj = obj.replace(/\<a\>/,'');
+	obj = obj.replace(/\<\/a\>/,'');
+	console.log('obj: ' + obj);
+
 	var data_array = []
 	console.log("In queryToChart")
 	var ChartData = Parse.Object.extend("QuizPersonalStatistics");
 	var UserData = Parse.Object.extend("User");
 	var query = new Parse.Query(ChartData);
 
-	var user_dev10_objectId = "WrWZRnIDbv"
+	// "WrWZRnIDbv"
+	var user_dev10_objectId = obj;
 	query.equalTo("user", {
         __type: "Pointer",
         className: "_User",
