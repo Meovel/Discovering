@@ -6,3 +6,21 @@
 	-moz-border-radius: 50%;
 	border: 3px solid #cccccc;
 }
+
+.btn-group {
+	margin-left: 5px;
+}
+
+.creator {
+	color: #3598dc;
+}
+
+.portlet {
+	min-height: 290px;
+}
+
+.playButton {
+	position: absolute;
+	bottom: 30px;
+	width: 80%
+}

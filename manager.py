@@ -39,11 +39,24 @@ class LearningAreas(Object):
 class LearningStage(Object):
     pass
 
+
+class Following(Object):
+    pass
+
+class Channel(Object):
+    pass
+
 org_info_parse = "Random"
 
 Quizzes = Quizling.Query.all().filter().limit(300)
+for q in Quizzes:
+    if not hasattr(q, 'averageScore'):
+        q.averageScore = 0
+    if not hasattr(q, 'playCount'):
+        q.playCount = 0
 kw = ''
 result = []
+filteredResult = []
 
 
 
@@ -60,6 +73,9 @@ def login():
             user = User.login(data['username'], data['password'])
         except:
             flash('Incorrect username or password', 'info')
+        # login_user(user)
+    #     return redirect(url_for("index"))
+    # return render_template('login.html')
 
 
         resp = make_response(render_template('organizations/organizations.html'))
@@ -69,6 +85,125 @@ def login():
 
 
     return make_response(render_template('login.html'))
+
+
+############################### Index ###############################
+'''
+    1. show recommanded quizzes
+        a. find the follow organizations
+        b. find the quizzes of the organizations
+        c. find top 3 category of quizzes
+        d. recommanded from the top 3 category
+    2. show channels
+        a. render channels
+        b. show quizzes of organzations when organizations clicked
+'''
+
+@manager.route('/index')
+def index():
+    print "================ Index ================"
+
+    # return variables
+    categories = []
+    retQuizzes = []
+
+
+    # get the current user
+    clientId = "tWv8MQspc5"
+    client = _User.Query.get(objectId = clientId)
+
+    '''
+    ----------------------------
+        recommanded quizzes
+    ----------------------------
+    '''
+    # find the follow organizations
+    follows = Following.Query.all().filter(subscriber = client)
+    print "follow length: " + str(len(follows))
+
+    followedOrgs = []
+    for follow in follows:
+        followedOrgs.append(follow.user)
+
+
+    # get the quiz category dictionary
+    quizzesCount = quizzesOfFollowedOrgs(followedOrgs)
+    # quizzesCount = dict()
+
+    count = 0
+    for categoryId in sorted(quizzesCount, key=quizzesCount.get, reverse=True):
+        if count == 3:
+            break
+
+        category = LearningAreas.Query.get(objectId = categoryId)
+
+        # add to categories
+        categories.append(category.name)
+
+        # find the quizzes of this category
+        quizzesTemp = Quizling.Query.all().filter(area = category).limit(8)
+        retQuizzes.append(quizzesTemp)
+
+        count += 1
+
+
+    '''
+    ----------------------------
+        channels
+    ----------------------------
+    '''
+    channels = getChannels()
+    # for channel in channels:
+    #     print channel
+
+    print "========================================"
+
+    return render_template("index.html",
+        categories = categories,
+        quizzes = retQuizzes,
+        lengthOne = len(retQuizzes[0]),
+        lengthTwo = len(retQuizzes[1]),
+        lengthThree = len(retQuizzes[2]),
+        channels = channels)
+
+
+
+def quizzesOfFollowedOrgs(followedOrgs):
+    quizzesCount = dict()
+
+    count = 0
+    for org in followedOrgs:
+        quizzes = Quizling.Query.all().filter(ownerName = org.username)
+
+        if(len(quizzes) != 0):
+            count += 1
+
+        if count == 5:
+            break
+
+        for quiz in quizzes:
+            if hasattr(quiz, "area"):
+                if quiz.area.name not in quizzesCount:
+                    quizzesCount[quiz.area.objectId] = 1
+                else:
+                    quizzesCount[quiz.area.objectId] += 1
+
+    return quizzesCount
+
+
+
+def getChannels():
+    superOrgs = []
+
+    for channel in Channel.Query.all():
+        if hasattr(channel, 'user'):
+            if channel.user is not None:
+                print channel.channelName
+                superOrgs.append(channel.user)
+
+    return superOrgs
+
+############################### End of Index ###############################
 
 ############################### Dashboard ###############################
 
@@ -148,11 +283,11 @@ def getQuizHistory(userName):
 
 
 @manager.route('/quizzes/<org_name>')
-def quizzes(org_name=None, quiz_list=None, keyword=None):
+def quizzes(org_name=None, user_list=None, quiz_list=None, keyword=None):
     if org_name:
         quiz_list = Quizling.Query.filter(ownerName=org_name)
     try:
-        return render_template('quizzes.html', quiz_list=quiz_list, keyword=keyword)
+        return render_template('quizzes.html', user_list=user_list, quiz_list=quiz_list, keyword=keyword)
     except HTTPException as e:
         return "error page"
 
@@ -211,7 +346,9 @@ def timeline():
 def search():
     keyword = request.query_string[6:]
     quiz_list = searchKeyword(keyword)
-    return quizzes(quiz_list=quiz_list, keyword=keyword)
+    users = _User.Query.filter(username=keyword)
+    return quizzes(user_list=users, quiz_list=quiz_list, keyword=keyword)
+
 
 
 def searchKeyword(keyword):
@@ -236,6 +373,7 @@ def filterArea():
     areaName = request.form.keys()[0]
     global kw
     global result
+    global filteredResult
     area = LearningAreas.Query.get(objectId=areaName)
     filteredResult = []
     for quiz in result:
@@ -277,14 +415,31 @@ def makeJSONquizzes(quizzes):
             qjson['questionCount'] = quiz.questionCount
         else:
             qjson['questionCount'] = 0
+        qjson['avgScore'] = quiz.averageScore
         data.append(qjson)
     response['data'] = data
     return json.dumps(response)
 
 
-@manager.route('/testing', methods=['POST'])
-def ajaxResponse():
-    return getMongoQuizHistory('test_user_name')
+@manager.route('/sortQuizzes', methods=['POST'])
+def sort():
+    global result
+    global filteredResult
+    if not filteredResult:
+        filteredResult = result
+
+    attr = request.form.keys()[0]
+    if attr == 'name':
+        filteredResult.sort(key=lambda x: x.name, reverse=True)
+    if attr == 'updatedAt':
+        filteredResult.sort(key=lambda x: x.updatedAt, reverse=True)
+    if attr == 'averageScore':
+        filteredResult.sort(key=lambda x: x.averageScore, reverse=True)
+    if attr == 'playCount':
+        filteredResult.sort(key=lambda x: x.playCount, reverse=True)
+
+    return makeJSONquizzes(filteredResult)
+
 
 if __name__ == '__main__':
     manager.run(debug=True)
