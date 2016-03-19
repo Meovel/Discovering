@@ -176,8 +176,12 @@ def stats():
     print request.cookies
 
     user = request.cookies.get('username')
-    # print "stats user: "
-    # print user
+
+    if user is None:
+        print "Error: user returned None"
+        return "No_Cookie"
+        exit()
+
     user_obj = _User.Query.all().filter().limit(300)
     if user_obj is None:
         print "Error: user_obj returned None"
@@ -191,6 +195,10 @@ def stats():
             obj_id = obj.objectId
 
     print obj_id
+    if obj_id == '':
+        print "Error: obj_id returned None"
+        return "no_obj_id"
+        exit()
 
     return render_template('stats.html', org=org_info_parse, objectId = obj_id)
 
