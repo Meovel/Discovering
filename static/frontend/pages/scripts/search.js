@@ -59,14 +59,48 @@ $(document).ready(function(){
 			});
 		});
 		$("#sortResult").children(".dropdown-menu").children(".submit").click(function(){
+			var requestJSON = {};
+			var arrow = $(this).parent().siblings("#sortArrow").children("i");
+			var className = arrow.attr("class");
+			if(className.indexOf("fa-angle-down") >= 0){
+				requestJSON["order"] = "ascending";
+			}else{
+				requestJSON["order"] = "descending";
+			}
 			var val = $(this).attr("data-value");
+			requestJSON["field"] = val;
 			var name = $(this).children().html();
 			$("#sortResult").children("#dropDownDisplay").html(name);
+			$("#sortResult").children("#dropDownDisplay").attr("data-value", val);
 			$.ajax({
 				url: "/sortQuizzes",
 				method: "POST",
 				dataType: "Text",
-				data: val
+				data: JSON.stringify(requestJSON)
+			}).done(function(data){
+				$("#quizList").html(quizListToHTML(JSON.parse(data)));
+			});
+		});
+		$("#sortResult").children("#dropDownDisplay").click(function(){
+			var requestJSON = {};
+			var arrow = $(this).siblings("#sortArrow").children("i");
+			var className = arrow.attr("class");
+			if(className.indexOf("fa-angle-down") >= 0){
+				arrow.removeClass("fa fa-angle-down");
+				arrow.addClass("fa fa-angle-up");
+				requestJSON["order"] = "descending";
+			}else{
+				arrow.removeClass("fa fa-angle-up");
+				arrow.addClass("fa fa-angle-down");
+				requestJSON["order"] = "ascending";
+			}
+			var val = $(this).attr("data-value");
+			requestJSON["field"] = val;
+			$.ajax({
+				url: "/sortQuizzes",
+				method: "POST",
+				dataType: "Text",
+				data: JSON.stringify(requestJSON)
 			}).done(function(data){
 				$("#quizList").html(quizListToHTML(JSON.parse(data)));
 			});

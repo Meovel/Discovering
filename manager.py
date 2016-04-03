@@ -419,19 +419,19 @@ def sort():
     global filteredResult
     if not filteredResult:
         filteredResult = result
-
-    attr = request.form.keys()[0]
-    if attr == 'name':
-        filteredResult.sort(key=lambda x: x.name, reverse=True)
-    if attr == 'updatedAt':
-        filteredResult.sort(key=lambda x: x.updatedAt, reverse=True)
-    if attr == 'averageScore':
-        filteredResult.sort(key=lambda x: x.averageScore, reverse=True)
-    if attr == 'playCount':
-        filteredResult.sort(key=lambda x: x.playCount, reverse=True)
-
+    reqJSON = json.loads(request.form.keys()[0])
+    order = True
+    if reqJSON["order"] != 'ascending':
+        order = False
+    if reqJSON["field"] == 'name':
+        filteredResult.sort(key=lambda x: x.name, reverse=order)
+    if reqJSON["field"] == 'updatedAt':
+        filteredResult.sort(key=lambda x: x.updatedAt, reverse=order)
+    if reqJSON["field"] == 'averageScore':
+        filteredResult.sort(key=lambda x: x.averageScore, reverse=order)
+    if reqJSON["field"] == 'playCount':
+        filteredResult.sort(key=lambda x: x.playCount, reverse=order)
     return makeJSONquizzes(filteredResult)
-
 
 if __name__ == '__main__':
     manager.run(debug=True)
