@@ -241,6 +241,7 @@ def follow(organizationId = None):
     subscriber = _User.Query.get(objectId = subscriberId)
 
     type = request.args.get('type', 0, type=str)
+    print type
 
     # save the follow relation
     if type == "follow":
@@ -252,8 +253,9 @@ def follow(organizationId = None):
 
     # cancel follow relation
     elif type == "cancel":
-        following = Following.Query.get(subscriber = subscriber, user = organization)
-        following.delete()
+        following = Following.Query.filter(subscriber = subscriber, user = organization)
+        for follow in following:
+            follow.delete()
 
     return jsonify(result = "success")
 
@@ -340,7 +342,6 @@ def search():
     quiz_list = searchKeyword(keyword)
     users = _User.Query.filter(username=keyword)
     return quizzes(user_list=users, quiz_list=quiz_list, keyword=keyword)
-
 
 
 def searchKeyword(keyword):
