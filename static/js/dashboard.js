@@ -1,3 +1,6 @@
+var username;
+var user_id;
+
 $(".follow-btn").click(function(){
 	event.preventDefault();
 
@@ -29,6 +32,37 @@ $(".follow-btn").click(function(){
 		});
 	}
 });
+
+
+// post comment
+$("#make-comment").click(function(){
+	$("#post-comment").fadeIn();
+	$("#comments").fadeOut();
+});
+
+
+$("#post-comment-btn").click(function(){
+	var content = $("#comment-content").val();
+	var path = "/comment/" + user_id;
+	$.getJSON(path, {
+		content: content,
+		poster: username
+	}, function(data){
+		if(data.result == "OK"){
+			var html = "<div class='comment'>" + 
+			"<p>" + content + "</p>" + 
+			"<p>By: " + username + "<p>" +
+			"</div>";
+			$("#comments").prepend(html);
+		}
+	});
+});
+
+$("#back-btn").click(function(){
+	$("#post-comment").fadeOut();
+	$("#comments").fadeIn();
+});
+
 
 
 $('a[href^="#"]').on('click',function (e) {
