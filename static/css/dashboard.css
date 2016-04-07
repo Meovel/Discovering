@@ -1,0 +1,23 @@
+#user-photo{
+	height: 150px;
+	width: 150px;
+	margin-left: 50%;
+	position: absolute;
+	left: -75px;
+	border-radius: 75px;
+}
+
+.comment{
+	margin-top: 20px;
+	border-bottom: 1px solid #dddddd;
+}
+
+.normal-text{
+	font-size: 18px;
+	font-style: bold;
+}
+
+.sub-text{
+	color: #cccccc;
+	font-size: 12px;
+}

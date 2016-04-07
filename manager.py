@@ -46,6 +46,9 @@ class Following(Object):
 class Channel(Object):
     pass
 
+class Comment(Object):
+    pass
+
 org_info_parse = "Random"
 
 Quizzes = Quizling.Query.all().filter().limit(300)
@@ -204,6 +207,41 @@ def getChannels():
     return superOrgs
 
 ############################### End of Index ###############################
+
+
+############################### User Dashboard ###############################
+@manager.route('/user/<user_id>')
+def userDashBoard(user_id = None):
+    '''
+        This page required organization basic information, follower, followed, 
+        quizzes(if have any) and comment
+    '''
+    comments = Comment.Query.all().filter(user = user_id)
+
+    return render_template("dashboard.html",
+        comments = comments,
+        numOfComments = len(comments),
+        username = "guoqiao",
+        user_id = user_id)
+
+
+@manager.route('/comment/<target_id>')
+def postComment(target_id = None):
+    content = request.args.get('content', 0, type = str)
+    poster = request.args.get('poster', 0, type = str)
+
+    # create comment and save
+    comment = Comment()
+    comment.content = content
+    comment.poster = poster
+    comment.user = target_id
+    comment.save()
+
+    return jsonify(result = "OK")
+
+############################### End Of User Dashboard ###############################
+
+
 
 ############################### Dashboard ###############################
 
