@@ -324,60 +324,62 @@ def stats():
     print 'cookie in stats: '
     print request.cookies
 
-    user = request.cookies.get('username')
+    username = request.cookies.get('username')
+    user_objectId = request.cookies.get('user_objectId')
 
-    if user is None:
+    if username is None:
         print "Error: user returned None"
-        # return "No_Cookie"
+        return redirect(url_for(''))
         # exit()
 
-    user_obj = _User.Query.all().filter().limit(300)
-    if user_obj is None:
-        print "Error: user_obj returned None"
-        # return "Error"
-        # exit()
-    print len(user_obj)
-    obj_id = ''
-    for obj in user_obj:
-        # print obj.username
-        if obj.username == user:
-            obj_id = obj.objectId
+    # user_obj = _User.Query.all().filter().limit(300)
+    # if user_obj is None:
+    #     print "Error: user_obj returned None"
+    #     # return "Error"
+    #     # exit()
+    # print len(user_obj)
+    # obj_id = ''
+    # for obj in user_obj:
+    #     # print obj.username
+    #     if obj.username == user:
+    #         obj_id = obj.objectId
+    #
+    # print obj_id
+    # if obj_id == '':
+    #     print "Error: obj_id returned None"
+    #     # return "no_obj_id"
+    #     # exit()
 
-    print obj_id
-    if obj_id == '':
-        print "Error: obj_id returned None"
-        # return "no_obj_id"
-        # exit()
-
-    return render_template('stats.html', org=org_info_parse, objectId = obj_id)
+    return render_template('stats.html', org=org_info_parse, objectId = user_objectId)
 
 @manager.route('/timeline', methods=['GET', 'POST'])
 def timeline():
 
-    user = request.cookies.get('username')
+    username = request.cookies.get('username')
+    user_objectId = request.cookies.get('user_objectId')
 
-    if user is None:
+    if username is None:
         print "Error: user returned None"
-        # return "No_Cookie"
+        return redirect(url_for(''))
         # exit()
 
-    user_obj = _User.Query.all().filter().limit(300)
-    if user_obj is None:
-        print "Error: user_obj returned None"
-        # return "Error"
-        # exit()
-    print len(user_obj)
-    obj_id = ''
-    for obj in user_obj:
-        # print obj.username
-        if obj.username == user:
-            obj_id = obj.objectId
-
-    print obj_id
-    if obj_id == '':
-        print "Error: obj_id returned None"
-        # return "no_obj_id"
-        # exit()
+    # user_obj = _User.Query.all().filter().limit(300)
+    # if user_obj is None:
+    #     print "Error: user_obj returned None"
+    #     # return "Error"
+    #     # exit()
+    # print len(user_obj)
+    # obj_id = ''
+    # for obj in user_obj:
+    #     # print obj.username
+    #     if obj.username == user:
+    #         obj_id = obj.objectId
+    #
+    # print obj_id
+    # if obj_id == '':
+    #     print "Error: obj_id returned None"
+    #     # return "no_obj_id"
+    #     # exit()
 
     relevant_data = []
 
@@ -385,17 +387,26 @@ def timeline():
     question_obj = QuestionPersonalStatistics.Query.all().filter().limit(17000)
 
 
-    for quiz in quiz_obj:
-        if quiz.user.objectId == obj_id:
-            relevant_data.append(quiz.quizling.objectId)
-            relevant_data.append(quiz.averageScore)
-            print "quizling: " + str(quiz.quizling.objectId) + " created: " + str(quiz.createdAt) + " updated: " + str(quiz.updatedAt)
-    relevant_data = {}
-    relevant_data['hello'] = 'wassup'
-    relevant_data['arab'] = 'spring'
+    for quiz_stat in quiz_obj:
+        data = []
+        if quiz_stat.user.objectId == user_objectId:
+            data.append(quiz_stat.quizling.objectId)
+            data.append(quiz_stat.averageScore)
+            data.append(quiz_stat.updatedAt)
+
+            # for quest_stat in question_obj:
+            #     if (quest_stat.person.objectId == user_objectId) and (quest_stat.quizling.objectId == quiz_stat.quizling.objectId):
+            #         # data.append(quest_stat.geolocation)
+
+        if data:
+            relevant_data.append(data)
+
+    # relevant_data = {}
+    # relevant_data['hello'] = 'wassup'
+    # relevant_data['arab'] = 'spring'
     # relevant_data_json = json.dumps(relevant_data)
     # print relevant_data_json
-    return render_template('timeline.html', org=org_info_parse, relevant_data=relevant_data, objectId = obj_id)
+    return render_template('timeline.html', org=org_info_parse, relevant_data=relevant_data, objectId = user_objectId)
 
 
 @manager.route('/search')
