@@ -23,6 +23,8 @@ manager.secret_key = 'discoveringfalsksecretkey2016'
 class QuestionPersonalStatistics(Object):
     pass
 
+class QuizPersonalStatistics(Object):
+    pass
 
 class _User(Object):
     pass
@@ -339,7 +341,49 @@ def stats():
 
 @manager.route('/timeline', methods=['GET', 'POST'])
 def timeline():
-    return render_template('timeline.html', org=org_info_parse)
+
+    user = request.cookies.get('username')
+
+    if user is None:
+        print "Error: user returned None"
+        # return "No_Cookie"
+        # exit()
+
+    user_obj = _User.Query.all().filter().limit(300)
+    if user_obj is None:
+        print "Error: user_obj returned None"
+        # return "Error"
+        # exit()
+    print len(user_obj)
+    obj_id = ''
+    for obj in user_obj:
+        # print obj.username
+        if obj.username == user:
+            obj_id = obj.objectId
+
+    print obj_id
+    if obj_id == '':
+        print "Error: obj_id returned None"
+        # return "no_obj_id"
+        # exit()
+
+    relevant_data = []
+
+    quiz_obj = QuizPersonalStatistics.Query.all().filter().limit(900)
+    question_obj = QuestionPersonalStatistics.Query.all().filter().limit(17000)
+
+
+    for quiz in quiz_obj:
+        if quiz.user.objectId == obj_id:
+            relevant_data.append(quiz.quizling.objectId)
+            relevant_data.append(quiz.averageScore)
+            print "quizling: " + str(quiz.quizling.objectId) + " created: " + str(quiz.createdAt) + " updated: " + str(quiz.updatedAt)
+    relevant_data = {}
+    relevant_data['hello'] = 'wassup'
+    relevant_data['arab'] = 'spring'
+    # relevant_data_json = json.dumps(relevant_data)
+    # print relevant_data_json
+    return render_template('timeline.html', org=org_info_parse, relevant_data=relevant_data)
 
 
 @manager.route('/search')
