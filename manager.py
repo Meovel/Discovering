@@ -395,7 +395,7 @@ def timeline():
     relevant_data['arab'] = 'spring'
     # relevant_data_json = json.dumps(relevant_data)
     # print relevant_data_json
-    return render_template('timeline.html', org=org_info_parse, relevant_data=relevant_data)
+    return render_template('timeline.html', org=org_info_parse, relevant_data=relevant_data, objectId = obj_id)
 
 
 @manager.route('/search')
