@@ -88,11 +88,13 @@ def login():
         for obj in user_obj_query:
             print obj
         user_id = ""
-        if user_obj_query is not None:
+        print len(user_obj_query)
+        if len(user_obj_query) > 0:
             user_objectId = (user_obj_query[0]).objectId
+            resp.set_cookie('user_objectId', user_objectId)
 
         resp.set_cookie('username', username)
-        resp.set_cookie('user_objectId', user_objectId)
+
         return resp
 
 
