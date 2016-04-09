@@ -77,7 +77,7 @@ function queryToChart(obj_id, str) {
 	query.include("quizling");
 	query.find({
 	  success: function(results) {
-	    alert("Successfully retrieved " + results.length + " entries.");
+	    // alert("Successfully retrieved " + results.length + " entries.");
 			console.log(results)
 			// Do something with the returned Parse.Object values
 	    for (var i = 0; i < results.length; i++) {
@@ -139,6 +139,6 @@ function buildBarGraph(json_array, key1, key2, divId) {
 function riyadSpike() {
   var x = document.forms["chartBuilder"]["x-axis"].value;
   var y = document.forms["chartBuilder"]["y-axis"].value;
-  alert("x-axis is: " + x + ", y-axis is: " + y);
+  // alert("x-axis is: " + x + ", y-axis is: " + y);
   return false;
 }
