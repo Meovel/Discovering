@@ -81,8 +81,18 @@ def login():
 
 
         resp = make_response(render_template('organizations/organizations.html'))
+
         username = data.getlist('username')[0]
+        user_obj_query = _User.Query.all().filter(username = username)
+        print user_obj_query
+        for obj in user_obj_query:
+            print obj
+        user_id = ""
+        if user_obj_query is not None:
+            user_objectId = (user_obj_query[0]).objectId
+
         resp.set_cookie('username', username)
+        resp.set_cookie('user_objectId', user_objectId)
         return resp
 
 
