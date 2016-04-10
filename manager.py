@@ -5,9 +5,7 @@ from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.datastructures import ImmutableMultiDict
 import json
-# import pymongo
-# from pymongo import MongoClient
-# from bson import json_util
+import string
 
 # Parse setting
 application_id = '1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD'
@@ -386,7 +384,6 @@ def timeline():
     quiz_obj = QuizPersonalStatistics.Query.all().filter().limit(900)
     question_obj = QuestionPersonalStatistics.Query.all().filter().limit(17000)
 
-
     for quiz_stat in quiz_obj:
         data = []
         if quiz_stat.user.objectId == user_objectId:
@@ -394,18 +391,19 @@ def timeline():
             data.append(quiz_stat.averageScore)
             data.append(quiz_stat.updatedAt)
 
-            # for quest_stat in question_obj:
-            #     if (quest_stat.person.objectId == user_objectId) and (quest_stat.quizling.objectId == quiz_stat.quizling.objectId):
-            #         # data.append(quest_stat.geolocation)
+            # convert datetime.datetime to string, take out punctuation,
+            # take out whitespace, finally convert to integer so it is a
+            # numeric date-timestamp
+            data.append(int(str(quiz_stat.updatedAt).translate(None, string.punctuation).replace(' ', '')))
 
-        if data:
+        if data: # data is sometimes empty. Discard those entries in relevant_data.
             relevant_data.append(data)
 
-    # relevant_data = {}
-    # relevant_data['hello'] = 'wassup'
-    # relevant_data['arab'] = 'spring'
-    # relevant_data_json = json.dumps(relevant_data)
-    # print relevant_data_json
+    # sorts the list, relevant_data, by the 3-th value in each sublist
+    # (a numeric date), in reverse order.
+    relevant_data.sort(key=lambda x: x[3], reverse=True)
+
+    # send the data to timeline.html using Jinja2, built in to Flask.
     return render_template('timeline.html', org=org_info_parse, relevant_data=relevant_data, objectId = user_objectId)
 
 
