@@ -43,8 +43,17 @@ class LearningStage(Object):
 class Following(Object):
     pass
 
+
 class Channel(Object):
     pass
+
+
+class Notification(Object):
+    pass
+
+class Message(Object):
+    pass
+
 
 org_info_parse = "Random"
 
@@ -57,6 +66,8 @@ for q in Quizzes:
 kw = ''
 result = []
 filteredResult = []
+notifications = []
+messages = []
 
 
 
@@ -64,6 +75,7 @@ filteredResult = []
 
 @manager.route('/', methods=['GET', 'POST'])
 def login():
+    global notifications, messages
     print 'cookie in homepage: '
     print request.cookies
     if request.method == 'POST':
@@ -73,16 +85,13 @@ def login():
             user = User.login(data['username'], data['password'])
         except:
             flash('Incorrect username or password', 'info')
-        # login_user(user)
-    #     return redirect(url_for("index"))
-    # return render_template('login.html')
 
-
-        resp = make_response(render_template('organizations/organizations.html'))
         username = data.getlist('username')[0]
+        notifications = Notification.Query.filter(to=username)
+        messages = Message.Query.filter(toUser=username)
+        resp = make_response(render_template('organizations/organizations.html', notifications=notifications, messages=messages))
         resp.set_cookie('username', username)
         return resp
-
 
     return make_response(render_template('login.html'))
 
@@ -101,6 +110,7 @@ def login():
 
 @manager.route('/index')
 def index():
+    global notifications, messages
     print "================ Index ================"
 
     # return variables
@@ -164,7 +174,9 @@ def index():
         lengthOne = len(retQuizzes[0]),
         lengthTwo = len(retQuizzes[1]),
         lengthThree = len(retQuizzes[2]),
-        channels = channels)
+        channels = channels,
+        notifications=notifications,
+        messages=messages)
 
 
 
@@ -209,6 +221,7 @@ def getChannels():
 
 @manager.route('/organizations')
 def organizations():
+    global notifications, messages
 
     print 'cookie in organizations: '
     print request.cookies
@@ -218,7 +231,7 @@ def organizations():
 
     # render page
     return render_template("organizations/organizations.html",
-        organizations = organizations)
+        organizations = organizations, notifications=notifications, messages=messages)
 
 @manager.route('/quiz/<organizationName>')
 def quiz(organizationName = None):
@@ -286,10 +299,13 @@ def getQuizHistory(userName):
 
 @manager.route('/quizzes/<org_name>')
 def quizzes(org_name=None, user_list=None, quiz_list=None, keyword=None):
+    global notifications, messages
     if org_name:
         quiz_list = Quizling.Query.filter(ownerName=org_name)
     try:
-        return render_template('quizzes.html', user_list=user_list, quiz_list=quiz_list, keyword=keyword)
+        return render_template('quizzes.html',
+                user_list=user_list, quiz_list=quiz_list, keyword=keyword,
+                notifications=notifications, messages=messages)
     except HTTPException as e:
         return "error page"
 
@@ -307,7 +323,7 @@ def getMongoQuizHistory(userName):
 
 @manager.route('/stats', methods=['GET', 'POST'])
 def stats():
-
+    global notifications, messages
 
     print 'cookie in stats: '
     print request.cookies
@@ -329,11 +345,16 @@ def stats():
 
     print obj_id
 
-    return render_template('stats.html', org=org_info_parse, objectId = obj_id)
+    return render_template('stats.html',
+                           org=org_info_parse, objectId=obj_id,
+                           notifications=notifications, messages=messages)
+
 
 @manager.route('/timeline', methods=['GET', 'POST'])
 def timeline():
-    return render_template('timeline.html', org=org_info_parse)
+    global notifications, messages
+    return render_template('timeline.html', org=org_info_parse,
+                           notifications=notifications, messages=messages)
 
 
 @manager.route('/search')
@@ -433,6 +454,36 @@ def sort():
     if reqJSON["field"] == 'playCount':
         filteredResult.sort(key=lambda x: x.playCount, reverse=order)
     return makeJSONquizzes(filteredResult)
+
+@manager.route("/share")
+def share():
+    reqJSON = json.loads(request.form.keys()[0])
+    userName = request.cookies.get('username')
+    user = _User.Query.get(username=userName)
+    quizName = reqJSON["name"]
+    quizId = reqJSON["Id"]
+
+    followers = Following.Query.filter(user=user)
+
+    for follower in followers:
+        notification = Notification()
+        notification.fromUser = userName
+        notification.to = follower.subscriber.username
+        notification.read = False
+        notification.save()
+
+@manager.route("/message")
+def sendMessage():
+    eqJSON = json.loads(request.form.keys()[0])
+    userName = request.cookies.get('username')
+    toUserName = eqJSON["name"]
+    content = eqJSON["message"]
+    message = Message()
+    message.fromUser = userName
+    message.toUser = toUserName
+    message.content = content
+    message.save()
+
 
 if __name__ == '__main__':
     manager.run(debug=True)
