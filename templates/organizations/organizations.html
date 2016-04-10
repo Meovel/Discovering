@@ -46,8 +46,6 @@
 				<!-- organization information -->
 				<div class="organization-card col-md-3 col-sm-3 col-xs-12" id="{{organization.username}}">
 						<div class="front-face">
-							
-
 							{% if organizations[loop.index0].avatar %}
 								<img class="organization_avatar" src="./../static/images/blog_bg.jpg">
                             {% else %}
@@ -68,9 +66,9 @@
 										<i class="fa fa-plus"></i> Follow </a>
 									</div>
 								</div>
-								<a href="#quizzes-wrapper">
+								<a href="../dashboard">
 								<div class="portlet-body" style="height: 220px;">
-									<a href="#quizzes-wrapper">
+									<a href="../user/{{organizations[loop.index0].objectId}}">
 									<p style="font-size: 18px;">
 										 Introduction goes here.
 									</p>
@@ -82,18 +80,6 @@
 					</div>
 				{% endif %}
 			{% endfor %}
-		</div>
-	</div>
-	<div id="quizzes-wrapper">
-		<div id="quiz-search-result">		
-			<div id="quizzes-list">
-			</div>
-			<div id="quiz-detail">
-				<img src="../../static/images/blog_bg.jpg">
-				<h1>Description</h1>
-				<p id="quiz-description">This is a quiz description</p>
-				<p class="button" style="margin-top: 20px;">Take Quiz</p>
-			</div>
 		</div>
 	</div>
 

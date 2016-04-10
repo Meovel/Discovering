@@ -1,12 +1,24 @@
 var username;
 var user_id;
 
+$(".org-card-image-wrapper a").mouseenter(function(){
+	// show blur and text
+	$(this).children().eq(1).fadeIn();
+	$(this).children().eq(2).fadeIn();
+});
+
+$(".org-card-image-wrapper a").mouseleave(function(){
+	// show blur and text
+	$(this).children().eq(1).fadeOut();
+	$(this).children().eq(2).fadeOut();
+});
+
 $(".follow-btn").click(function(){
 	event.preventDefault();
 
 	var followBtn = $(this);
-	var organizationId = $(this).attr("id");
-	var path = "/follow/" + organizationId;
+	var organizationId = user_id;
+	var path = "/follow/" + user_id;
 
 	if(followBtn.hasClass("follow-btn")){
 		$.getJSON(path,{
@@ -15,7 +27,7 @@ $(".follow-btn").click(function(){
 				if(data.result == "success"){
 					followBtn.removeClass("follow-btn");
 					followBtn.addClass("cancel-btn");
-					followBtn.html("<i class=\"fa fa-minus\"></i> Cancel");
+					followBtn.html("UnFollow");
 			}
 		});
 	}
@@ -27,7 +39,7 @@ $(".follow-btn").click(function(){
 				if(data.result == "success"){
 					followBtn.removeClass("follow-btn");
 					followBtn.addClass("cancel-btn");
-					followBtn.html("<i class=\"fa fa-plus\"></i> Follow");
+					followBtn.html("Follow");
 			}
 		});
 	}
@@ -63,20 +75,6 @@ $("#back-btn").click(function(){
 	$("#comments").fadeIn();
 });
 
-
-
-$('a[href^="#"]').on('click',function (e) {
-	    e.preventDefault();
-
-	    var target = this.hash;
-	    var $target = $(target);
-
-	    $('html, body').stop().animate({
-	        'scrollTop': $target.offset().top
-	    }, 500, 'swing', function () {
-	        window.location.hash = target;
-	    });
-	});
 
 $(".organization-card").click(function(){
 	var name = $(this).attr("id");
