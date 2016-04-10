@@ -5,6 +5,7 @@ from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.datastructures import ImmutableMultiDict
 import json
+
 # import pymongo
 # from pymongo import MongoClient
 # from bson import json_util
@@ -217,12 +218,61 @@ def userDashBoard(user_id = None):
         quizzes(if have any) and comment
     '''
     comments = Comment.Query.all().filter(user = user_id)
+    organization = _User.Query.get(objectId = user_id)  
+    followings = Following.Query.all().filter(user = organization)
+    followers = []
+    for following in followings:
+        followers.append(following.subscriber)
+    print "====================="
+    for follower in followers:
+        print follower.username
+    quizzes = getQuiz(organization.username)
+
+    # get related organizations
+    relatedOrgs, relatedOrgsArea = getRelatedOrgs(quizzes, organization.username)
+
 
     return render_template("dashboard.html",
         comments = comments,
         numOfComments = len(comments),
         username = "guoqiao",
-        user_id = user_id)
+        user_id = user_id,
+        organization = organization,
+        followers = followers,
+        numOfFollowers = len(followers),
+        quizzes = quizzes,
+        relatedOrgs = relatedOrgs,
+        relatedOrgsArea = relatedOrgsArea)
+
+def getRelatedOrgs(quizzes, organizationName):
+    areas = []
+    areasName = []
+    relatedOrgs = []
+    relatedOrgsName = []
+    relatedOrgsArea = []
+
+    count = 0
+    if quizzes is not None:
+        for quiz in quizzes:
+            if count == 20:
+                break
+            if hasattr(quiz, "area"):
+                if quiz.area.name not in areasName:
+                    areas.append(quiz.area)
+                    areasName.append(quiz.area.name)
+            count += 1
+
+
+        for area in areas:
+            representativeQuizzes = Quizling.Query.all().filter(area = area).limit(10)
+            for quiz in representativeQuizzes:
+                relatedOrg = _User.Query.get(username = quiz.ownerName)
+                if relatedOrg.username not in relatedOrgsName and relatedOrg.username != organizationName:
+                    relatedOrgs.append(relatedOrg)
+                    relatedOrgsName.append(relatedOrg.username)
+                    relatedOrgsArea.append(quiz.area.name)
+
+    return relatedOrgs,relatedOrgsArea
 
 
 @manager.route('/comment/<target_id>')
@@ -258,15 +308,10 @@ def organizations():
     return render_template("organizations/organizations.html",
         organizations = organizations)
 
-@manager.route('/quiz/<organizationName>')
-def quiz(organizationName = None):
+def getQuiz(organizationName):
     quizzes = Quizling.Query.all().filter(ownerName = organizationName)
-    print "============="
-
-    if(len(quizzes) == 0):
-        return jsonify(result = None)
-    else:
-        return jsonify(result = serialize(quizzes))
+    
+    return quizzes;
 
 @manager.route("/follow/<organizationId>")
 def follow(organizationId = None):
