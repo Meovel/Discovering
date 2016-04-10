@@ -97,30 +97,43 @@
 							<!-- BEGIN TIMELINE TABLE -->
 							<ul class="timeline">
 
+								<!-- Begin spike results using Jinja in Timeline -->
+								<!-- {% for data in relevant_data %}
+										<div>
+											Quiz Id: {{data[0]}},
+											Average Score: {{data[1]}},
+											Pretty Date: {{data[2]}}
+											Date: {{data[3]}}
+										</div>
+								{% endfor %} -->
+								<!-- Ends spike results using Jinja -->
+
 								<!-- TODO Use Flask/Jinja to generate the correct data within each <li></li> of this table. -->
-								<li class="timeline-yellow">
-									<div class="timeline-time">
-										<span class="date">
-										4/10/13 </span>
-										<span class="time">
-										18:30 </span>
-									</div>
-									<div class="timeline-icon">
-										<i class="fa fa-trophy"></i>
-									</div>
-									<div class="timeline-body">
-										<h2>ICT 2013 20th International Conference</h2>
-										<div class="timeline-content">
-											<img class="timeline-img pull-left" src="../../assets/admin/pages/media/blog/2.jpg" alt="">
-											Ricebean black-eyed pea maize scallion green bean spinach cabbage jicama bell pepper carrot onion corn plantain garbanzo. Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber watercress. Parsley amaranth tigernut silver beet maize fennel spinach. Ricebean black-eyed pea maize scallion green bean spinach cabbage jicama bell pepper carrot onion corn plantain garbanzo.
+								{% for data in relevant_data %}
+									<li class="timeline-yellow">
+										<div class="timeline-time">
+											<span class="date">
+											Date: {{data[2]}} </span>
+											<!-- <span class="time">
+											Numeric Date: {{data[3]}} </span> -->
 										</div>
-										<div class="timeline-footer">
-											<a href="javascript:;" class="nav-link pull-right">
-											Read more <i class="m-icon-swapright m-icon-white"></i>
-											</a>
+										<div class="timeline-icon">
+											<i class="fa fa-trophy"></i>
 										</div>
-									</div>
-								</li>
+										<div class="timeline-body">
+											<h2>Quiz Id: {{data[0]}}</h2>
+											<div class="timeline-content">
+												<img class="timeline-img pull-left" src="../../assets/admin/pages/media/blog/2.jpg" alt="">
+												Average Score: {{data[1]}}
+											</div>
+											<div class="timeline-footer">
+												<a href="javascript:;" class="nav-link pull-right">
+												Read more <i class="m-icon-swapright m-icon-white"></i>
+												</a>
+											</div>
+										</div>
+									</li>
+								{% endfor %}
 
 								<li class="timeline-blue">
 									<div class="timeline-time">
