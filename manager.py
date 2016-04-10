@@ -385,19 +385,31 @@ def timeline():
     question_obj = QuestionPersonalStatistics.Query.all().filter().limit(17000)
 
     for quiz_stat in quiz_obj:
-        data = []
+        quiz_data = []
         if quiz_stat.user.objectId == user_objectId:
-            data.append(quiz_stat.quizling.objectId)
-            data.append(quiz_stat.averageScore)
-            data.append(quiz_stat.updatedAt)
+            quiz_data.append(quiz_stat.quizling.objectId)
+            quiz_data.append(quiz_stat.averageScore)
+            quiz_data.append(quiz_stat.updatedAt)
+            quiz_data.append(int(str(quiz_stat.updatedAt).translate(None, string.punctuation).replace(' ', '')))
+
+            for quest_stat in question_obj:
+                quest_data = []
+                if (quest_stat.quizling.objectId == quiz_stat.quizling.objectId) and (quest_stat.person.objectId == user_objectId):
+                    # print str(quest_stat.quizling.objectId) + ", " + str(quest_stat.geolocation.latitude) + ", " + str(quest_stat.geolocation.longitude)
+                    quest_data.append(quest_stat.objectId)
+                    quest_data.append(quest_stat.geolocation.latitude)
+                    quest_data.append(quest_stat.geolocation.longitude)
+                    if quest_data:
+                        quiz_data.append(quest_data)
+
 
             # convert datetime.datetime to string, take out punctuation,
             # take out whitespace, finally convert to integer so it is a
             # numeric date-timestamp
-            data.append(int(str(quiz_stat.updatedAt).translate(None, string.punctuation).replace(' ', '')))
+            # data.append(int(str(quiz_stat.updatedAt).translate(None, string.punctuation).replace(' ', '')))
 
-        if data: # data is sometimes empty. Discard those entries in relevant_data.
-            relevant_data.append(data)
+        if quiz_data: # data is sometimes empty. Discard those entries in relevant_data.
+            relevant_data.append(quiz_data)
 
     # sorts the list, relevant_data, by the 3-th value in each sublist
     # (a numeric date), in reverse order.
