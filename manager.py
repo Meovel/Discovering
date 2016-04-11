@@ -383,18 +383,27 @@ def timeline():
 
     quiz_obj = QuizPersonalStatistics.Query.all().filter().limit(900)
     question_obj = QuestionPersonalStatistics.Query.all().filter().limit(17000)
+    quizling_obj = Quizling.Query.all().filter().limit(500)
+
 
     for quiz_stat in quiz_obj:
         quiz_data = []
-        if quiz_stat.user.objectId == user_objectId:
-            quiz_data.append(quiz_stat.quizling.objectId)
+        quiz_id = quiz_stat.quizling.objectId
+        quiz_name = ""
+        for q in quizling_obj:
+            if q.objectId == quiz_id:
+                quiz_name = q.name
+
+        if (quiz_stat.user.objectId == user_objectId):
+            quiz_data.append(quiz_name)
+            quiz_data.append(quiz_id)
             quiz_data.append(quiz_stat.averageScore)
             quiz_data.append(quiz_stat.updatedAt)
             quiz_data.append(int(str(quiz_stat.updatedAt).translate(None, string.punctuation).replace(' ', '')))
 
             for quest_stat in question_obj:
                 quest_data = []
-                if (quest_stat.quizling.objectId == quiz_stat.quizling.objectId) and (quest_stat.person.objectId == user_objectId):
+                if (quest_stat.quizling.objectId == quiz_id) and (quest_stat.person.objectId == user_objectId):
                     # print str(quest_stat.quizling.objectId) + ", " + str(quest_stat.geolocation.latitude) + ", " + str(quest_stat.geolocation.longitude)
                     quest_data.append(quest_stat.objectId)
                     quest_data.append(quest_stat.geolocation.latitude)
@@ -413,7 +422,9 @@ def timeline():
 
     # sorts the list, relevant_data, by the 3-th value in each sublist
     # (a numeric date), in reverse order.
-    relevant_data.sort(key=lambda x: x[3], reverse=True)
+    # relevant_data.sort(key=lambda x: x[3], reverse=True)
+    for r in relevant_data:
+        print r
 
     # send the data to timeline.html using Jinja2, built in to Flask.
     return render_template('timeline.html', org=org_info_parse, relevant_data=relevant_data, objectId = user_objectId)
