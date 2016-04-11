@@ -87,7 +87,24 @@
 							<ul class="timeline">
 								<!-- BEGIN QUIZ STATISTICS -->
 								{% for data in relevant_data %}
-									<li class="timeline-yellow">
+									{% if loop.index % 6 == 1 %}
+										<li class="timeline-yellow">
+									{% endif %}
+									{% if loop.index % 6 == 2 %}
+										<li class="timeline-blue">
+									{% endif %}
+									{% if loop.index % 6 == 3 %}
+										<li class="timeline-green">
+									{% endif %}
+									{% if loop.index % 6 == 4 %}
+										<li class="timeline-purple">
+									{% endif %}
+									{% if loop.index % 6 == 5 %}
+										<li class="timeline-red">
+									{% endif %}
+									{% if loop.index % 6 == 0 %}
+										<li class="timeline-grey">
+									{% endif %}
 										<div class="timeline-time">
 											<span class="date">
 											Date: {{data[3]}} </span>
