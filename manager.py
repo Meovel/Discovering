@@ -50,6 +50,9 @@ class Channel(Object):
 class Comment(Object):
     pass
 
+class Like(Object):
+    pass
+
 org_info_parse = "Random"
 
 Quizzes = Quizling.Query.all().filter().limit(300)
@@ -211,22 +214,31 @@ def getChannels():
 
 
 ############################### User Dashboard ###############################
-@manager.route('/user/<user_id>')
-def userDashBoard(user_id = None):
+@manager.route('/user/<target_id>')
+def userDashBoard(target_id = None):
     '''
         This page required organization basic information, follower, followed, 
         quizzes(if have any) and comment
     '''
-    comments = Comment.Query.all().filter(user = user_id)
-    organization = _User.Query.get(objectId = user_id)  
-    followings = Following.Query.all().filter(user = organization)
+    user_id = "hfy96QWaXg"
+
+    comments = Comment.Query.all().filter(user = target_id)
+    organization = _User.Query.get(objectId = target_id)  
+    followings = Following.Query.all().filter(user = organization).limit(12)
     followers = []
     for following in followings:
-        followers.append(following.subscriber)
-    print "====================="
-    for follower in followers:
-        print follower.username
+        if hasattr(following.subscriber, "username"):
+            followers.append(following.subscriber)
     quizzes = getQuiz(organization.username)
+
+    #like
+    like = ""
+    like = Like.Query.all().filter(liker=user_id).filter(likee=target_id)
+    if len(like) == 0:
+        like = "unlike"
+    else:
+        like = "like"
+    numOfLikes = len(Like.Query.all().filter(likee=target_id))
 
     # get related organizations
     relatedOrgs, relatedOrgsArea = getRelatedOrgs(quizzes, organization.username)
@@ -236,13 +248,15 @@ def userDashBoard(user_id = None):
         comments = comments,
         numOfComments = len(comments),
         username = "guoqiao",
-        user_id = user_id,
+        target_id = target_id,
         organization = organization,
         followers = followers,
         numOfFollowers = len(followers),
         quizzes = quizzes,
         relatedOrgs = relatedOrgs,
-        relatedOrgsArea = relatedOrgsArea)
+        relatedOrgsArea = relatedOrgsArea,
+        like = like,
+        numOfLikes = numOfLikes)
 
 def getRelatedOrgs(quizzes, organizationName):
     areas = []
@@ -288,6 +302,27 @@ def postComment(target_id = None):
     comment.save()
 
     return jsonify(result = "OK")
+
+
+@manager.route('/like/<target_id>')
+def like(target_id = None):
+    user_id = "hfy96QWaXg"
+
+    newLike = Like()
+    newLike.liker = user_id
+    newLike.likee = target_id
+    newLike.save()
+    return jsonify(result="OK")
+
+@manager.route('/unlike/<target_id>')
+def unlike(target_id = None):
+    user_id = "hfy96QWaXg"
+
+    like = Like.Query.get(liker = user_id, likee = target_id)
+    like.delete()
+
+    return jsonify(result="OK")
+
 
 ############################### End Of User Dashboard ###############################
 

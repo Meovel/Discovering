@@ -1,5 +1,6 @@
 var username;
-var user_id;
+var target_id;
+var numOfLikes;
 
 $(".org-card-image-wrapper a").mouseenter(function(){
 	// show blur and text
@@ -17,8 +18,8 @@ $(".follow-btn").click(function(){
 	event.preventDefault();
 
 	var followBtn = $(this);
-	var organizationId = user_id;
-	var path = "/follow/" + user_id;
+	var organizationId = target_id;
+	var path = "/follow/" + target_id;
 
 	if(followBtn.hasClass("follow-btn")){
 		$.getJSON(path,{
@@ -46,6 +47,36 @@ $(".follow-btn").click(function(){
 });
 
 
+//like
+$("#like-image").click(function(){
+	alert($(this).attr("src"));
+	var path = "";
+
+	// click to unlike
+	if($(this).attr("src") == "../static/images/like.jpg"){
+		$(this).attr("src", "../static/images/unlike.jpg");
+		path = "/unlike/" + target_id
+		$.getJSON(path, function(data){
+				if(data.result == "OK"){
+					numOfLikes--;
+					$("#likes").text(numOfLikes)
+			}
+		});
+	}
+	// click to like
+	else{
+		path = "/like/" + target_id;
+		$(this).attr("src", "../static/images/like.jpg");
+		$.getJSON(path, function(data){
+				if(data.result == "OK"){
+					numOfLikes++;
+					$("#likes").text(numOfLikes)
+			}
+		});
+	}
+});
+
+
 // post comment
 $("#make-comment").click(function(){
 	$("#post-comment").fadeIn();
@@ -55,15 +86,15 @@ $("#make-comment").click(function(){
 
 $("#post-comment-btn").click(function(){
 	var content = $("#comment-content").val();
-	var path = "/comment/" + user_id;
+	var path = "/comment/" + target_id;
 	$.getJSON(path, {
 		content: content,
 		poster: username
 	}, function(data){
 		if(data.result == "OK"){
 			var html = "<div class='comment'>" + 
-			"<p>" + content + "</p>" + 
-			"<p>By: " + username + "<p>" +
+			"<p class='normal-text'>" + content + "</p>" + 
+			"<p class='sub-text'>By: " + username + "</p>" +
 			"</div>";
 			$("#comments").prepend(html);
 		}
