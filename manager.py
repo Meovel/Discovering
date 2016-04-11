@@ -418,7 +418,9 @@ def timeline():
 
     # send the data to timeline.html using Jinja2, built in to Flask.
     return render_template('timeline.html', org=org_info_parse,
-                           notifications=notifications, messages=messages)
+                        relevant_data=relevant_data, objectId = user_objectId,
+                        notifications=notifications, messages=messages)
+
 
 
 @manager.route('/search')
