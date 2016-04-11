@@ -36,16 +36,19 @@
 				<div class="portlet light" style="height:580px;">
 						<div class="portlet-title">
 							<div class="actions">
-								<a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
-								<i class="icon-wrench"></i>
-								</a>
+								<div>
+									<img id="like-image" src="../static/images/{{like}}.jpg">
+									<p id="likes">{{numOfLikes}}</p>
+								</div>
 							</div>
 						</div>
 						<div class="portlet-body" style="text-align:center;">
-							<div style="width:100%; height:200px;"><img src="../static/images/bg6.jpg" id="user-photo"></div>
-							<p>{{organization.username}}</p>
-							<p>{{organization.email}}</p>
-							<button class="btn purple follow-btn">Follow</button>
+							<div id="org-information">
+								<div style="width:100%; height:200px;"><img src="../static/images/bg6.jpg" id="user-photo"></div>
+								<p>{{organization.username}}</p>
+								<p>{{organization.email}}</p>
+								<button class="btn purple follow-btn">Follow</button>
+							</div>
 						</div>
 				</div>
 			</div>
@@ -159,11 +162,13 @@
 												<div class="org-card-image-wrapper">
 													<a href="{{follower.objectId}}"><img src="../static/images/bg6.jpg" class="org-card-image">
 													<div class="org-card-blur"></div>
-													<p class="org-card-name">{{follower.username}}</p></a>
+												
+													<p class="org-card-name">{{follower.username}}</p>
+												
 												</div>
 										</div>
 
-										{% if loop.index0 % 4 == 3 %}
+										{% if loop.index0 % 6 == 5 %}
 											</div>
 										{% endif %}
 							{% endfor %}
@@ -222,7 +227,8 @@ jQuery(document).ready(function() {
 
     // store user id into session
     username = "{{username}}";
-    user_id = "{{user_id}}"
+    target_id = "{{target_id}}";
+    numOfLikes = {{numOfLikes}};
     // init global variables
     var quizzes = new Array();
 });   
