@@ -128,7 +128,7 @@ $(document).ready(function () {
 		$("#quizList").on("click",".sharebtn",function(){
 			var val = $(this).attr("value");
 			var idAndName = val.split("|");
-			var requestJSON = {"name":idAndName[0],"Id":idAndName[1]};
+			var requestJSON = {"name":idAndName[1],"Id":idAndName[0]};
 			$.ajax({
                 url: "/share",
                 method: "POST",
@@ -137,8 +137,9 @@ $(document).ready(function () {
             }).done(function (data) {
 				var result = JSON.parse(data);
 				if(result["result"] == 1){
-					$(this).html("kappa");
-					alert("shared");
+                    var btn = document.getElementById("shareButton"+idAndName[0]);
+					btn.innerText = "Shared"
+                    btn.className = "btn red"
 				}
             });
 		});
@@ -152,7 +153,7 @@ $(document).ready(function () {
                 dataType: "Text",
                 data: JSON.stringify(requestJSON)
             }).done(function (data) {
-				alert("sent");
+				alert("Message sent");
             });
 		});
     }
