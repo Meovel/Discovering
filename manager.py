@@ -5,9 +5,6 @@ from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.datastructures import ImmutableMultiDict
 import json
-# import pymongo
-# from pymongo import MongoClient
-# from bson import json_util
 
 # Parse setting
 application_id = '1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD'
@@ -309,16 +306,6 @@ def quizzes(org_name=None, user_list=None, quiz_list=None, keyword=None):
     except HTTPException as e:
         return "error page"
 
-
-def getMongoQuizHistory(userName):
-    stuff = []
-    client = MongoClient('localhost',27017)
-    db = client['discovering_user_db']
-    collection = db['test_user_name']
-    results = collection.find({'type':'quiz_result'}).sort([('time', pymongo.DESCENDING)])
-    for result in results:
-        stuff.append(json_util.dumps(result,default=json_util.default))
-    return str({'result':stuff})
 
 
 @manager.route('/stats', methods=['GET', 'POST'])
