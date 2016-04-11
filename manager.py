@@ -469,6 +469,8 @@ def share():
         notification = Notification()
         notification.fromUser = userName
         notification.to = follower.subscriber.username
+        notification.quizName = quizName
+        notification.quizId = quizId
         notification.read = False
         notification.save()
     print "finished sending share notification"
