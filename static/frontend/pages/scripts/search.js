@@ -16,10 +16,7 @@ function quizListToHTML(jobj) {
         }
         htmlString = htmlString + '</p></div></div><div class="playButton"><a href="http://webplay.quizlingapp.com/app#/quizzes/';
         htmlString = htmlString + qList[i]["id"] + '" style="text-decoration: none;"><button class="btn blue" style="width: 45%">Play</button></a><button type="button" id="shareButton" class="btn green sharebtn" value="'+qList[i]["id"]+'|'+qList[i]["name"]+'" style="width: 45%">Share</button></div></div></div>';
-        //var htmlString = '<div class="col-md-4"><div class="portlet light"><div class="portlet-title"><div class="caption font-purple-plum"><img class="organization_avatar" src="./../static/organizations/book.png"><span class="caption-subject bold uppercase">';
-        //htmlString = htmlString+qList[i]['name']+'</span></div></div><div class="portlet-body"><div id="context" data-toggle="context" data-target="#context-menu"><p>';
-        //var endString = '</p></div></div><div style="height:25px; margin-top:25px"><a class="button" style="float:left">Follow</a><a class="button" style="float:right">Quiz</a></div></div><!-- END PORTLET--></div>';
-        //htmlString = htmlString + qList[i]['summary'] + endString;
+        
         if (i % 3 === 0) {
             htmlString = rowTag + htmlString;
         } else if (i % 3 === 2 || qList.length - 1 === i) {
@@ -30,6 +27,19 @@ function quizListToHTML(jobj) {
     return resultHTML
 }
 
+function filterProperty(parName, obj,requestURL){
+	var val = obj.attr("data-value");
+	var name = obj.children().html();
+	$(parName).children("#dropDownDisplay").html(name);
+	$.ajax({
+		url: requestURL,
+		method: "POST",
+		dataType: "Text",
+		data: val
+	}).done(function (data) {
+		$("#quizList").html(quizListToHTML(JSON.parse(data)));
+	});
+}
 
 $(document).ready(function () {
         $(".followBtn").click(function () {
@@ -53,32 +63,13 @@ $(document).ready(function () {
             });
 
         });
-        $("#areaFilter").children(".dropdown-menu").children(".submit").click(function () {
-            var name = $(this).children().html();
-            $("#areaFilter").children("#dropDownDisplay").html(name);
-            $.ajax({
-                url: "/filterArea",
-                method: "POST",
-                dataType: "Text",
-                data: val
-            }).done(function (data) {
-                $("#quizList").html(quizListToHTML(JSON.parse(data)));
-            });
+        $("#areaFilter").on("click",".submit",function () {
+			filterProperty("#areaFilter",$(this),"/filterArea");
         });
-        $("#ageFilter").children(".dropdown-menu").children(".submit").click(function () {
-            var val = $(this).attr("data-value");
-            var name = $(this).children().html();
-            $("#ageFilter").children("#dropDownDisplay").html(name);
-            $.ajax({
-                url: "/filterAge",
-                method: "POST",
-                dataType: "Text",
-                data: val
-            }).done(function (data) {
-                $("#quizList").html(quizListToHTML(JSON.parse(data)));
-            });
+        $("#ageFilter").on("click",".submit",function () {
+			filterProperty("#ageFilter",$(this),"/filterAge");
         });
-        $("#sortResult").children(".dropdown-menu").children(".submit").click(function () {
+        $("#sortResult").on("click",".submit",function () {
             var requestJSON = {};
             var arrow = $(this).parent().siblings("#sortArrow").children("i");
             var className = arrow.attr("class");
@@ -101,7 +92,7 @@ $(document).ready(function () {
                 $("#quizList").html(quizListToHTML(JSON.parse(data)));
             });
         });
-        $("#sortResult").children("#dropDownDisplay").click(function () {
+        $("#sortResult").on("click","#dropDownDisplay",function () {
             var requestJSON = {};
             var arrow = $(this).siblings("#sortArrow").children("i");
             var className = arrow.attr("class");
