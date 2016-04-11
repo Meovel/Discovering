@@ -53,7 +53,7 @@
                 </div>
                 <div class="btn-group" style="float: right" id="areaFilter">
                     <button type="button" class="btn purple" id="dropDownDisplay">Area</button>
-                    <button type="button" class="btn purple dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
+                    <button type="button" class="btn purple dropdown-toggle" data-toggle="dropdown" id="sortOrder"><i class="fa fa-angle-down"></i></button>
                     <ul class="dropdown-menu" role="menu" data-style="purple" style="float: right"
                             action="" method="GET" id="filter">
                         <li class="submit" data-value="95aSXQ3xMo"><a href="javascript:;">Literature</a></li>
@@ -68,7 +68,7 @@
                 </div>
                 <div class="btn-group" style="float: right" id="sortResult">
                     <button type="button" class="btn green" id="dropDownDisplay">Sort</button>
-                    <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></button>
+                    <button type="button" class="btn green dropdown-toggle" data-toggle="dropdown" id="sortArrow"><i class="fa fa-angle-down"></i></button>
                     <ul class="dropdown-menu" role="menu" data-style="green" style="float: right"
                             action="sort" method="GET" id="sort">
                         <li class="submit" data-value="name"><a href="javascript:;">Name</a></li>
@@ -96,15 +96,40 @@
 								</div>
 							</div>
 							<div class="portlet-body">
-								<div id="context" data-toggle="context" data-target="#context-menu">
+								<div data-toggle="context" data-target="#context-menu">
                                     <p>
 									</p>
 								</div>
 							</div>
-							<div>
-                                <a href="" style="text-decoration: none;">
-								<button class="btn green btn-block">Follow
-                                </button></a>
+							<div style="text-align: center">
+								<button id="{{user.objectId}}" class="btn green followBtn" style="width: 45%" data-value="{{user.objectId}}">
+                                    Follow
+                                </button>
+                                <button class="btn blue" style="width: 45%" data-toggle="modal" href="#modal{{ user.objectId }}">
+                                    Message
+                                </button>
+                                <!-- /.modal -->
+                                <div class="modal fade draggable-modal" id="modal{{ user.objectId }}" tabindex="-1" role="basic" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                                <h4 class="modal-title">Message to {{ user.username }}</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>
+                                                    <input type="text" class="col-md-12 form-control">
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn default" data-dismiss="modal">Close</button>
+                                                <button id="sendMessage" type="button" class="btn blue sendbtn" data-value="{{ user.username }}">Send</button>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
 							</div>
 						</div>
 						<!-- END PORTLET-->
@@ -157,8 +182,10 @@
 							</div>
 							<div class="playButton">
                                 <a href="http://webplay.quizlingapp.com/app#/quizzes/{{quiz.objectId}}" style="text-decoration: none;">
-								<button class="btn blue btn-block">Play
+								<button type="button" class="btn blue" style="width: 45%">Play
                                 </button></a>
+                                <button id="shareButton{{quiz.objectId}}" type="button" class="btn green sharebtn" value="{{quiz.objectId}}|{{quiz.name}}" style="width: 45%">Share
+                                </button>
 							</div>
 						</div>
 						<!-- END PORTLET-->
