@@ -330,24 +330,6 @@ def stats():
         return redirect(url_for(''))
         # exit()
 
-    # user_obj = _User.Query.all().filter().limit(300)
-    # if user_obj is None:
-    #     print "Error: user_obj returned None"
-    #     # return "Error"
-    #     # exit()
-    # print len(user_obj)
-    # obj_id = ''
-    # for obj in user_obj:
-    #     # print obj.username
-    #     if obj.username == user:
-    #         obj_id = obj.objectId
-    #
-    # print obj_id
-    # if obj_id == '':
-    #     print "Error: obj_id returned None"
-    #     # return "no_obj_id"
-    #     # exit()
-
     return render_template('stats.html', org=org_info_parse, objectId = user_objectId)
 
 @manager.route('/timeline', methods=['GET', 'POST'])
@@ -360,24 +342,6 @@ def timeline():
         print "Error: user returned None"
         return redirect(url_for(''))
         # exit()
-
-    # user_obj = _User.Query.all().filter().limit(300)
-    # if user_obj is None:
-    #     print "Error: user_obj returned None"
-    #     # return "Error"
-    #     # exit()
-    # print len(user_obj)
-    # obj_id = ''
-    # for obj in user_obj:
-    #     # print obj.username
-    #     if obj.username == user:
-    #         obj_id = obj.objectId
-    #
-    # print obj_id
-    # if obj_id == '':
-    #     print "Error: obj_id returned None"
-    #     # return "no_obj_id"
-    #     # exit()
 
     relevant_data = []
 
