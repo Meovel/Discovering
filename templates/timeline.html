@@ -1,11 +1,5 @@
 <!DOCTYPE html>
-<!--[if IE 8]>
-<html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]>
-<html lang="en" class="ie9 no-js"> <![endif]-->
-<!--[if !IE]><!-->
 <html lang="en">
-<!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head>
 		<!-- <meta id="relevant_data_id" style="visibility: hidden" relevant-data='{{relevant_data|tojson}}'> -->
@@ -21,7 +15,6 @@
     <link href="../static/organizations/css/organizations.css" rel="stylesheet" type="text/css">
 </head>
 <!-- END HEAD -->
-
 <!-- BEGIN BODY -->
 <body class="page-md page-header-fixed page-sidebar-closed-hide-logo">
 <!-- BEGIN HEADER -->
@@ -60,7 +53,6 @@
 			<!-- /.modal -->
 			<!-- END SAMPLE PORTLET CONFIGURATION MODAL FORM-->
 			<!-- BEGIN PAGE HEADER-->
-
 			<div class="page-head">
 				<!-- BEGIN SUB-PAGE TITLE -->
 				<div class="page-title">
@@ -79,16 +71,14 @@
 				</div>
 			</div>
 			<!-- END PORTLET : END CHART DIV-->
-
 			<!-- BEGIN PAGE HEAD -->
 			<div class="page-head">
 				<div class="page-title">
-					<h1>Timeline <small>shows user's statistics, sorted by time.</small></h1>
+					<h1>Timeline <small>shows user's quiz statistics, sorted by time of last answer.</small></h1>
 				</div>
 				<div class="page-toolbar">
 				</div>
 			</div>
-
 			<!-- BEGIN TIMELINE CONTENT-->
 			<div class="portlet light">
 				<div class="portlet-body">
@@ -96,8 +86,7 @@
 						<div class="col-md-12">
 							<!-- BEGIN TIMELINE TABLE -->
 							<ul class="timeline">
-
-								<!-- TODO Use Flask/Jinja to generate the correct data within each <li></li> of this table. -->
+								<!-- BEGIN QUIZ STATISTICS -->
 								{% for data in relevant_data %}
 									<li class="timeline-yellow">
 										<div class="timeline-time">
@@ -112,21 +101,20 @@
 										<div class="timeline-body">
 											<h2>Quiz Id: {{data[0]}}</h2>
 											<div class="timeline-content">
-												<!-- <img class="timeline-img pull-left" src="../../assets/admin/pages/media/blog/2.jpg" alt=""> -->
 												Average Score: {{data[2]}}
 											</div>
 											<div class="timeline-footer">
 												<a href="javascript:;" class="nav-link pull-right">
 												<input type='button' id='specifyGeolocations{{loop.index}}' value='Toggle map for quiz.' style='color:black'>
 												</a>
-
+												<!-- BEGIN MAP DIV -->
 												<div id='question_map{{loop.index}}' style='height:100px; width:300px' style='display: none'>
 													<style type="text/css">
 														html, body { height: 100%; margin: 0; padding: 0; }
 														#question_map{{loop.index}} { height: 300px; width: 300px; }
 													</style>
 												</div>
-
+												<!-- END MAP DIV -->
 											</div>
 										</div>
 									</li>
@@ -147,11 +135,11 @@
 									};
 									</script>
 								{% endfor %}
-
-								<!-- Generate all maps. -->
+								<!-- BEGIN QUIZ STATISTICS -->
+								<!-- BEGIN LONG MAP GENERATION FUNCTION -->
 								<script>
 									{% for maps in relevant_data %}
-									var map{{loop.index}};
+										var map{{loop.index}};
 									{% endfor %}
 									function initMap() {
 										{% for data in relevant_data %}
@@ -164,7 +152,7 @@
 										{% endfor %}
 									}
 								</script>
-
+								<!-- END LONG MAP GENERATION FUNCTION -->
 							</ul>
 							<!-- END TIMELINE TABLE -->
 						</div>
@@ -193,7 +181,6 @@
 <script src="http://www.parsecdn.com/js/parse-1.2.13.min.js"></script>
 <script src="../static/frontend/indexPage/scripts/charts.js" type="text/javascript"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD6bWcaUGesvwtfTAmNSxI51jVhpYDKvJc&callback=initMap" type="text/javascript"></script>
-<script src="../static/frontend/indexPage/scripts/timeline.js" type="text/javascript"></script>
 <script src="../static/frontend/pages/scripts/search.js" type="text/javascript"></script>
 <script>
     jQuery(document).ready(function () {
@@ -201,9 +188,7 @@
         Layout.init(); // init current layout
     });
 </script>
-<!-- END GOOGLE RECAPTCHA -->
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->
-
 </html>
