@@ -212,7 +212,7 @@ def getChannels():
 
 ############################### User Dashboard ###############################
 @manager.route('/user/<user_id>')
-def userDashBoard(user_id = None):
+def userDashBoard(user_id = None, test=False):
     '''
         This page required organization basic information, follower, followed, 
         quizzes(if have any) and comment
@@ -228,21 +228,28 @@ def userDashBoard(user_id = None):
         print follower.username
     quizzes = getQuiz(organization.username)
 
+    #create a comment arr consisting of comment poster mame
+    comment_arr = []
+    for temp_comment in comments:
+        comment_arr.append(temp_comment.poster)
+
     # get related organizations
     relatedOrgs, relatedOrgsArea = getRelatedOrgs(quizzes, organization.username)
 
-
-    return render_template("dashboard.html",
-        comments = comments,
-        numOfComments = len(comments),
-        username = "guoqiao",
-        user_id = user_id,
-        organization = organization,
-        followers = followers,
-        numOfFollowers = len(followers),
-        quizzes = quizzes,
-        relatedOrgs = relatedOrgs,
-        relatedOrgsArea = relatedOrgsArea)
+    if test:
+        return comment_arr
+    else:
+        return render_template("dashboard.html",
+            comments = comments,
+            numOfComments = len(comments),
+            username = "guoqiao",
+            user_id = user_id,
+            organization = organization,
+            followers = followers,
+            numOfFollowers = len(followers),
+            quizzes = quizzes,
+            relatedOrgs = relatedOrgs,
+            relatedOrgsArea = relatedOrgsArea)
 
 def getRelatedOrgs(quizzes, organizationName):
     areas = []

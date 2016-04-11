@@ -7,9 +7,10 @@ import os,sys,inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
-from manager import quiz
+#from manager import quiz
 from manager import serialize
 from manager import getChannels
+from manager import userDashBoard
 # from manager import organizations
 
 # Parse setting
@@ -39,7 +40,11 @@ class Following(Object):
 class Channel(Object):
     pass
 
+class Comment(Object):
+    pass
+
 class TestOrganizations(unittest.TestCase):
+
     def test_organizations1(self):
     	self.assertTrue(True)
 
@@ -73,13 +78,24 @@ class TestOrganizations(unittest.TestCase):
 		self.assertTrue(result.has_key("idgtXmekx4"))
 		self.assertTrue(result.has_key("Y6I9zDbZHw"))
 		self.assertTrue(result.has_key("CiXSGRo3eI"))
-		#test getchannel function
-		channel_arr = getChannels(True);
-		self.assertTrue("channel_RzlZiu7ZA8" in channel_arr)
-		self.assertTrue("channel_Fu4XCipsP9" in channel_arr)
-		self.assertTrue("channel_6XAT3fA7wR" in channel_arr)
+
+		#testing comment staff
+		self.assertTrue(True)
+		user_id = "123"
+		#retrieve all comments relate to a specific user
+		comment_arr= userDashBoard(user_id, True)
+		self.assertEqual(len(comment_arr),5)
+		self.assertTrue("guoqiao" in comment_arr)
+		self.assertEqual(comment_arr.count("guoqiao"), 4)
+		self.assertTrue("123" in comment_arr)
+		# count the occurences of comment
+		self.assertEqual(comment_arr.count("123"), 1)
+		self.assertTrue("haotian" not in comment_arr)
+		self.assertTrue("zhao jin" not in comment_arr)
+
+		#testing posting comment
 		
-		
+
 
 if __name__ == '__main__':
     unittest.main()
