@@ -368,7 +368,6 @@ def timeline():
             for quest_stat in question_obj:
                 quest_data = []
                 if (quest_stat.quizling.objectId == quiz_id) and (quest_stat.person.objectId == user_objectId):
-                    # print str(quest_stat.quizling.objectId) + ", " + str(quest_stat.geolocation.latitude) + ", " + str(quest_stat.geolocation.longitude)
                     quest_data.append(quest_stat.objectId)
                     quest_data.append(quest_stat.geolocation.latitude)
                     quest_data.append(quest_stat.geolocation.longitude)
