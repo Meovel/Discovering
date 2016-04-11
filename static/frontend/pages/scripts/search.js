@@ -45,10 +45,10 @@ $(document).ready(function () {
             }, function (data) {
                 if (btn.innerText == "FOLLOW") {
                     btn.innerText = "Unfollow";
-                    btn.className = "btn red btn-block followBtn"
+                    btn.className = "btn red followBtn"
                 } else {
                     btn.innerText = "Follow";
-                    btn.className = "btn green btn-block followBtn"
+                    btn.className = "btn green followBtn"
                 }
             });
 
