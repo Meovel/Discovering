@@ -522,12 +522,16 @@ def sort():
     return makeJSONquizzes(filteredResult)
 
 @manager.route("/share", methods=['POST'])
-def share():
-    reqJSON = json.loads(request.form.keys()[0])
-    userName = request.cookies.get('username')
-    user = _User.Query.get(username=userName)
-    quizName = reqJSON["name"]
-    quizId = reqJSON["Id"]
+def share(test=False, userName="", quizName="", quizId=""):
+    # cases of test mode and none test mode
+    if not test:
+        reqJSON = json.loads(request.form.keys()[0])
+        userName = request.cookies.get('username')
+        user = _User.Query.get(username=userName)
+        quizName = reqJSON["name"]
+        quizId = reqJSON["Id"]
+    else:
+        user = _User.Query.get(username=userName)
 
     followers = Following.Query.filter(user=user)
 
@@ -540,14 +544,18 @@ def share():
         notification.read = False
         notification.save()
     print "finished sending share notification"
-    return '{"result":1}'
+    if not test:
+        return '{"result":1}'
+    else:
+        return userName
 
 @manager.route("/message", methods=['POST'])
-def sendMessage():
-    eqJSON = json.loads(request.form.keys()[0])
-    userName = request.cookies.get('username')
-    toUserName = eqJSON["name"]
-    content = eqJSON["message"]
+def sendMessage(test=False, userName ="", toUserName="", content=""):
+    if not test:
+        eqJSON = json.loads(request.form.keys()[0])
+        userName = request.cookies.get('username')
+        toUserName = eqJSON["name"]
+        content = eqJSON["message"]
     message = Message()
     message.fromUser = userName
     message.toUser = toUserName
