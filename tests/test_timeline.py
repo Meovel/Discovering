@@ -11,6 +11,7 @@ from manager import quiz
 from manager import serialize
 from manager import getChannels
 from manager import fetch_timeline_data
+import datetime
 
 __author__ = 'Chris Riyad'
 # from manager import organizations
@@ -69,11 +70,29 @@ class ParameterizedTestTimeline(TestCase):
 
 # Tests if no empty entries were put into the date for Timeline.
 class TestOne(ParameterizedTestTimeline):
-    def test_timeline_no_empty(self):
+    # tests if data returned from fetch_timeline_data is not none.
+    def test_timeline_no_empty1(self):
+        timeline_data = fetch_timeline_data(self.objId)
+        self.assertIsNotNone(timeline_data)
+
+    # tests specifically that the date is correctly parsed as a long (converted from int by python) in timeline_data
+    def test_timeline_date_parsed_as_long(self):
+        timeline_data = fetch_timeline_data(self.objId)
+        for data in timeline_data:
+            self.assertTrue(type(data[4]) is long)
+
+    # tests first dimension of timeline_data list
+    def test_timeline_no_empty2(self):
         # Pass certain parameters to see if the result matches expectation
         timeline_data = fetch_timeline_data(self.objId)
-        for t in timeline_data:
-            self.assertFalse(t is None)
+        for data in timeline_data:
+            self.assertFalse(data is None)
+
+    # tests to make sure date is a datetime.datetime object
+    def test_timeline_correct_date_type(self):
+        timeline_data = fetch_timeline_data(self.objId)
+        for data in timeline_data:
+            self.assertTrue(type(data[3]) is datetime.datetime)
 
 # Tests if the quiz affiliated with the question data actually exists in the database.
 class TestTwo(ParameterizedTestTimeline):
