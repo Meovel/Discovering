@@ -67,6 +67,7 @@ class ParameterizedTestTimeline(TestCase):
             suite.addTest(testcase_klass(name, objId=objId))
         return suite
 
+# Tests if no empty entries were put into the date for Timeline.
 class TestOne(ParameterizedTestTimeline):
     def test_timeline_no_empty(self):
         # Pass certain parameters to see if the result matches expectation
@@ -74,6 +75,7 @@ class TestOne(ParameterizedTestTimeline):
         for t in timeline_data:
             self.assertFalse(t is None)
 
+# Tests if the quiz affiliated with the question data actually exists in the database.
 class TestTwo(ParameterizedTestTimeline):
     def test_no_quizless_questions(self):
         question_obj = QuestionPersonalStatistics.Query.all().filter().limit(17000)
