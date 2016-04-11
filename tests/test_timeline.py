@@ -92,7 +92,7 @@ objectId1 = "WrWZRnIDbv"
 # mostly from http://eli.thegreenplace.net/2011/08/02/python-unit-testing-parametrized-test-cases
 suite = unittest.TestSuite()
 suite.addTest(ParameterizedTestTimeline.parametrize(TestOne, objId=objectId1))
-suite.addTest(ParameterizedTestTimeline.parametrize(TestOne, objId=objectId1))
+suite.addTest(ParameterizedTestTimeline.parametrize(TestTwo, objId=objectId1))
 unittest.TextTestRunner(verbosity=2).run(suite)
 
 
