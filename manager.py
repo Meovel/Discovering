@@ -332,19 +332,9 @@ def stats():
 
     return render_template('stats.html', org=org_info_parse, objectId = user_objectId)
 
-@manager.route('/timeline', methods=['GET', 'POST'])
-def timeline():
 
-    username = request.cookies.get('username')
-    user_objectId = request.cookies.get('user_objectId')
-
-    if username is None:
-        print "Error: user returned None"
-        return redirect(url_for(''))
-        # exit()
-
+def fetch_timeline_data(user_objectId):
     relevant_data = []
-
     quiz_obj = QuizPersonalStatistics.Query.all().filter().limit(900)
     question_obj = QuestionPersonalStatistics.Query.all().filter().limit(17000)
     quizling_obj = Quizling.Query.all().filter().limit(500)
@@ -384,8 +374,23 @@ def timeline():
     # sorts the list, relevant_data, by the 3-th value in each sublist
     # (a numeric date), in descending order.
     relevant_data.sort(key=lambda x: x[4], reverse=True)
-    for r in relevant_data:
-        print r
+
+    return relevant_data
+
+
+@manager.route('/timeline', methods=['GET', 'POST'])
+def timeline():
+
+    username = request.cookies.get('username')
+    user_objectId = request.cookies.get('user_objectId')
+
+    if username is None:
+        print "Error: user returned None"
+        return redirect(url_for(''))
+        # exit()
+
+    relevant_data = fetch_timeline_data(user_objectId)
+
 
     # send the data to timeline.html using Jinja2, built in to Flask.
     return render_template('timeline.html', org=org_info_parse, relevant_data=relevant_data, objectId = user_objectId)
