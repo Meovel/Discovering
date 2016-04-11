@@ -8,8 +8,8 @@
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head>
-		<div class="container" id="relevant_data_id" style="visibility: hidden"><a>{{relevant_data|tojson}}</a></div>
-		<div class="container" id="obj_id" style="visibility: hidden"><a>{{objectId}}</a></div>
+		<!-- <meta id="relevant_data_id" style="visibility: hidden" relevant-data='{{relevant_data|tojson}}'> -->
+		<meta id="obj_id" style="visibility: hidden" objectId='{{objectId}}'>
 		<meta charset="utf-8"/>
     <title>Discovering - Quizzes</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -97,23 +97,12 @@
 							<!-- BEGIN TIMELINE TABLE -->
 							<ul class="timeline">
 
-								<!-- Begin spike results using Jinja in Timeline -->
-								<!-- {% for data in relevant_data %}
-										<div>
-											Quiz Id: {{data[0]}},
-											Average Score: {{data[1]}},
-											Pretty Date: {{data[2]}}
-											Date: {{data[3]}}
-										</div>
-								{% endfor %} -->
-								<!-- Ends spike results using Jinja -->
-
 								<!-- TODO Use Flask/Jinja to generate the correct data within each <li></li> of this table. -->
 								{% for data in relevant_data %}
 									<li class="timeline-yellow">
 										<div class="timeline-time">
 											<span class="date">
-											Date: {{data[2]}} </span>
+											Date: {{data[3]}} </span>
 											<!-- <span class="time">
 											Numeric Date: {{data[3]}} </span> -->
 										</div>
@@ -124,11 +113,11 @@
 											<h2>Quiz Id: {{data[0]}}</h2>
 											<div class="timeline-content">
 												<!-- <img class="timeline-img pull-left" src="../../assets/admin/pages/media/blog/2.jpg" alt=""> -->
-												Average Score: {{data[1]}}
+												Average Score: {{data[2]}}
 											</div>
 											<div class="timeline-footer">
 												<a href="javascript:;" class="nav-link pull-right">
-												<input type='button' id='specifyGeolocations{{loop.index}}' value='Toggle geolocation for specific questions' style='color:black'>
+												<input type='button' id='specifyGeolocations{{loop.index}}' value='Toggle map for quiz.' style='color:black'>
 												</a>
 
 												<div id='question_map{{loop.index}}' style='height:100px; width:300px' style='display: none'>
@@ -149,7 +138,7 @@
 									var button = document.getElementById('specifyGeolocations{{loop.index}}'); // Assumes element with id='button'
 									button.onclick = function() {
 											var div = document.getElementById('question_map{{loop.index}}');
-											if (div.style.display !== 'block') {
+											if (div.style.display == 'none') {
 													div.style.display = 'block';
 											}
 											else {
@@ -165,165 +154,16 @@
 									var map{{loop.index}};
 									{% endfor %}
 									function initMap() {
-										{% for maps in relevant_data %}
-										map{{loop.index}} = new google.maps.Map(document.getElementById('question_map{{loop.index}}'), {
-											center: {lat: -34.397, lng: 150.644},
-											zoom: 8
-										});
+										{% for data in relevant_data %}
+											{% if data[5] %}
+												map{{loop.index}} = new google.maps.Map(document.getElementById('question_map{{loop.index}}'), {
+													center: {lat: {{data[5][1]}}, lng: {{data[5][2]}}},
+													zoom: 4
+												});
+											{% endif %}
 										{% endfor %}
 									}
 								</script>
-
-								<li class="timeline-blue">
-									<div class="timeline-time">
-										<span class="date">
-										4/11/13 </span>
-										<span class="time">
-										12:04 </span>
-									</div>
-									<div class="timeline-icon">
-										<i class="fa fa-video-camera"></i>
-									</div>
-									<div class="timeline-body">
-										<h2>Management Meeting</h2>
-										<div class="timeline-content">
-											<img class="timeline-img pull-right" src="../../assets/admin/pages/media/blog/1.jpg" alt="">
-											Caulie dandelion maize lentil collard greens radish arugula sweet pepper water spinach kombu courgette lettuce. Celery coriander bitterleaf epazote radicchio shallot winter collard greens spring onion squash lentil. Artichoke salad bamboo shoot black-eyed pea brussels sprout garlic kohlrabi purslane collard greens spring onion squash lentil. Artichoke salad bamboo shoot black-eyed pea brussels sprout garlic kohlrabi..
-										</div>
-										<div class="timeline-footer">
-											<a href="javascript:;" class="nav-link">
-											Read more <i class="m-icon-swapright m-icon-white"></i>
-											</a>
-										</div>
-									</div>
-								</li>
-								<li class="timeline-green">
-									<div class="timeline-time">
-										<span class="date">
-										4/13/13 </span>
-										<span class="time">
-										05:36 </span>
-									</div>
-									<div class="timeline-icon">
-										<i class="fa fa-comments"></i>
-									</div>
-									<div class="timeline-body">
-										<h2>New Project Launch</h2>
-										<div class="timeline-content">
-											<img class="timeline-img pull-left" src="../../assets/admin/pages/media/blog/3.jpg" alt="">
-											Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber watercress. Pea sprouts wattle seed rutabaga okra yarrow cress avocado grape radish bush tomato ricebean. Pea sprouts wattle seed rutabaga okra yarrow cress avocado grape radish bush tomato ricebean.
-										</div>
-										<div class="timeline-footer">
-											<a href="javascript:;" class="nav-link">
-											Read more <i class="m-icon-swapright m-icon-white"></i>
-											</a>
-										</div>
-									</div>
-								</li>
-								<li class="timeline-purple">
-									<div class="timeline-time">
-										<span class="date">
-										4/15/13 </span>
-										<span class="time">
-										13:15 </span>
-									</div>
-									<div class="timeline-icon">
-										<i class="fa fa-music"></i>
-									</div>
-									<div class="timeline-body">
-										<h2>Promotion Day</h2>
-										<div class="timeline-content">
-											<div class="scroller" data-height="175px" data-always-visible="1" data-rail-visible1="1">
-												<p>
-													<img class="timeline-img pull-right" src="../../assets/admin/pages/media/blog/4.jpg" alt="">
-													Caulie dandelion maize lentil collard greens radish arugula sweet pepper water spinach kombu courgette lettuce. Celery coriander bitterleaf epazote radicchio shallot winter purslane collard greens spring onion squash lentil. Artichoke salad bamboo shoot black-eyed pea brussels sprout garlic kohlrabi. coriander bitterleaf epazote radicchio shallot winter purslane collard.
-												</p>
-												<p>
-													 Coriander bitterleaf epazote radicchio shallot winter purslane collard. Caulie dandelion maize lentil collard greens radish arugula sweet pepper water spinach kombu courgette lettuce. Celery coriander bitterleaf epazote radicchio shallot winter purslane collard greens spring onion squash lentil. Artichoke salad bamboo shoot black-eyed pea brussels sprout garlic kohlrabi.
-												</p>
-												<p>
-													<img class="timeline-img pull-left" src="../../assets/admin/pages/media/blog/6.jpg" alt=""> Caulie dandelion maize lentil collard greens radish arugula sweet pepper water spinach kombu courgette lettuce. Celery coriander bitterleaf epazote radicchio shallot winter purslane collard greens spring onion squash lentil. Artichoke salad bamboo shoot black-eyed pea brussels sprout garlic kohlrabi radicchio shallot winter purslane collard greens spring onion squash lentil.
-												</p>
-												<p>
-													 Coriander bitterleaf epazote radicchio shallot winter purslane collard. Caulie dandelion maize lentil collard greens radish arugula sweet pepper water spinach kombu courgette lettuce. Celery coriander bitterleaf epazote radicchio shallot winter purslane collard greens spring onion squash lentil. Artichoke salad bamboo shoot black-eyed pea brussels sprout garlic kohlrabi.
-												</p>
-											</div>
-										</div>
-										<div class="timeline-footer">
-											<a href="javascript:;" class="btn blue">
-											Read more <i class="m-icon-swapright m-icon-white"></i>
-											</a>
-										</div>
-									</div>
-								</li>
-								<li class="timeline-red">
-									<div class="timeline-time">
-										<span class="date">
-										4/16/13 </span>
-										<span class="time">
-										21:30 </span>
-									</div>
-									<div class="timeline-icon">
-										<i class="fa fa-rss"></i>
-									</div>
-									<div class="timeline-body">
-										<h2>Daily Feeds</h2>
-										<div class="timeline-content">
-											<img class="timeline-img pull-left" src="../../assets/admin/pages/media/blog/5.jpg" alt="">
-											Parsley amaranth tigernut silver beet maize fennel spinach. Ricebean black-eyed pea maize scallion green bean spinach cabbage jicama bell pepper carrot onion corn plantain garbanzo. Sierra leone bologi komatsuna celery peanut swiss chard silver beet squash dandelion maize chicory burdock tatsoi dulse radish wakame beetroot.
-										</div>
-										<div class="timeline-footer">
-											<a href="javascript:;" class="btn green pull-right">
-											Read more <i class="m-icon-swapright m-icon-white"></i>
-											</a>
-										</div>
-									</div>
-								</li>
-								<li class="timeline-grey">
-									<div class="timeline-time">
-										<span class="date">
-										4/17/13 </span>
-										<span class="time">
-										12:11 </span>
-									</div>
-									<div class="timeline-icon">
-										<i class="fa fa-times"></i>
-									</div>
-									<div class="timeline-body">
-										<h2>Staff Meeting</h2>
-										<div class="timeline-content">
-											 Caulie dandelion maize lentil collard greens radish arugula sweet pepper water spinach kombu courgette lettuce. Celery coriander bitterleaf epazote radicchio shallot winter purslane collard greens spring onion squash lentil. Artichoke salad bamboo shoot black-eyed pea brussels sprout garlic kohlrabi.
-										</div>
-										<div class="timeline-footer">
-											<a href="javascript:;" class="nav-link pull-right">
-											Read more <i class="m-icon-swapright m-icon-white"></i>
-											</a>
-										</div>
-									</div>
-								</li>
-								<li class="timeline-blue timeline-noline">
-									<div class="timeline-time">
-										<span class="date">
-										4/18/13 </span>
-										<span class="time">
-										09:56 </span>
-									</div>
-									<div class="timeline-icon">
-										<i class="fa fa-bar-chart-o"></i>
-									</div>
-									<div class="timeline-body">
-										<h2>Demo Europe 2013</h2>
-										<div class="timeline-content">
-											<img class="timeline-img pull-left" src="../../assets/admin/pages/media/blog/2.jpg" alt="">
-											Parsnip lotus root celery yarrow seakale tomato collard greens tigernut epazote ricebean melon tomatillo soybean chicory broccoli beet greens peanut salad. Lotus root burdock bell pepper chickweed shallot groundnut pea sprouts welsh onion wattle seed pea salsify turnip scallion peanut arugula bamboo shoot onion swiss chard.
-										</div>
-										<div class="timeline-footer">
-											<a href="javascript:;" class="nav-link">
-											Read more <i class="m-icon-swapright m-icon-white"></i>
-											</a>
-										</div>
-									</div>
-								</li>
 
 							</ul>
 							<!-- END TIMELINE TABLE -->

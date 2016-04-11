@@ -54,7 +54,7 @@ function queryToChart(obj_id, str) {
 	// 	console.log('obj: ' + obj.innerHTML);
 	// });
 
-	var obj = document.getElementById('obj_id').innerHTML;
+	var obj = document.getElementById('obj_id').getAttribute('objectId');
 	obj = obj.replace(/\<a\>/,'');
 	obj = obj.replace(/\<\/a\>/,'');
 	console.log('obj: ' + obj);
