@@ -15,7 +15,7 @@ function quizListToHTML(jobj) {
             htmlString = htmlString + "Description";
         }
         htmlString = htmlString + '</p></div></div><div class="playButton"><a href="http://webplay.quizlingapp.com/app#/quizzes/';
-        htmlString = htmlString + qList[i]["id"] + '" style="text-decoration: none;"><button class="btn blue btn-block">Play</button></a></div></div></div>';
+        htmlString = htmlString + qList[i]["id"] + '" style="text-decoration: none;"><button class="btn blue" style="width: 45%">Play</button></a><button type="button" id="shareButton" class="btn green sharebtn" value="'+qList[i]["id"]+'|'+qList[i]["name"]+'" style="width: 45%">Share</button></div></div></div>';
         //var htmlString = '<div class="col-md-4"><div class="portlet light"><div class="portlet-title"><div class="caption font-purple-plum"><img class="organization_avatar" src="./../static/organizations/book.png"><span class="caption-subject bold uppercase">';
         //htmlString = htmlString+qList[i]['name']+'</span></div></div><div class="portlet-body"><div id="context" data-toggle="context" data-target="#context-menu"><p>';
         //var endString = '</p></div></div><div style="height:25px; margin-top:25px"><a class="button" style="float:left">Follow</a><a class="button" style="float:right">Quiz</a></div></div><!-- END PORTLET--></div>';
@@ -125,6 +125,36 @@ $(document).ready(function () {
                 $("#quizList").html(quizListToHTML(JSON.parse(data)));
             });
         });
+		$("#quizList").on("click",".sharebtn",function(){
+			var val = $(this).attr("value");
+			var idAndName = val.split("|");
+			var requestJSON = {"name":idAndName[0],"Id":idAndName[1]};
+			$.ajax({
+                url: "/share",
+                method: "POST",
+                dataType: "Text",
+                data: JSON.stringify(requestJSON)
+            }).done(function (data) {
+				var result = JSON.parse(data);
+				if(result["result"] == 1){
+					$(this).html("kappa");
+					alert("shared");
+				}
+            });
+		});
+		$(document).on("click","#sendMessage",function(){
+			var messageTxt = $(this).parent().siblings(".modal-body").children("p").children("input").val();
+			var toUserName = $(this).attr("data-value");
+			var requestJSON = {"name":toUserName,"message":messageTxt};
+			$.ajax({
+                url: "/message",
+                method: "POST",
+                dataType: "Text",
+                data: JSON.stringify(requestJSON)
+            }).done(function (data) {
+				alert("sent");
+            });
+		});
     }
 );
 

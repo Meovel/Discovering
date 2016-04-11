@@ -123,7 +123,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn default" data-dismiss="modal">Close</button>
-                                                <button type="button" class="btn blue sendbtn">Send</button>
+                                                <button id="sendMessage" type="button" class="btn blue sendbtn" data-value="{{ user.username }}">Send</button>
                                             </div>
                                         </div>
                                         <!-- /.modal-content -->
@@ -184,7 +184,7 @@
                                 <a href="http://webplay.quizlingapp.com/app#/quizzes/{{quiz.objectId}}" style="text-decoration: none;">
 								<button type="button" class="btn blue" style="width: 45%">Play
                                 </button></a>
-                                <button type="button" class="btn green sharebtn" value="{{quiz.objectId}}|{{quiz.name}}" style="width: 45%">Share
+                                <button id="shareButton" type="button" class="btn green sharebtn" value="{{quiz.objectId}}|{{quiz.name}}" style="width: 45%">Share
                                 </button>
 							</div>
 						</div>

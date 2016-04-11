@@ -455,7 +455,7 @@ def sort():
         filteredResult.sort(key=lambda x: x.playCount, reverse=order)
     return makeJSONquizzes(filteredResult)
 
-@manager.route("/share")
+@manager.route("/share", methods=['POST'])
 def share():
     reqJSON = json.loads(request.form.keys()[0])
     userName = request.cookies.get('username')
@@ -471,8 +471,10 @@ def share():
         notification.to = follower.subscriber.username
         notification.read = False
         notification.save()
+    print "finished sending share notification"
+    return '{"result":1}'
 
-@manager.route("/message")
+@manager.route("/message", methods=['POST'])
 def sendMessage():
     eqJSON = json.loads(request.form.keys()[0])
     userName = request.cookies.get('username')
@@ -483,7 +485,7 @@ def sendMessage():
     message.toUser = toUserName
     message.content = content
     message.save()
-
+    return '{"result":1}'
 
 if __name__ == '__main__':
     manager.run(debug=True)
