@@ -363,6 +363,10 @@ def timeline():
             quiz_data.append(quiz_id)
             quiz_data.append(quiz_stat.averageScore)
             quiz_data.append(quiz_stat.updatedAt)
+
+            # convert datetime.datetime to string, take out punctuation,
+            # take out whitespace, finally convert to integer so it is a
+            # numeric date-timestamp
             quiz_data.append(int(str(quiz_stat.updatedAt).translate(None, string.punctuation).replace(' ', '')))
 
             for quest_stat in question_obj:
@@ -374,17 +378,11 @@ def timeline():
                     if quest_data:
                         quiz_data.append(quest_data)
 
-
-            # convert datetime.datetime to string, take out punctuation,
-            # take out whitespace, finally convert to integer so it is a
-            # numeric date-timestamp
-            # data.append(int(str(quiz_stat.updatedAt).translate(None, string.punctuation).replace(' ', '')))
-
         if quiz_data: # data is sometimes empty. Discard those entries in relevant_data.
             relevant_data.append(quiz_data)
 
     # sorts the list, relevant_data, by the 3-th value in each sublist
-    # (a numeric date), in reverse order.
+    # (a numeric date), in descending order.
     relevant_data.sort(key=lambda x: x[4], reverse=True)
     for r in relevant_data:
         print r
