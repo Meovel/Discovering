@@ -422,7 +422,7 @@ def timeline():
 
     # sorts the list, relevant_data, by the 3-th value in each sublist
     # (a numeric date), in reverse order.
-    # relevant_data.sort(key=lambda x: x[3], reverse=True)
+    relevant_data.sort(key=lambda x: x[4], reverse=True)
     for r in relevant_data:
         print r
 
