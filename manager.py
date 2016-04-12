@@ -5,10 +5,14 @@ from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.datastructures import ImmutableMultiDict
 import json
+<<<<<<< HEAD
 
 # import pymongo
 # from pymongo import MongoClient
 # from bson import json_util
+=======
+import string
+>>>>>>> master
 
 # Parse setting
 application_id = '1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD'
@@ -24,6 +28,8 @@ manager.secret_key = 'discoveringfalsksecretkey2016'
 class QuestionPersonalStatistics(Object):
     pass
 
+class QuizPersonalStatistics(Object):
+    pass
 
 class _User(Object):
     pass
@@ -44,15 +50,27 @@ class LearningStage(Object):
 class Following(Object):
     pass
 
+
 class Channel(Object):
     pass
 
+<<<<<<< HEAD
 class Comment(Object):
     pass
 
 class Like(Object):
     pass
 
+=======
+
+class Notification(Object):
+    pass
+
+class Message(Object):
+    pass
+
+
+>>>>>>> master
 org_info_parse = "Random"
 
 Quizzes = Quizling.Query.all().filter().limit(300)
@@ -64,6 +82,8 @@ for q in Quizzes:
 kw = ''
 result = []
 filteredResult = []
+notifications = []
+messages = []
 
 
 
@@ -71,6 +91,7 @@ filteredResult = []
 
 @manager.route('/', methods=['GET', 'POST'])
 def login():
+    global notifications, messages
     print 'cookie in homepage: '
     print request.cookies
     if request.method == 'POST':
@@ -81,15 +102,20 @@ def login():
         except:
             flash('Incorrect username or password', 'info')
         # login_user(user)
-    #     return redirect(url_for("index"))
-    # return render_template('login.html')
 
-
-        resp = make_response(render_template('organizations/organizations.html'))
         username = data.getlist('username')[0]
-        resp.set_cookie('username', username)
-        return resp
 
+        notifications = Notification.Query.filter(to=username)
+        messages = Message.Query.filter(toUser=username)
+        resp = make_response(render_template('organizations/organizations.html', notifications=notifications, messages=messages))
+        resp.set_cookie('username', username)
+
+        user_obj_query = _User.Query.all().filter(username = username)
+        if len(user_obj_query) > 0:
+            user_objectId = (user_obj_query[0]).objectId
+            resp.set_cookie('user_objectId', user_objectId)
+
+        return resp
 
     return make_response(render_template('login.html'))
 
@@ -108,6 +134,7 @@ def login():
 
 @manager.route('/index')
 def index():
+    global notifications, messages
     print "================ Index ================"
 
     # return variables
@@ -171,7 +198,9 @@ def index():
         lengthOne = len(retQuizzes[0]),
         lengthTwo = len(retQuizzes[1]),
         lengthThree = len(retQuizzes[2]),
-        channels = channels)
+        channels = channels,
+        notifications=notifications,
+        messages=messages)
 
 
 
@@ -332,6 +361,7 @@ def unlike(target_id = None):
 
 @manager.route('/organizations')
 def organizations():
+    global notifications, messages
 
     print 'cookie in organizations: '
     print request.cookies
@@ -341,7 +371,7 @@ def organizations():
 
     # render page
     return render_template("organizations/organizations.html",
-        organizations = organizations)
+        organizations = organizations, notifications=notifications, messages=messages)
 
 def getQuiz(organizationName):
     quizzes = Quizling.Query.all().filter(ownerName = organizationName)
@@ -359,6 +389,7 @@ def follow(organizationId = None):
     subscriber = _User.Query.get(objectId = subscriberId)
 
     type = request.args.get('type', 0, type=str)
+    print type
 
     # save the follow relation
     if type == "follow":
@@ -370,8 +401,9 @@ def follow(organizationId = None):
 
     # cancel follow relation
     elif type == "cancel":
-        following = Following.Query.get(subscriber = subscriber, user = organization)
-        following.delete()
+        following = Following.Query.filter(subscriber = subscriber, user = organization)
+        for follow in following:
+            follow.delete()
 
     return jsonify(result = "success")
 
@@ -402,10 +434,13 @@ def getQuizHistory(userName):
 
 @manager.route('/quizzes/<org_name>')
 def quizzes(org_name=None, user_list=None, quiz_list=None, keyword=None):
+    global notifications, messages
     if org_name:
         quiz_list = Quizling.Query.filter(ownerName=org_name)
     try:
-        return render_template('quizzes.html', user_list=user_list, quiz_list=quiz_list, keyword=keyword)
+        return render_template('quizzes.html',
+                user_list=user_list, quiz_list=quiz_list, keyword=keyword,
+                notifications=notifications, messages=messages)
     except HTTPException as e:
         return "error page"
 
@@ -423,7 +458,7 @@ def getMongoQuizHistory(userName):
 
 @manager.route('/stats', methods=['GET', 'POST'])
 def stats():
-
+    global notifications, messages
 
     print 'cookie in stats: '
     print request.cookies
@@ -445,11 +480,74 @@ def stats():
 
     print obj_id
 
-    return render_template('stats.html', org=org_info_parse, objectId = obj_id)
+    return render_template('stats.html',
+                           org=org_info_parse, objectId=obj_id,
+                           notifications=notifications, messages=messages)
+
+
+def fetch_timeline_data(user_objectId):
+    relevant_data = []
+    quiz_obj = QuizPersonalStatistics.Query.all().filter().limit(900)
+    question_obj = QuestionPersonalStatistics.Query.all().filter().limit(17000)
+    quizling_obj = Quizling.Query.all().filter().limit(500)
+
+    for quiz_stat in quiz_obj:
+        quiz_data = []
+        quiz_id = quiz_stat.quizling.objectId
+        quiz_name = ""
+        for q in quizling_obj:
+            if q.objectId == quiz_id:
+                quiz_name = q.name
+
+        if (quiz_stat.user.objectId == user_objectId):
+            quiz_data.append(quiz_name)
+            quiz_data.append(quiz_id)
+            quiz_data.append(quiz_stat.averageScore)
+            quiz_data.append(quiz_stat.updatedAt)
+
+            # convert datetime.datetime to string, take out punctuation,
+            # take out whitespace, finally convert to integer so it is a
+            # numeric date-timestamp
+            quiz_data.append(int(str(quiz_stat.updatedAt).translate(None, string.punctuation).replace(' ', '')))
+
+            for quest_stat in question_obj:
+                quest_data = []
+                if (quest_stat.quizling.objectId == quiz_id) and (quest_stat.person.objectId == user_objectId):
+                    quest_data.append(quest_stat.objectId)
+                    quest_data.append(quest_stat.geolocation.latitude)
+                    quest_data.append(quest_stat.geolocation.longitude)
+                    if quest_data:
+                        quiz_data.append(quest_data)
+
+        if quiz_data: # data is sometimes empty. Discard those entries in relevant_data.
+            relevant_data.append(quiz_data)
+
+    # sorts the list, relevant_data, by the 3-th value in each sublist
+    # (a numeric date), in descending order.
+    relevant_data.sort(key=lambda x: x[4], reverse=True)
+
+    return relevant_data
+
 
 @manager.route('/timeline', methods=['GET', 'POST'])
 def timeline():
-    return render_template('timeline.html', org=org_info_parse)
+    global notifications, messages
+
+    username = request.cookies.get('username')
+    user_objectId = request.cookies.get('user_objectId')
+
+    if username is None:
+        print "Error: user returned None"
+        return redirect(url_for(''))
+        # exit()
+
+    relevant_data = fetch_timeline_data(user_objectId)
+
+    # send the data to timeline.html using Jinja2, built in to Flask.
+    return render_template('timeline.html', org=org_info_parse,
+                        relevant_data=relevant_data, objectId = user_objectId,
+                        notifications=notifications, messages=messages)
+
 
 
 @manager.route('/search')
@@ -458,7 +556,6 @@ def search():
     quiz_list = searchKeyword(keyword)
     users = _User.Query.filter(username=keyword)
     return quizzes(user_list=users, quiz_list=quiz_list, keyword=keyword)
-
 
 
 def searchKeyword(keyword):
@@ -537,19 +634,61 @@ def sort():
     global filteredResult
     if not filteredResult:
         filteredResult = result
-
-    attr = request.form.keys()[0]
-    if attr == 'name':
-        filteredResult.sort(key=lambda x: x.name, reverse=True)
-    if attr == 'updatedAt':
-        filteredResult.sort(key=lambda x: x.updatedAt, reverse=True)
-    if attr == 'averageScore':
-        filteredResult.sort(key=lambda x: x.averageScore, reverse=True)
-    if attr == 'playCount':
-        filteredResult.sort(key=lambda x: x.playCount, reverse=True)
-
+    reqJSON = json.loads(request.form.keys()[0])
+    order = True
+    if reqJSON["order"] != 'ascending':
+        order = False
+    if reqJSON["field"] == 'name':
+        filteredResult.sort(key=lambda x: x.name, reverse=order)
+    if reqJSON["field"] == 'updatedAt':
+        filteredResult.sort(key=lambda x: x.updatedAt, reverse=order)
+    if reqJSON["field"] == 'averageScore':
+        filteredResult.sort(key=lambda x: x.averageScore, reverse=order)
+    if reqJSON["field"] == 'playCount':
+        filteredResult.sort(key=lambda x: x.playCount, reverse=order)
     return makeJSONquizzes(filteredResult)
 
+@manager.route("/share", methods=['POST'])
+def share(test=False, userName="", quizName="", quizId=""):
+    # cases of test mode and none test mode
+    if not test:
+        reqJSON = json.loads(request.form.keys()[0])
+        userName = request.cookies.get('username')
+        user = _User.Query.get(username=userName)
+        quizName = reqJSON["name"]
+        quizId = reqJSON["Id"]
+    else:
+        user = _User.Query.get(username=userName)
+
+    followers = Following.Query.filter(user=user)
+
+    for follower in followers:
+        notification = Notification()
+        notification.fromUser = userName
+        notification.to = follower.subscriber.username
+        notification.quizName = quizName
+        notification.quizId = quizId
+        notification.read = False
+        notification.save()
+    print "finished sending share notification"
+    if not test:
+        return '{"result":1}'
+    else:
+        return userName
+
+@manager.route("/message", methods=['POST'])
+def sendMessage(test=False, userName ="", toUserName="", content=""):
+    if not test:
+        eqJSON = json.loads(request.form.keys()[0])
+        userName = request.cookies.get('username')
+        toUserName = eqJSON["name"]
+        content = eqJSON["message"]
+    message = Message()
+    message.fromUser = userName
+    message.toUser = toUserName
+    message.content = content
+    message.save()
+    return '{"result":1}'
 
 if __name__ == '__main__':
     manager.run(debug=True)
