@@ -84,7 +84,7 @@
 								<ul class="dropdown-menu-list scroller" style="height: 275px;" data-handle-color="#637283">
 									{% for message in messages %}
 									<li>
-										<a href="inbox.html?a=view">
+										<a href="">
 										<span class="photo">
 										<img src="../../static/admin/layout/img/avatar2.jpg" class="img-circle" alt="">
 										</span>
@@ -220,26 +220,26 @@
 							</li>
 							<li>
 								<a href="{{ url_for('organizations') }}">
-								<i class="icon-calendar"></i> Explore </a>
+								<i class="icon-rocket"></i> Explore </a>
+							</li>
+							<li>
+								<a href="{{ url_for('timeline') }}">
+								<i class="icon-calendar"></i> My Timeline
+									<!--<span class="badge badge-success"> 7 </span>-->
+								</a>
 							</li>
 							<li>
 								<a href="inbox.html">
 								<i class="icon-envelope-open"></i> My Inbox <span class="badge badge-danger">
-								3 </span>
-								</a>
-							</li>
-							<li>
-								<a href="page_todo.html">
-								<i class="icon-rocket"></i> My Tasks <span class="badge badge-success">
-								7 </span>
+								0 </span>
 								</a>
 							</li>
 							<li class="divider">
 							</li>
-							<li>
-								<a href="extra_lock.html">
-								<i class="icon-lock"></i> Lock Screen </a>
-							</li>
+							<!--<li>-->
+								<!--<a href="extra_lock.html">-->
+								<!--<i class="icon-lock"></i> Lock Screen </a>-->
+							<!--</li>-->
 							<li>
 								<a href="/">
 								<i class="icon-key"></i> Log Out </a>
