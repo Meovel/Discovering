@@ -5,14 +5,13 @@ from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.datastructures import ImmutableMultiDict
 import json
-<<<<<<< HEAD
 
 # import pymongo
 # from pymongo import MongoClient
 # from bson import json_util
-=======
+
 import string
->>>>>>> master
+
 
 # Parse setting
 application_id = '1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD'
@@ -54,14 +53,13 @@ class Following(Object):
 class Channel(Object):
     pass
 
-<<<<<<< HEAD
+
 class Comment(Object):
     pass
 
 class Like(Object):
     pass
 
-=======
 
 class Notification(Object):
     pass
@@ -70,7 +68,7 @@ class Message(Object):
     pass
 
 
->>>>>>> master
+
 org_info_parse = "Random"
 
 Quizzes = Quizling.Query.all().filter().limit(300)
