@@ -218,6 +218,13 @@ def userDashBoard(user_id = None, test=False):
         quizzes(if have any) and comment
     '''
     comments = Comment.Query.all().filter(user = user_id)
+    if test:
+        #create a comment arr consisting of comment poster mame
+        comment_arr = []
+        for temp_comment in comments:
+            comment_arr.append(temp_comment.poster)
+        return comment_arr
+
     organization = _User.Query.get(objectId = user_id)  
     followings = Following.Query.all().filter(user = organization)
     followers = []
@@ -228,28 +235,22 @@ def userDashBoard(user_id = None, test=False):
         print follower.username
     quizzes = getQuiz(organization.username)
 
-    #create a comment arr consisting of comment poster mame
-    comment_arr = []
-    for temp_comment in comments:
-        comment_arr.append(temp_comment.poster)
 
     # get related organizations
     relatedOrgs, relatedOrgsArea = getRelatedOrgs(quizzes, organization.username)
 
-    if test:
-        return comment_arr
-    else:
-        return render_template("dashboard.html",
-            comments = comments,
-            numOfComments = len(comments),
-            username = "guoqiao",
-            user_id = user_id,
-            organization = organization,
-            followers = followers,
-            numOfFollowers = len(followers),
-            quizzes = quizzes,
-            relatedOrgs = relatedOrgs,
-            relatedOrgsArea = relatedOrgsArea)
+    
+    return render_template("dashboard.html",
+        comments = comments,
+        numOfComments = len(comments),
+        username = "guoqiao",
+        user_id = user_id,
+        organization = organization,
+        followers = followers,
+        numOfFollowers = len(followers),
+        quizzes = quizzes,
+        relatedOrgs = relatedOrgs,
+        relatedOrgsArea = relatedOrgsArea)
 
 def getRelatedOrgs(quizzes, organizationName):
     areas = []
@@ -283,18 +284,26 @@ def getRelatedOrgs(quizzes, organizationName):
 
 
 @manager.route('/comment/<target_id>')
-def postComment(target_id = None):
-    content = request.args.get('content', 0, type = str)
-    poster = request.args.get('poster', 0, type = str)
+def postComment(test=False,test_id = None, content=None, poster=None):
+    if not test:
+        content = request.args.get('content', 0, type = str)
+        poster = request.args.get('poster', 0, type = str)
+
 
     # create comment and save
     comment = Comment()
     comment.content = content
     comment.poster = poster
-    comment.user = target_id
+    if not test:
+        comment.user = target_id
+    else:
+        comment.user = test_id
     comment.save()
 
-    return jsonify(result = "OK")
+    if not test:
+        return jsonify(result = "OK")
+    else:
+        return comment
 
 ############################### End Of User Dashboard ###############################
 
@@ -319,6 +328,16 @@ def getQuiz(organizationName):
     quizzes = Quizling.Query.all().filter(ownerName = organizationName)
     
     return quizzes;
+
+manager.route('/quiz/<organizationName>')
+def quiz(organizationName = None):
+    quizzes = Quizling.Query.all().filter(ownerName = organizationName)
+    print "============="
+
+    if(len(quizzes) == 0):
+        return jsonify(result = None)
+    else:
+        return jsonify(result = serialize(quizzes))
 
 @manager.route("/follow/<organizationId>")
 def follow(organizationId = None):
@@ -441,14 +460,20 @@ def searchKeyword(keyword):
     keyword = keyword.lower()
     for quiz in Quizzes:
         if quiz.name:
-            if keyword in quiz.name.lower():
+            if check(keyword, quiz.name):
                 result.append(quiz)
         else:
             if quiz.summary:
-                if keyword in quiz.summary.lower():
+                if check(keyword, quiz.summary):
                     result.append(quiz)
     return result
 
+# refractoring here
+def check(keyword, quiz_str):
+    if keyword in quiz_str.lower():
+        return True
+    else:
+        return False
 
 @manager.route('/filterArea', methods=['POST'])
 def filterArea():
