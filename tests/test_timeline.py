@@ -7,7 +7,7 @@ import os,sys,inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
-from manager import quiz
+from manager import quizzes
 from manager import serialize
 from manager import getChannels
 from manager import fetch_timeline_data
