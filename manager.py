@@ -547,6 +547,12 @@ def timeline():
                         notifications=notifications, messages=messages)
 
 
+@manager.route('/inbox')
+def inbox():
+    global notifications, messages
+    return render_template('inbox.html',
+                           notifications=notifications, messages=messages)
+
 
 @manager.route('/search')
 def search():
