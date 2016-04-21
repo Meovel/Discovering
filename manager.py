@@ -555,7 +555,7 @@ def inbox():
 
 
 @manager.route('/inbox/markasread')
-def markAsRead(readMessages):
+def markMessagesAsRead(readMessages):
     global notifications, messages
     for messageId in readMessages:
         message = Message.Query.get(objectId=messageId)
