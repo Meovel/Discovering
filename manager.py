@@ -554,6 +554,33 @@ def inbox():
                            notifications=notifications, messages=messages)
 
 
+@manager.route('/inbox/markasread')
+def markAsRead(readMessages):
+    global notifications, messages
+    for messageId in readMessages:
+        message = Message.Query.get(objectId=messageId)
+        message.read = True
+        message.save()
+    for message in messages:
+        if message.objectId in readMessages:
+            messages.remove(message)
+    return
+    # return redirect(url_for('inbox'))
+
+
+@manager.route('/inbox/delete')
+def deleteMessages(deletedMessages):
+    global notifications, messages
+    for messageId in deletedMessages:
+        message = Message.Query.get(objectId=messageId)
+        message.delete()
+    for message in messages:
+        if message.objectId in deletedMessages:
+            messages.remove(message)
+    return
+    # return redirect(url_for('inbox'))
+
+
 @manager.route('/search')
 def search():
     keyword = request.query_string[6:]
