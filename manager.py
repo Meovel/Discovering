@@ -547,6 +547,13 @@ def timeline():
                         notifications=notifications, messages=messages)
 
 
+@manager.route('/favourites')
+def bookmark():
+    global notifications, messages
+    return render_template('bookmark.html',
+                           notifications=notifications, messages=messages)
+
+
 @manager.route('/inbox')
 def inbox():
     global notifications, messages
