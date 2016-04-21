@@ -231,7 +231,7 @@
 							<li>
 								<a href="{{ url_for('inbox') }}">
 								<i class="icon-envelope-open"></i> My Inbox <span class="badge badge-danger">
-								0 </span>
+								{{ messages|length }} </span>
 								</a>
 							</li>
 							<li class="divider">
