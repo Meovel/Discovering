@@ -84,23 +84,23 @@ notifications = []
 following = []
 follower = []
 messages = []
-
+user = None
 
 
 
 
 @manager.route('/', methods=['GET', 'POST'])
 def login():
-    global notifications, messages
+    global user, notifications, messages
     print 'cookie in homepage: '
     print request.cookies
     if request.method == 'POST':
         data = request.form
-        user = None
 
         try:
             user = User.login(data['username'], data['password'])
         except:
+            user = None
             flash('Incorrect username or password', 'info')
         # login_user(user)
 
@@ -413,6 +413,17 @@ def follow(organizationId = None):
     return jsonify(result = "success")
 
 
+@manager.route("/deleteFollower/<userId>")
+def follow(userId = None):
+    global user
+    follower = _User.Query.get(objectId=userId)
+    if follower:
+        relations = Following.Query.filter(subscriber=follower, user=user)
+        for r in relations:
+            r.delete()
+    return "success"
+
+
 # serialize ParseObject so that it can be jsonify
 def serialize(quizzes):
     ret = dict()
@@ -578,7 +589,7 @@ def markMessagesAsRead(readMessages):
     for message in messages:
         if message.objectId in readMessages:
             messages.remove(message)
-    return
+    return "success"
     # return redirect(url_for('inbox'))
 
 
@@ -591,7 +602,7 @@ def deleteMessages(deletedMessages):
     for message in messages:
         if message.objectId in deletedMessages:
             messages.remove(message)
-    return
+    return "success"
     # return redirect(url_for('inbox'))
 
 
