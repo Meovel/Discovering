@@ -81,6 +81,8 @@ kw = ''
 result = []
 filteredResult = []
 notifications = []
+following = []
+follower = []
 messages = []
 
 
@@ -94,6 +96,7 @@ def login():
     print request.cookies
     if request.method == 'POST':
         data = request.form
+        user = None
 
         try:
             user = User.login(data['username'], data['password'])
@@ -101,19 +104,23 @@ def login():
             flash('Incorrect username or password', 'info')
         # login_user(user)
 
-        username = data.getlist('username')[0]
+        if user:
+            username = data.getlist('username')[0]
 
-        notifications = Notification.Query.filter(to=username)
-        messages = Message.Query.filter(toUser=username)
-        resp = make_response(render_template('organizations/organizations.html', notifications=notifications, messages=messages))
-        resp.set_cookie('username', username)
+            notifications = Notification.Query.filter(to=username)
+            messages = Message.Query.filter(toUser=username)
+            resp = make_response(render_template('organizations/organizations.html', notifications=notifications, messages=messages))
+            following_query = Following.Query.filter(subscriber=user)
+            for u in following_query:
+                following.append(u.user)
+            follower_query = Following.Query.filter(user=user)
+            for u in follower_query:
+                follower.append(u.subscriber)
+            resp.set_cookie('username', username)
 
-        user_obj_query = _User.Query.all().filter(username = username)
-        if len(user_obj_query) > 0:
-            user_objectId = (user_obj_query[0]).objectId
-            resp.set_cookie('user_objectId', user_objectId)
+            resp.set_cookie('user_objectId', user.objectId)
 
-        return resp
+            return resp
 
     return make_response(render_template('login.html'))
 
@@ -549,9 +556,9 @@ def timeline():
 
 @manager.route('/favourites')
 def bookmark():
-    global notifications, messages
+    global notifications, messages, following, follower
     return render_template('bookmark.html',
-                           notifications=notifications, messages=messages)
+                           notifications=notifications, messages=messages, followings=following, followers=follower)
 
 
 @manager.route('/inbox')

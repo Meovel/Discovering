@@ -1,26 +1,29 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en">
 <!--<![endif]-->
 <!-- BEGIN HEAD -->
 <head>
-<meta charset="utf-8"/>
-<title>Discovering | Relations</title>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-<meta content="" name="description"/>
-<meta content="" name="author"/>
-{% include "style.html" %}
-<!-- BEGIN PAGE LEVEL STYLES -->
-<link rel="stylesheet" type="text/css" href="../static/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css"/>
-<link rel="stylesheet" type="text/css" href="../static/global/plugins/select2/select2.css"/>
-<!-- END PAGE LEVEL STYLES -->
-<!-- BEGIN THEME STYLES -->
-<link href="../static/admin/pages/css/todo.css" rel="stylesheet" type="text/css"/>
-<!-- END THEME STYLES -->
+    <meta charset="utf-8"/>
+    <title>Discovering | Relations</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta content="" name="description"/>
+    <meta content="" name="author"/>
+    {% include "style.html" %}
+    <!-- BEGIN PAGE LEVEL STYLES -->
+    <link rel="stylesheet" type="text/css"
+          href="../static/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/global/plugins/select2/select2.css"/>
+    <!-- END PAGE LEVEL STYLES -->
+    <!-- BEGIN THEME STYLES -->
+    <link href="../static/admin/pages/css/todo.css" rel="stylesheet" type="text/css"/>
+    <!-- END THEME STYLES -->
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -30,317 +33,166 @@
 </div>
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
-	<!-- BEGIN CONTENT -->
-	<div class="page-content-wrapper">
-		<div class="page-content">
-			<!-- BEGIN PAGE HEADER-->
-			<!-- BEGIN PAGE HEAD -->
-			<div class="page-head">
-				<!-- BEGIN PAGE TITLE -->
-				<div class="page-title">
-					<h1>Follows <small>who you follow and who follows you</small></h1>
-				</div>
-				<!-- END PAGE TITLE -->
-			</div>
-			<!-- END PAGE HEAD -->
-			<!-- END PAGE HEADER-->
-			<!-- BEGIN PAGE CONTENT-->
-			<div class="row">
-				<div class="col-md-12">
-					<!-- BEGIN TODO SIDEBAR -->
-					<div class="todo-sidebar">
-						<div class="portlet light">
-							<div class="portlet-title">
-								<div class="caption" data-toggle="collapse" data-target=".todo-project-list-content">
-									<span class="caption-subject font-green-sharp bold uppercase">Relations </span>
-									<span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view relations</span>
-								</div>
-								<!--<div class="actions">-->
-									<!--<div class="btn-group">-->
-										<!--<a class="btn green-haze btn-circle btn-sm todo-projects-config" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">-->
-										<!--<i class="icon-settings"></i> &nbsp; <i class="fa fa-angle-down"></i>-->
-										<!--</a>-->
-										<!--<ul class="dropdown-menu pull-right">-->
-											<!--<li>-->
-												<!--<a href="javascript:;">-->
-												<!--<i class="i"></i> New Project </a>-->
-											<!--</li>-->
-											<!--<li class="divider">-->
-											<!--</li>-->
-											<!--<li>-->
-												<!--<a href="javascript:;">-->
-												<!--Completed <span class="badge badge-success">-->
-												<!--12 </span>-->
-												<!--</a>-->
-											<!--</li>-->
-											<!--<li class="divider">-->
-											<!--</li>-->
-										<!--</ul>-->
-									<!--</div>-->
-								<!--</div>-->
-							</div>
-							<div class="portlet-body todo-project-list-content">
-								<div class="todo-project-list">
-									<ul class="nav nav-pills nav-stacked">
-										<li>
-											<a href="javascript:;">
-											<span class="badge badge-success badge-active"> 0 </span> Follwing </a>
-										</li>
-										<li>
-											<a href="javascript:;">
-											<span class="badge badge-default"> 0 </span> Follower </a>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- END TODO SIDEBAR -->
-					<!-- BEGIN TODO CONTENT -->
-					<div class="todo-content">
-						<div class="portlet light">
-							<div class="portlet-body">
-								<div class="row">
-									<div class="col-md-5 col-sm-4">
-										<div class="scroller" style="max-height: 800px;" data-always-visible="0" data-rail-visible="0" data-handle-color="#dae3e7">
-											<div class="todo-tasklist">
-												<div class="todo-tasklist-item todo-tasklist-item-border-green">
-													<img class="todo-userpic pull-left" src="../static/admin/layout/img/avatar4.jpg" width="27px" height="27px">
-													<div class="todo-tasklist-item-title">
-														 Slider Redesign
-													</div>
-													<div class="todo-tasklist-item-text">
-														 Lorem dolor sit amet ipsum dolor sit consectetuer dolore.
-													</div>
-													<div class="todo-tasklist-controls pull-left">
-														<span class="todo-tasklist-date"><i class="fa fa-calendar"></i> 21 Sep 2014 </span>
-														<span class="todo-tasklist-badge badge badge-roundless">Urgent</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="todo-tasklist-devider">
-									</div>
-									<div class="col-md-7 col-sm-8">
-										<div class="scroller" style="max-height: 800px;" data-always-visible="0" data-rail-visible="0" data-handle-color="#dae3e7">
-											<form action="#" class="form-horizontal">
-												<!-- TASK HEAD -->
-												<div class="form">
-													<div class="form-group">
-														<div class="col-md-8 col-sm-8">
-															<div class="todo-taskbody-user">
-																<img class="todo-userpic pull-left" src="../static/admin/layout/img/avatar6.jpg" width="50px" height="50px">
-																<span class="todo-username pull-left">Vanessa Bond</span>
-															</div>
-														</div>
-													</div>
-													<!-- END TASK HEAD -->
-													<!-- TASK TITLE -->
-													<div class="form-group">
-														<div class="col-md-12">
-															<input type="text" class="form-control todo-taskbody-tasktitle" placeholder="Task Title...">
-														</div>
-													</div>
-													<!-- TASK DESC -->
-													<div class="form-group">
-														<div class="col-md-12">
-															<textarea class="form-control todo-taskbody-taskdesc" rows="8" placeholder="Task Description..."></textarea>
-														</div>
-													</div>
-													<!-- END TASK DESC -->
-													<!-- TASK DUE DATE -->
-													<div class="form-group">
-														<div class="col-md-12">
-															<div class="input-icon">
-																<i class="fa fa-calendar"></i>
-																<input type="text" class="form-control todo-taskbody-due" placeholder="Due Date...">
-															</div>
-														</div>
-													</div>
-													<!-- TASK TAGS -->
-													<div class="form-group">
-														<div class="col-md-12">
-															<input type="text" class="form-control todo-taskbody-tags" placeholder="Tags..." value="Pending, Requested">
-														</div>
-													</div>
-													<!-- TASK TAGS -->
-													<div class="form-actions right todo-form-actions">
-														<button class="btn btn-circle btn-sm green-haze">Save Changes</button>
-														<button class="btn btn-circle btn-sm btn-default">Cancel</button>
-													</div>
-												</div>
-												<div class="tabbable-line">
-													<ul class="nav nav-tabs ">
-														<li class="active">
-															<a href="#tab_1" data-toggle="tab">
-															Comments </a>
-														</li>
-														<li>
-															<a href="#tab_2" data-toggle="tab">
-															History </a>
-														</li>
-													</ul>
-													<div class="tab-content">
-														<div class="tab-pane active" id="tab_1">
-															<!-- TASK COMMENTS -->
-															<div class="form-group">
-																<div class="col-md-12">
-																	<ul class="media-list">
-																		<li class="media">
-																			<a class="pull-left" href="javascript:;">
-																			<img class="todo-userpic" src="../static/admin/layout/img/avatar8.jpg" width="27px" height="27px">
-																			</a>
-																			<div class="media-body todo-comment">
-																				<button type="button" class="todo-comment-btn btn btn-circle btn-default btn-xs">&nbsp; Reply &nbsp;</button>
-																				<p class="todo-comment-head">
-																					<span class="todo-comment-username">Christina Aguilera</span> &nbsp; <span class="todo-comment-date">17 Sep 2014 at 2:05pm</span>
-																				</p>
-																				<p class="todo-text-color">
-																					 Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. <br>
-																				</p>
-																				<!-- Nested media object -->
-																				<div class="media">
-																					<a class="pull-left" href="javascript:;">
-																					<img class="todo-userpic" src="../static/admin/layout/img/avatar4.jpg" width="27px" height="27px">
-																					</a>
-																					<div class="media-body">
-																						<p class="todo-comment-head">
-																							<span class="todo-comment-username">Carles Puyol</span> &nbsp; <span class="todo-comment-date">17 Sep 2014 at 4:30pm</span>
-																						</p>
-																						<p class="todo-text-color">
-																							 Thanks so much my dear!
-																						</p>
-																					</div>
-																				</div>
-																			</div>
-																		</li>
-																		<li class="media">
-																			<a class="pull-left" href="javascript:;">
-																			<img class="todo-userpic" src="../static/admin/layout/img/avatar5.jpg" width="27px" height="27px">
-																			</a>
-																			<div class="media-body todo-comment">
-																				<button type="button" class="todo-comment-btn btn btn-circle btn-default btn-xs">&nbsp; Reply &nbsp;</button>
-																				<p class="todo-comment-head">
-																					<span class="todo-comment-username">Andres Iniesta</span> &nbsp; <span class="todo-comment-date">18 Sep 2014 at 9:22am</span>
-																				</p>
-																				<p class="todo-text-color">
-																					 Cras sit amet nibh libero, in gravida nulla. Scelerisque ante sollicitudin commodo Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. <br>
-																				</p>
-																			</div>
-																		</li>
-																		<li class="media">
-																			<a class="pull-left" href="javascript:;">
-																			<img class="todo-userpic" src="../static/admin/layout/img/avatar6.jpg" width="27px" height="27px">
-																			</a>
-																			<div class="media-body todo-comment">
-																				<button type="button" class="todo-comment-btn btn btn-circle btn-default btn-xs">&nbsp; Reply &nbsp;</button>
-																				<p class="todo-comment-head">
-																					<span class="todo-comment-username">Olivia Wilde</span> &nbsp; <span class="todo-comment-date">18 Sep 2014 at 11:50am</span>
-																				</p>
-																				<p class="todo-text-color">
-																					 Cras sit amet nibh libero, in gravida nulla. Scelerisque ante sollicitudin commodo Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. <br>
-																				</p>
-																			</div>
-																		</li>
-																	</ul>
-																</div>
-															</div>
-															<!-- END TASK COMMENTS -->
-															<!-- TASK COMMENT FORM -->
-															<div class="form-group">
-																<div class="col-md-12">
-																	<ul class="media-list">
-																		<li class="media">
-																			<img class="todo-userpic pull-left" src="../static/admin/layout/img/avatar4.jpg" width="27px" height="27px">
-																			<div class="media-body">
-																				<textarea class="form-control todo-taskbody-taskdesc" rows="4" placeholder="Type comment..."></textarea>
-																			</div>
-																		</li>
-																	</ul>
-																	<button type="button" class="pull-right btn btn-sm btn-circle green-haze"> &nbsp; Submit &nbsp; </button>
-																</div>
-															</div>
-															<!-- END TASK COMMENT FORM -->
-														</div>
-														<div class="tab-pane" id="tab_2">
-															<ul class="todo-task-history">
-																<li>
-																	<div class="todo-task-history-date">
-																		 20 Jun, 2014 at 11:35am
-																	</div>
-																	<div class="todo-task-history-desc">
-																		 Task created
-																	</div>
-																</li>
-																<li>
-																	<div class="todo-task-history-date">
-																		 21 Jun, 2014 at 10:35pm
-																	</div>
-																	<div class="todo-task-history-desc">
-																		 Task category status changed to "Top Priority"
-																	</div>
-																</li>
-																<li>
-																	<div class="todo-task-history-date">
-																		 22 Jun, 2014 at 11:35am
-																	</div>
-																	<div class="todo-task-history-desc">
-																		 Task owner changed to "Nick Larson"
-																	</div>
-																</li>
-																<li>
-																	<div class="todo-task-history-date">
-																		 30 Jun, 2014 at 8:09am
-																	</div>
-																	<div class="todo-task-history-desc">
-																		 Task completed by "Nick Larson"
-																	</div>
-																</li>
-															</ul>
-														</div>
-													</div>
-												</div>
-											</form>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- END TODO CONTENT -->
-				</div>
-			</div>
-			<!-- END PAGE CONTENT-->
-		</div>
-	</div>
-	<!-- END CONTENT -->
+    <!-- BEGIN CONTENT -->
+    <div class="page-content-wrapper">
+        <div class="page-content">
+            <!-- BEGIN PAGE HEADER-->
+            <!-- BEGIN PAGE HEAD -->
+            <div class="page-head">
+                <!-- BEGIN PAGE TITLE -->
+                <div class="page-title">
+                    <h1>Relations
+                        <small>manage your relationships here</small>
+                    </h1>
+                </div>
+                <!-- END PAGE TITLE -->
+            </div>
+            <!-- END PAGE HEAD -->
+            <!-- END PAGE HEADER-->
+            <!-- BEGIN PAGE CONTENT-->
+            <div class="row">
+                <div class="col-md-12">
+
+                    <!-- BEGIN TODO CONTENT -->
+                    <div class="todo-content">
+                        <div class="portlet light">
+                            <div class="portlet-body">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12">
+                                        <div class="scroller" style="max-height: 800px;" data-always-visible="0"
+                                             data-rail-visible="0" data-handle-color="#dae3e7">
+                                            <form action="#" class="form-horizontal">
+                                                <!-- TASK HEAD -->
+                                                <div class="tabbable-line">
+                                                    <ul class="nav nav-tabs ">
+                                                        <li class="active">
+                                                            <a href="#following" data-toggle="tab">
+                                                                Following </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#follower" data-toggle="tab">
+                                                                Follower </a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane active" id="following">
+                                                            <!-- FOLLOWING -->
+                                                            <div class="form-group">
+                                                                <div class="col-md-12">
+                                                                    <div class="scroller" style="max-height: 1000px;"
+                                                                         data-always-visible="0" data-rail-visible="0"
+                                                                         data-handle-color="#dae3e7">
+                                                                        <div class="todo-tasklist">
+                                                                            {% for following in followings %}
+                                                                            <div class="todo-tasklist-item todo-tasklist-item-border-green">
+                                                                                <img class="todo-userpic pull-left"
+                                                                                     src="../static/admin/layout/img/avatar4.jpg"
+                                                                                     width="27px" height="27px">
+
+                                                                                <div class="todo-tasklist-item-title">
+                                                                                    {{following.username}}
+                                                                                    <button id="{{following.objectId}}"
+                                                                                            type="button"
+                                                                                            class="pull-right btn btn-sm btn-circle haze unfollow">
+                                                                                        &nbsp; Unfollow &nbsp; </button>
+                                                                                </div>
+                                                                                <div class="todo-tasklist-item-text">
+                                                                                    {{following.email}}
+                                                                                </div>
+                                                                                <div class="todo-tasklist-controls pull-left">
+																					<span class="todo-tasklist-date">
+																						<i class="fa fa-calendar"></i>
+																						{{following.createdAt.year}}-{{following.createdAt.month}}-{{following.createdAt.day}}
+																					</span>
+                                                                                    <!--<span class="todo-tasklist-badge badge badge-roundless">Urgent</span>-->
+                                                                                </div>
+                                                                            </div>
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- END FOLLOWING -->
+                                                        </div>
+                                                        <div class="tab-pane" id="follower">
+                                                            <!-- FOLLOWER -->
+                                                            <div class="form-group">
+                                                                <div class="col-md-12">
+                                                                    <!--<div class="scroller" style="max-height: 1000px;" data-always-visible="0" data-rail-visible="0" data-handle-color="#dae3e7">-->
+                                                                    <div class="todo-tasklist">
+                                                                        {% for follower in followers %}
+                                                                        <div class="todo-tasklist-item todo-tasklist-item-border-green">
+                                                                            <img class="todo-userpic pull-left"
+                                                                                 src="../static/admin/layout/img/avatar4.jpg"
+                                                                                 width="27px" height="27px">
+
+                                                                            <div class="todo-tasklist-item-title">
+                                                                                {{follower.username}}
+                                                                                <button id="{{follower.objectId}}"
+                                                                                        type="button"
+                                                                                        class="pull-right btn btn-sm btn-circle red-haze delete">
+                                                                                    &nbsp; Delete &nbsp; </button>
+                                                                            </div>
+                                                                            <div class="todo-tasklist-item-text">
+                                                                                {{follower.email}}
+                                                                            </div>
+                                                                            <div class="todo-tasklist-controls pull-left">
+																					<span class="todo-tasklist-date">
+																						<i class="fa fa-calendar"></i>
+																						{{follower.createdAt.year}}-{{follower.createdAt.month}}-{{follower.createdAt.day}}
+																					</span>
+                                                                                <!--<span class="todo-tasklist-badge badge badge-roundless">Urgent</span>-->
+                                                                            </div>
+                                                                        </div>
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                    <!--</div>-->
+                                                                </div>
+                                                            </div>
+                                                            <!-- END FOLLOWER -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END TODO CONTENT -->
+                </div>
+            </div>
+            <!-- END PAGE CONTENT-->
+        </div>
+    </div>
+    <!-- END CONTENT -->
 </div>
 <!-- END CONTAINER -->
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
-	<div class="page-footer-inner">
-		 2014 &copy; Metronic by keenthemes. <a href="http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes" title="Purchase Metronic just for 27$ and get lifetime updates for free" target="_blank">Purchase Metronic!</a>
-	</div>
-	<div class="scroll-to-top">
-		<i class="icon-arrow-up"></i>
-	</div>
+    <div class="page-footer-inner">
+    </div>
+    <div class="scroll-to-top">
+        <i class="icon-arrow-up"></i>
+    </div>
 </div>
 <!-- END FOOTER -->
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 {% include "script.html" %}
 <!-- BEGIN PAGE PLUGINS & SCRIPTS -->
-<script type="text/javascript" src="../static/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript"
+        src="../static/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="../static/global/plugins/select2/select2.min.js"></script>
 <script src="../static/admin/pages/scripts/todo.js" type="text/javascript"></script>
 <!-- END PAGE PLUGINS & SCRIPTS -->\
 <script>
-jQuery(document).ready(function() {    
-   Metronic.init(); // init metronic core components
-Layout.init(); // init current layout
-Demo.init(); // init demo features
-Todo.init(); // init todo page
-});
+    jQuery(document).ready(function () {
+        Metronic.init(); // init metronic core components
+        Layout.init(); // init current layout
+//Demo.init(); // init demo features
+        Todo.init(); // init todo page
+    });
 </script>
 <!-- END JAVASCRIPTS -->
 </body>
