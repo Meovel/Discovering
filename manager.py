@@ -109,6 +109,7 @@ def login():
 
             notifications = Notification.Query.filter(to=username)
             messages_query = Message.Query.filter(toUser=username)
+            messages = []
             for m in messages_query:
                 messages.append(m)
             resp = make_response(render_template('organizations/organizations.html', notifications=notifications, messages=messages))
