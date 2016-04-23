@@ -150,3 +150,28 @@ function updateQuizDetail(quizId){
 
 	$("#quiz-description").text(summary);
 }
+
+
+
+$("#quizzes-wrapper a").click(function(){
+	event.preventDefault();
+
+	path = "/quiz_information/" + $(this).attr("id");
+	// send data to server using ajax
+	 $.ajax({
+            url: path,
+            type: 'GET',
+            success: function(response) {
+            	if(response.result == "Failed"){
+            		var html = "<h1>No one has taken this quiz yet!</h1>";
+            		$("#quiz-detail").html(html);
+            	}
+            	else{
+            		$("#quiz-detail").html(response);
+            	}
+            },
+            error: function(error) {
+                console.log(error);
+            }
+     });
+});
