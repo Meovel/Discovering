@@ -391,7 +391,7 @@ def handleFollow(organizationId = None):
     print("=======================")
 
     organizationId = organizationId
-    subscriberId = "seGQaKSk1O"
+    subscriberId = request.cookies.get('user_objectId')
     #find subscriber and organization
     organization = _User.Query.get(objectId = organizationId)
     subscriber = _User.Query.get(objectId = subscriberId)
