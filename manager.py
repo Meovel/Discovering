@@ -91,7 +91,7 @@ user = None
 
 @manager.route('/', methods=['GET', 'POST'])
 def login():
-    global user, notifications, messages
+    global user, notifications, messages, following, follower
     print 'cookie in homepage: '
     print request.cookies
     if request.method == 'POST':
@@ -114,9 +114,11 @@ def login():
                 messages.append(m)
             resp = make_response(render_template('organizations/organizations.html', notifications=notifications, messages=messages))
             following_query = Following.Query.filter(subscriber=user)
+            following = []
             for u in following_query:
                 following.append(u.user)
             follower_query = Following.Query.filter(user=user)
+            follower = []
             for u in follower_query:
                 follower.append(u.subscriber)
             resp.set_cookie('username', username)
@@ -388,6 +390,7 @@ def getQuiz(organizationName):
 
 @manager.route("/follow/<organizationId>",methods=['POST'])
 def handleFollow(organizationId = None):
+    global follower, following
     print("=======================")
 
     organizationId = organizationId
@@ -399,33 +402,38 @@ def handleFollow(organizationId = None):
     #type = request.args.get('type', 0, type=str)
     parsedRequest = json.loads(request.form.keys()[0])
     type = parsedRequest["type"]
-    print type
 
     # save the follow relation
     if type == "follow":
-        following = Following()
-        following.subscriber = subscriber
-        following.user = organization
-
-        following.save()
+        newFollowing = Following()
+        newFollowing.subscriber = subscriber
+        newFollowing.user = organization
+        newFollowing.save()
+        following.append(newFollowing)
 
     # cancel follow relation
     elif type == "cancel":
-        following = Following.Query.filter(subscriber = subscriber, user = organization)
-        for follow in following:
-            follow.delete()
+        followings = Following.Query.filter(subscriber = subscriber, user = organization)
+        for fquery in followings:
+            for flocal in following:
+                if flocal.objectId == fquery.objectId:
+                    following.remove(flocal)
+            fquery.delete()
 
     return jsonify(result = "success")
 
 
 @manager.route("/deleteFollower/<userId>",methods=['POST'])
 def follow(userId = None):
-    global user
-    follower = _User.Query.get(objectId=userId)
-    if follower:
-        relations = Following.Query.filter(subscriber=follower, user=user)
+    global user, follower
+    followerObj = _User.Query.get(objectId=userId)
+    if followerObj:
+        relations = Following.Query.filter(subscriber=followerObj, user=user)
         for r in relations:
             r.delete()
+    for f in follower:
+        if f.objectId == followerObj.objectId:
+            follower.remove(f)
     return "success"
 
 
