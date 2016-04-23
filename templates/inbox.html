@@ -143,7 +143,7 @@
                                 <tbody id="messageList">
                                 {% for message in messages %}
                                 {% if message.read %}
-                                <tr data-messageid="{{message.objectId}}">
+                                <tr id="{{message.objectId}}" data-messageid="{{message.objectId}}">
                                 {% else %}
                                 <tr id="{{message.objectId}}" class="unread" data-messageid="{{message.objectId}}">
                                 {% endif %}
