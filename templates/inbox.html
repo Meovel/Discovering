@@ -145,7 +145,7 @@
                                 {% if message.read %}
                                 <tr data-messageid="{{message.objectId}}">
                                 {% else %}
-                                <tr class="unread" data-messageid="{{message.objectId}}">
+                                <tr id="{{message.objectId}}" class="unread" data-messageid="{{message.objectId}}">
                                 {% endif %}
                                     <td class="inbox-small-cells">
                                         <input type="checkbox" class="mail-checkbox" id="checkBox">
