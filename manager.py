@@ -482,7 +482,8 @@ def stats():
                            org=org_info_parse, objectId=obj_id,
                            notifications=notifications, messages=messages)
 
-
+# Fetches data from QuizPersonalStatistics table using Parse REST API.
+# This is a helper method.
 def fetch_quiz_personal_stats(user_objectId):
     # username = request.cookies.get('username')
     connection = httplib.HTTPSConnection('api.parse.com', 443)
@@ -492,8 +493,6 @@ def fetch_quiz_personal_stats(user_objectId):
                                              "className": "_User",
                                              "objectId": user_objectId
                                            }
-
-
                                     })})
     connection.connect()
     connection.request('GET', '/1/classes/QuizPersonalStatistics?%s' % params, '', {
@@ -504,6 +503,8 @@ def fetch_quiz_personal_stats(user_objectId):
     print quiz_obj
     return quiz_obj
 
+# Fetches data from QuestionPersonalStatistics table using PARSE REST API.
+# This is a helper method.
 def fetch_question_personal_stats(user_objectId):
     # username = request.cookies.get('username')
     connection = httplib.HTTPSConnection('api.parse.com', 443)
@@ -527,7 +528,61 @@ def format_timeline_data(user_objectId):
     quiz_personal_stats = fetch_quiz_personal_stats(user_objectId)
     quest_personal_stats = fetch_question_personal_stats(user_objectId)
 
+# Design questions: should this be called in beginning when a user logs in?
+# Then, should we update these values using a synchronization system?
+# @description Fetches the data from Parse
+# @returns data... possibly as a dictionary OR as a Parse object...
+def fetch_quizling_data(user_objectId):
+    quizling_data = {} # Dictionary or Parse Object?? Design decision...
+
+    return quizling_data
+
+# Gets the average quiz scores, using fetch_quizling_data to first download the data.
+# @returns a dictionary of quiz name to average score
+# Note: a quiz_name can be retrieved from a Parse object
+def get_quizling_average_scores(quiz_name):
+    quiz_to_score = {}
+
+    return quiz_to_score
+
+# Note: a quiz_name can be retrieved from a Parse object
+def user_scored_above_average(user_score, quiz_name):
+    quizling_average_scores = get_quizling_average_scores(quiz_name)
+    # find if user scored above or below average score for the given quiz
+    return false
+
+# For each quiz the user takes, get the standings
+# @returns a dictionary of quiz to standing for the user passed in
+def get_user_quiz_standings(user_objectId):
+    user_standings = {}
+    #
+    return user_standings
+
+# @description May be called before get_user_quiz_scores
+def fetch_user_quiz_scores(user_objectId):
+    pass
+
+# Gets the user scores for the given quiz... Should this be achieved with a database
+# call once the user initially logs in?
+# @returns a dictionary of quiz to scores for the user passed in
+def get_user_quiz_scores(user_objectId):
+    user_scores = {}
+
+    return user_scores
+
+# This function may simply pass the data to HTML so that Jinja2 can populate the HTML
+# based on the simple conditions described in the comments.
+def update_timeline_stats(user_objectId):
+    user_standings = get_user_quiz_standings(user_objectId)
+    user_scores = get_user_quiz_scores(user_objectId)
+    # user_standing_results = {}
+    # loop through the user standings and compare with user scores:
+        # Save in timeline html for each quiz...
+            # "User above average with a score of X" OR "User below average with a score of Y"
+    pass
+
 def fetch_timeline_data(user_objectId):
+    # format_timeline_data(user_objectId) # for developing...
     relevant_data = []
     quiz_obj = QuizPersonalStatistics.Query.all().filter().limit(900)
     question_obj = QuestionPersonalStatistics.Query.all().filter().limit(17000)
