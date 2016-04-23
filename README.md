@@ -10,6 +10,7 @@ A platform for organizations to share and people to discover - a new world
 * Timeline, milestone & achievement system
 
 ## Screentshots
+
 ### Home page
 #![Home](https://github.com/zenithanu/Discovering/blob/master/Screenshot/Home.png)
 
@@ -17,12 +18,10 @@ A platform for organizations to share and people to discover - a new world
 #![Searh](https://github.com/zenithanu/Discovering/blob/master/Screenshot/Search.png)
 
 ### Inbox
-#![Inbox](https://github.com/zenithanu/Discovering/blob/master/Screenshot/Inbox.png
+#![Inbox](https://github.com/zenithanu/Discovering/blob/master/Screenshot/Inbox.png)
 
 ### Relation management
 #![Relation](https://github.com/zenithanu/Discovering/blob/master/Screenshot/Relations.png)
 
 ### User timeline & milestone
 #![Timeline](https://github.com/zenithanu/Discovering/blob/master/Screenshot/Timeline.png)
-
-Woooops
