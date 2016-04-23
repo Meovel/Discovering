@@ -592,6 +592,9 @@ def markMessagesAsRead():
         message = Message.Query.get(objectId=messageId)
         message.read = True
         message.save()
+    for message in messages:
+        if message.objectId in readMessages:
+            messages.read = True
     return "success"
     # return redirect(url_for('inbox'))
 
