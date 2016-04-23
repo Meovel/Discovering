@@ -67,6 +67,12 @@ class Notification(Object):
 class Message(Object):
     pass
 
+class QuizPersonalStatistics(Object):
+    pass
+
+class RecentlyVisited(Object):
+    pass
+
 
 
 org_info_parse = "Random"
@@ -92,6 +98,8 @@ def login():
     global notifications, messages
     print 'cookie in homepage: '
     print request.cookies
+    users = User.Query.all();
+
     if request.method == 'POST':
         data = request.form
 
@@ -242,21 +250,48 @@ def getChannels():
 
 ############################### User Dashboard ###############################
 @manager.route('/user/<target_id>')
-def userDashBoard(target_id = None):
+def userDashBoard(target_id = None, test=False,temp_id= ""):
     '''
         This page required organization basic information, follower, followed, 
         quizzes(if have any) and comment
     '''
-    user_id = "hfy96QWaXg"
+    # iteration_6
+    if not test:
+        user_id = request.cookies.get('user_objectId')
+    else:
+        user_id = temp_id
+    user = User.Query.get(objectId = user_id)
+    organization = _User.Query.get(objectId = target_id)
+
+    temp = RecentlyVisited.Query.all().filter(target=organization).order_by("-visitCount").limit(1)
+    recentlyVisited = RecentlyVisited()
+    recentlyVisited.target = organization
+    recentlyVisited.user = user
+    visitCount = 0
+    if len(temp) == 0:
+        recentlyVisited.visitCount = 1
+        visitCount = 1
+    else:
+        recentlyVisited.visitCount = temp[0].visitCount + 1
+        visitCount = temp[0].visitCount + 1
+    recentlyVisited.save()
+
+    # check test mode or not
+    if test:
+        return None
+    visits = RecentlyVisited.Query.all().filter(target=organization).order_by("-visitCount").limit(6)
+    print len(visits)
+    print visitCount
+
 
     comments = Comment.Query.all().filter(user = target_id)
-    organization = _User.Query.get(objectId = target_id)  
     followings = Following.Query.all().filter(user = organization).limit(12)
     followers = []
     for following in followings:
         if hasattr(following.subscriber, "username"):
             followers.append(following.subscriber)
     quizzes = getQuiz(organization.username)
+    # iteration_6
 
     #like
     like = ""
@@ -274,7 +309,7 @@ def userDashBoard(target_id = None):
     return render_template("dashboard.html",
         comments = comments,
         numOfComments = len(comments),
-        username = "guoqiao",
+        username = user.username,
         target_id = target_id,
         organization = organization,
         followers = followers,
@@ -283,7 +318,9 @@ def userDashBoard(target_id = None):
         relatedOrgs = relatedOrgs,
         relatedOrgsArea = relatedOrgsArea,
         like = like,
-        numOfLikes = numOfLikes)
+        numOfLikes = numOfLikes,
+        visits = visits,
+        visitCount = visitCount)
 
 def getRelatedOrgs(quizzes, organizationName):
     areas = []
@@ -349,6 +386,46 @@ def unlike(target_id = None):
     like.delete()
 
     return jsonify(result="OK")
+
+
+@manager.route('/quiz_information/<quiz_id>', methods=['GET'] )
+def quiz_inforamtion(quiz_id = None, test=False):
+    '''
+        Get the quiz id and find all the people who take this quiz, then rank the people and send back 
+        the top 3 user
+    '''
+    print "###########################quiz_inforamtion##########################"
+    if not test:
+        if request.method == "GET":
+        # find the quiz
+            quiz = Quizling.Query.get(objectId=quiz_id)
+
+            # find top three people take the quiz
+            users = []
+            results = QuizPersonalStatistics.Query.all().filter(quizling = quiz).order_by("-averageScore").limit(3)
+
+            # if no results return error, no one take this quiz
+            if len(results) == 0:
+                return jsonify(result="Failed")
+            
+            return render_template("quiz_detail.html",
+                results = results,
+                quiz = quiz)
+        return jsonify(result="Error")
+    else:
+        if quiz_id is None:
+            quiz_id = "idgtXmekx4"
+        print "quiz id is %s" %quiz_id
+        quiz1 = Quizling.Query.filter(objectId=quiz_id)
+        quiz = None
+        for i in quiz1:
+            quiz = i
+        result = QuizPersonalStatistics.Query.all().filter(quizling = quiz).order_by("-averageScore").limit(3)
+        names = []
+        for i in result:
+            names.append(i.user.username)
+        return names
+    # change store three people in array
 
 
 ############################### End Of User Dashboard ###############################

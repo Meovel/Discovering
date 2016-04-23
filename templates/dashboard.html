@@ -135,6 +135,30 @@
 			</div>
 		</div>
 
+		<!-- recently visited -->
+		<div class="row">
+			<div class="portlet light">
+						<div class="portlet-title">
+							<div class="caption font-purple-plum">
+								<span class="caption-subject bold uppercase">Visits</span>
+							</div>
+							<div class="actions">{{visitCount}}</div>
+						</div>
+						<div class="portlet-body" style="text-align:center;">
+							<div class="row">
+							{% for visit in visits %}
+								<div class="col-md-2" style="text-align: center;">
+									<img src="../static/images/bg6.jpg" style="height:80px; width: 80px; border-radius: 40px;" />
+									<p>{{visit.user.username}}</p>
+								</div>
+							{% endfor %}
+							</div>
+						</div>
+			</div>
+		</div>
+
+
+
 		<!-- followers -->
 		<div class="row">
 			<div class="portlet light">
@@ -189,10 +213,18 @@
 								</a>
 							</div>
 						</div>
-						<div class="portlet-body">
-							{% for quiz in quizzes %}
-								<p>{{quiz.name}}</p>
-							{% endfor %}
+						<div class="portlet-body" id="quizzes-wrapper">
+							<div class="row">
+								<div class="col-md-4">
+									{% for quiz in quizzes %}
+										<a id="{{quiz.objectId}}">{{quiz.name}}</a></br>
+									{% endfor %}
+								</div>
+
+								<div class="col-md-8" id="quiz-detail">
+									
+								</div>
+							</div>
 						</div>
 			</div>
 		</div>
