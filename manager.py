@@ -108,7 +108,9 @@ def login():
             username = data.getlist('username')[0]
 
             notifications = Notification.Query.filter(to=username)
-            messages = Message.Query.filter(toUser=username)
+            messages_query = Message.Query.filter(toUser=username)
+            for m in messages_query:
+                messages.append(m)
             resp = make_response(render_template('organizations/organizations.html', notifications=notifications, messages=messages))
             following_query = Following.Query.filter(subscriber=user)
             for u in following_query:
