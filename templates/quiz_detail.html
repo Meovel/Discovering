@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+<head>
+<meta charset="utf-8"/>
+<title>Discovering - Dashboard</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta content="" name="description"/>
+<meta content="" name="author"/>
+
+<!-- my css files -->
+<link href="../static/css/quiz_detail.css" rel="stylesheet" type="text/css">
+
+{% include "style.html" %}
+
+<link rel="shortcut icon" href="favicon.ico"/>
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<body class="page-md page-header-fixed page-sidebar-closed-hide-logo ">
+
+<div class="row">
+	<h2 style="float:left; margin-left: 50px;">Quiz Name: {{quiz.name}}</h2>
+	<button class="btn red" style="float:left; margin-left: 20px; margin-top: 20px;">Play Quiz</button>
+</div>
+<div class="row">
+	<h4 style="margin-left: 50px;">Average Score: {{quiz.averageScore}}</h4>
+</div>
+<div class="row">
+	<h4 style="margin-left: 50px;">Quiz Type: {% if quiz.quizType %}{{quiz.averageScore}}{% else %}Currently No Type{% endif %}</h4>
+</div>
+<div class="row">
+	<h4 style="margin-left: 50px;">Quiz Introduction: {% if quiz.summary %}{{quiz.averageScore}}{% else %}Currently No Summary{% endif %}</h4>
+</div>
+<div class="row" style="margin-top:20px;">
+	{% for result in results %}
+	<div class="col-md-4 top-user-wrapper">
+		<img style="height: 100px;width: 100px;border-radius: 50px;"src="../static/images/bg6.jpg" class="user-image"/>
+		<p style="margin-top: 10px;">Username: {{result.user.username}}</p>
+		<p>AverageScore: {{result.averageScore}}</p>
+		<p>PlayCount: {{result.playCount}}</p>
+		<button class="btn purple">Follow</button>
+	</div>
+	{% endfor %}
+</div>
+</body>
+</html>
