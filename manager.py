@@ -87,15 +87,17 @@ kw = ''
 result = []
 filteredResult = []
 notifications = []
+following = []
+follower = []
 messages = []
-
+user = None
 
 
 
 
 @manager.route('/', methods=['GET', 'POST'])
 def login():
-    global notifications, messages
+    global user, notifications, messages, following, follower
     print 'cookie in homepage: '
     print request.cookies
     users = User.Query.all();
@@ -106,22 +108,32 @@ def login():
         try:
             user = User.login(data['username'], data['password'])
         except:
+            user = None
             flash('Incorrect username or password', 'info')
         # login_user(user)
 
-        username = data.getlist('username')[0]
+        if user:
+            username = data.getlist('username')[0]
 
-        notifications = Notification.Query.filter(to=username)
-        messages = Message.Query.filter(toUser=username)
-        resp = make_response(render_template('organizations/organizations.html', notifications=notifications, messages=messages))
-        resp.set_cookie('username', username)
+            notifications = Notification.Query.filter(to=username)
+            messages_query = Message.Query.filter(toUser=username)
+            messages = []
+            for m in messages_query:
+                messages.append(m)
+            resp = make_response(render_template('organizations/organizations.html', notifications=notifications, messages=messages))
+            following_query = Following.Query.filter(subscriber=user)
+            following = []
+            for u in following_query:
+                following.append(u.user)
+            follower_query = Following.Query.filter(user=user)
+            follower = []
+            for u in follower_query:
+                follower.append(u.subscriber)
+            resp.set_cookie('username', username)
 
-        user_obj_query = _User.Query.all().filter(username = username)
-        if len(user_obj_query) > 0:
-            user_objectId = (user_obj_query[0]).objectId
-            resp.set_cookie('user_objectId', user_objectId)
+            resp.set_cookie('user_objectId', user.objectId)
 
-        return resp
+            return resp
 
     return make_response(render_template('login.html'))
 
@@ -453,34 +465,53 @@ def getQuiz(organizationName):
     
     return quizzes;
 
-@manager.route("/follow/<organizationId>")
-def follow(organizationId = None):
+@manager.route("/follow/<organizationId>",methods=['POST'])
+def handleFollow(organizationId = None):
+    global follower, following
     print("=======================")
 
     organizationId = organizationId
-    subscriberId = "seGQaKSk1O"
+    subscriberId = request.cookies.get('user_objectId')
     #find subscriber and organization
     organization = _User.Query.get(objectId = organizationId)
     subscriber = _User.Query.get(objectId = subscriberId)
 
-    type = request.args.get('type', 0, type=str)
-    print type
+    #type = request.args.get('type', 0, type=str)
+    parsedRequest = json.loads(request.form.keys()[0])
+    type = parsedRequest["type"]
 
     # save the follow relation
     if type == "follow":
-        following = Following()
-        following.subscriber = subscriber
-        following.user = organization
-
-        following.save()
+        newFollowing = Following()
+        newFollowing.subscriber = subscriber
+        newFollowing.user = organization
+        newFollowing.save()
+        following.append(newFollowing)
 
     # cancel follow relation
     elif type == "cancel":
-        following = Following.Query.filter(subscriber = subscriber, user = organization)
-        for follow in following:
-            follow.delete()
+        followings = Following.Query.filter(subscriber = subscriber, user = organization)
+        for fquery in followings:
+            for flocal in following:
+                if flocal.objectId == fquery.objectId:
+                    following.remove(flocal)
+            fquery.delete()
 
     return jsonify(result = "success")
+
+
+@manager.route("/deleteFollower/<userId>",methods=['POST'])
+def follow(userId = None):
+    global user, follower
+    followerObj = _User.Query.get(objectId=userId)
+    if followerObj:
+        relations = Following.Query.filter(subscriber=followerObj, user=user)
+        for r in relations:
+            r.delete()
+    for f in follower:
+        if f.objectId == followerObj.objectId:
+            follower.remove(f)
+    return "success"
 
 
 # serialize ParseObject so that it can be jsonify
@@ -623,6 +654,51 @@ def timeline():
                         relevant_data=relevant_data, objectId = user_objectId,
                         notifications=notifications, messages=messages)
 
+
+@manager.route('/favourites')
+def bookmark():
+    global notifications, messages, following, follower
+    return render_template('bookmark.html',
+                           notifications=notifications, messages=messages, followings=following, followers=follower)
+
+
+@manager.route('/inbox')
+def inbox():
+    global notifications, messages
+    return render_template('inbox.html',
+                           notifications=notifications, messages=messages)
+
+
+@manager.route('/inbox/markasread',methods=['POST'])
+def markMessagesAsRead():
+    global notifications, messages
+    parsedMsg = json.loads(request.form.keys()[0])
+    readMessages = parsedMsg["result"]
+    for messageId in readMessages:
+        print messageId
+        message = Message.Query.get(objectId=messageId)
+        message.read = True
+        message.save()
+    for message in messages:
+        if message.objectId in readMessages:
+            messages.read = True
+    return "success"
+    # return redirect(url_for('inbox'))
+
+
+@manager.route('/inbox/delete',methods=['POST'])
+def deleteMessages():
+    global notifications, messages
+    parsedMsg = json.loads(request.form.keys()[0])
+    deletedMessages = parsedMsg["result"]
+    for messageId in deletedMessages:
+        message = Message.Query.get(objectId=messageId)
+        message.delete()
+    for message in messages:
+        if message.objectId in deletedMessages:
+            messages.remove(message)
+    return "success"
+    # return redirect(url_for('inbox'))
 
 
 @manager.route('/search')
