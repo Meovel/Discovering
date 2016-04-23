@@ -70,7 +70,7 @@
 					<!-- BEGIN INBOX DROPDOWN -->
 					<!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
 					<li class="dropdown dropdown-extended dropdown-inbox dropdown-dark" id="header_inbox_bar">
-						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+						<a href="{{ url_for('organizations') }}" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 						<i class="icon-envelope-open"></i>
 						<span class="badge badge-danger">
 						{{ messages|length }} </span>
@@ -78,7 +78,7 @@
 						<ul class="dropdown-menu">
 							<li class="external">
 								<h3>You have <span class="bold">{{ messages|length }} New</span> Messages</h3>
-								<a href="inbox.html">view all</a>
+								<a href="{{ url_for('inbox') }}">view all</a>
 							</li>
 							<li>
 								<ul class="dropdown-menu-list scroller" style="height: 275px;" data-handle-color="#637283">
@@ -215,8 +215,14 @@
 						</a>
 						<ul class="dropdown-menu dropdown-menu-default">
 							<li>
-								<a href="extra_profile.html">
-								<i class="icon-user"></i> My Profile </a>
+								<a href="{{ url_for('bookmark') }}">
+								<i class="icon-user"></i> My Favourites </a>
+							</li>
+							<li>
+								<a href="{{ url_for('inbox') }}">
+								<i class="icon-envelope-open"></i> My Inbox <span class="badge badge-danger">
+								{{ messages|length }} </span>
+								</a>
 							</li>
 							<li>
 								<a href="{{ url_for('organizations') }}">
@@ -226,12 +232,6 @@
 								<a href="{{ url_for('timeline') }}">
 								<i class="icon-calendar"></i> My Timeline
 									<!--<span class="badge badge-success"> 7 </span>-->
-								</a>
-							</li>
-							<li>
-								<a href="inbox.html">
-								<i class="icon-envelope-open"></i> My Inbox <span class="badge badge-danger">
-								0 </span>
 								</a>
 							</li>
 							<li class="divider">
