@@ -386,7 +386,7 @@ def getQuiz(organizationName):
     
     return quizzes;
 
-@manager.route("/follow/<organizationId>")
+@manager.route("/follow/<organizationId>",methods=['POST'])
 def handleFollow(organizationId = None):
     print("=======================")
 
@@ -396,7 +396,9 @@ def handleFollow(organizationId = None):
     organization = _User.Query.get(objectId = organizationId)
     subscriber = _User.Query.get(objectId = subscriberId)
 
-    type = request.args.get('type', 0, type=str)
+    #type = request.args.get('type', 0, type=str)
+    parsedRequest = json.loads(request.form.keys()[0])
+    type = parsedRequest["type"]
     print type
 
     # save the follow relation
@@ -416,7 +418,7 @@ def handleFollow(organizationId = None):
     return jsonify(result = "success")
 
 
-@manager.route("/deleteFollower/<userId>")
+@manager.route("/deleteFollower/<userId>",methods=['POST'])
 def follow(userId = None):
     global user
     follower = _User.Query.get(objectId=userId)
