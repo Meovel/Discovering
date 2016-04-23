@@ -34,9 +34,10 @@ $(document).ready(function () {
 					dataType: "Text",
 					data: JSON.stringify(jobj)
 			}).done(function (data) {
-					//for (m in array) {
-					//	document.getElementById(array[m]).innerHTML = ""
-					//}
+					for (m in array) {
+						document.getElementById(array[m]).innerHTML = ""
+					}
+				alert("Success")
 			});
 		}
 	});
