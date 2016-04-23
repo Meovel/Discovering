@@ -4,7 +4,7 @@ from parse_rest.datatypes import Object
 from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.datastructures import ImmutableMultiDict
-import json
+import json, httplib, urllib
 
 # import pymongo
 # from pymongo import MongoClient
@@ -244,13 +244,13 @@ def getChannels():
 @manager.route('/user/<target_id>')
 def userDashBoard(target_id = None):
     '''
-        This page required organization basic information, follower, followed, 
+        This page required organization basic information, follower, followed,
         quizzes(if have any) and comment
     '''
     user_id = "hfy96QWaXg"
 
     comments = Comment.Query.all().filter(user = target_id)
-    organization = _User.Query.get(objectId = target_id)  
+    organization = _User.Query.get(objectId = target_id)
     followings = Following.Query.all().filter(user = organization).limit(12)
     followers = []
     for following in followings:
@@ -373,7 +373,7 @@ def organizations():
 
 def getQuiz(organizationName):
     quizzes = Quizling.Query.all().filter(ownerName = organizationName)
-    
+
     return quizzes;
 
 @manager.route("/follow/<organizationId>")
@@ -483,11 +483,57 @@ def stats():
                            notifications=notifications, messages=messages)
 
 
+def fetch_quiz_personal_stats(user_objectId):
+    # username = request.cookies.get('username')
+    connection = httplib.HTTPSConnection('api.parse.com', 443)
+    params = urllib.urlencode({"include":"quizling","where":json.dumps({
+                                           "user": {
+                                             "__type": "Pointer",
+                                             "className": "_User",
+                                             "objectId": user_objectId
+                                           }
+
+
+                                    })})
+    connection.connect()
+    connection.request('GET', '/1/classes/QuizPersonalStatistics?%s' % params, '', {
+       "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
+       "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5"
+     })
+    quiz_obj = json.loads(connection.getresponse().read())
+    print quiz_obj
+    return quiz_obj
+
+def fetch_question_personal_stats(user_objectId):
+    # username = request.cookies.get('username')
+    connection = httplib.HTTPSConnection('api.parse.com', 443)
+    params = urllib.urlencode({"where":json.dumps({
+                                           "user": {
+                                             "__type": "Pointer",
+                                             "className": "_User",
+                                             "objectId": user_objectId
+                                           }
+                                    })})
+    connection.connect()
+    connection.request('GET', '/1/classes/QuestionPersonalStatistics?%s' % params, '', {
+       "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
+       "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5"
+     })
+    quest_obj = json.loads(connection.getresponse().read())
+    print quest_obj
+    return quest_obj
+
+def format_timeline_data(user_objectId):
+    quiz_personal_stats = fetch_quiz_personal_stats(user_objectId)
+    quest_personal_stats = fetch_question_personal_stats(user_objectId)
+
 def fetch_timeline_data(user_objectId):
     relevant_data = []
     quiz_obj = QuizPersonalStatistics.Query.all().filter().limit(900)
     question_obj = QuestionPersonalStatistics.Query.all().filter().limit(17000)
     quizling_obj = Quizling.Query.all().filter().limit(500)
+    # quiz_obj = fetch_quiz_personal_stats(user_objectId)
+    # question_obj = fetch_question_personal_stats(user_objectId)
 
     for quiz_stat in quiz_obj:
         quiz_data = []
@@ -540,6 +586,7 @@ def timeline():
         # exit()
 
     relevant_data = fetch_timeline_data(user_objectId)
+    fetch_quiz_personal_stats(user_objectId)
 
     # send the data to timeline.html using Jinja2, built in to Flask.
     return render_template('timeline.html', org=org_info_parse,
