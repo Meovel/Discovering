@@ -384,7 +384,7 @@ def getQuiz(organizationName):
     return quizzes;
 
 @manager.route("/follow/<organizationId>")
-def follow(organizationId = None):
+def handleFollow(organizationId = None):
     print("=======================")
 
     organizationId = organizationId
@@ -579,10 +579,13 @@ def inbox():
                            notifications=notifications, messages=messages)
 
 
-@manager.route('/inbox/markasread')
-def markMessagesAsRead(readMessages):
+@manager.route('/inbox/markasread',methods=['POST'])
+def markMessagesAsRead():
     global notifications, messages
+    parsedMsg = json.loads(request.form.keys()[0])
+    readMessages = parsedMsg["result"]
     for messageId in readMessages:
+        print messageId
         message = Message.Query.get(objectId=messageId)
         message.read = True
         message.save()
@@ -593,9 +596,11 @@ def markMessagesAsRead(readMessages):
     # return redirect(url_for('inbox'))
 
 
-@manager.route('/inbox/delete')
-def deleteMessages(deletedMessages):
+@manager.route('/inbox/delete',methods=['POST'])
+def deleteMessages():
     global notifications, messages
+    parsedMsg = json.loads(request.form.keys()[0])
+    deletedMessages = parsedMsg["result"]
     for messageId in deletedMessages:
         message = Message.Query.get(objectId=messageId)
         message.delete()
