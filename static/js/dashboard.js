@@ -97,6 +97,8 @@ $("#post-comment-btn").click(function(){
 			"<p class='sub-text'>By: " + username + "</p>" +
 			"</div>";
 			$("#comments").prepend(html);
+			$("#post-comment").fadeOut();
+			$("#comments").fadeIn();
 		}
 	});
 });
