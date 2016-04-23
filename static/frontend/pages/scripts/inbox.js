@@ -37,7 +37,6 @@ $(document).ready(function () {
 					for (m in array) {
 						document.getElementById(array[m]).innerHTML = ""
 					}
-				alert("Success")
 			});
 		}
 	});
