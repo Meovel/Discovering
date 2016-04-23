@@ -162,8 +162,16 @@
 											{% if data[5] %}
 												map{{loop.index}} = new google.maps.Map(document.getElementById('question_map{{loop.index}}'), {
 													center: {lat: {{data[5][1]}}, lng: {{data[5][2]}}},
-													zoom: 4
+													zoom: 4,
+													scrollwheel: false
 												});
+												map{{loop.index}}.addListener('click', function() {
+													if(map{{loop.index}}.get('scrollwheel')) {
+														map{{loop.index}}.set('scrollwheel', false);
+													} else {
+														map{{loop.index}}.set('scrollwheel', true);
+													}
+												})
 											{% endif %}
 										{% endfor %}
 									}
