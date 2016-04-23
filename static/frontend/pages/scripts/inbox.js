@@ -15,7 +15,9 @@ $(document).ready(function () {
 					dataType: "Text",
 					data: JSON.stringify(jobj)
 			}).done(function (data) {
-					alert(data);
+					for (m in array) {
+						document.getElementById(array[m]).className = ""
+					}
 			});
 		}else if($(this).attr("id") === "delete"){
 			var array = [];
