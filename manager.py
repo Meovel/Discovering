@@ -98,7 +98,7 @@ user = None
 @manager.route('/', methods=['GET', 'POST'])
 def login():
     global user, notifications, messages, following, follower
-    print 'cookie in homepage: '
+   # print 'cookie in homepage: '
     print request.cookies
     users = User.Query.all();
 
@@ -208,7 +208,6 @@ def index():
     # for channel in channels:
     #     print channel
 
-    print "========================================"
 
     return render_template("index.html",
         categories = categories,
@@ -406,7 +405,6 @@ def quiz_inforamtion(quiz_id = None, test=False):
         Get the quiz id and find all the people who take this quiz, then rank the people and send back 
         the top 3 user
     '''
-    print "###########################quiz_inforamtion##########################"
     if not test:
         if request.method == "GET":
         # find the quiz
@@ -821,7 +819,7 @@ def share(test=False, userName="", quizName="", quizId=""):
         notification.quizId = quizId
         notification.read = False
         notification.save()
-    print "finished sending share notification"
+    #print "finished sending share notification"
     if not test:
         return '{"result":1}'
     else:
