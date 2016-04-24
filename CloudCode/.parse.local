@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "DiscoveringDev": {
+      "applicationId": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD"
+    },
+    "_default": {
+      "link": "DiscoveringDev"
+    }
+  }
+}
