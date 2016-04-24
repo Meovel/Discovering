@@ -503,6 +503,18 @@ def fetch_quiz_personal_stats(user_objectId):
     print quiz_obj
     return quiz_obj
 
+def parse_timeline_spike():
+    connection = httplib.HTTPSConnection('api.parse.com', 443)
+    connection.connect()
+    connection.request('POST', '/1/functions/timelineSpike?', '', {
+        "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
+        "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5",
+        "Content-Type": "application/json"
+    })
+    resp = json.loads(connection.getresponse().read())
+    print resp
+    # print resp['result']
+
 def parse_rest_cloudcode_spike():
     connection = httplib.HTTPSConnection('api.parse.com', 443)
     connection.connect()
@@ -652,7 +664,8 @@ def timeline():
         # exit()
 
     relevant_data = fetch_timeline_data(user_objectId)
-    parse_rest_cloudcode_spike()
+    # parse_rest_cloudcode_spike()
+    parse_timeline_spike()
 
     # send the data to timeline.html using Jinja2, built in to Flask.
     return render_template('timeline.html', org=org_info_parse,
