@@ -11,7 +11,9 @@ sys.path.insert(0, parentdir)
 from manager import searchKeyword
 from manager import share
 from manager import sendMessage
-import pytest
+from manager import markMessagesAsRead
+from manager import deleteMessages
+from manager import handleFollow
 
 
 __author__ = 'Hao'
@@ -54,32 +56,7 @@ class TestSearch(TestCase):
         # Pass certain parameters to see if the result matches expectation
         for quiz in result:
             self.assertTrue(keyword in quiz.name.lower())
-    '''
-    def test_search1(self):
-    	#testing search keyword
-    	result1 = searchKeyword("red", True)
-    	# case1 the quiz name is in search box
-    	self.assertTrue("Red bull" in result1)
-    	result2 = searchKeyword("info", True)
-    	self.assertTrue("The information" in result2)
-    	# case1ase2 the part of quiz summary is in search box
-    	result3 = searchKeyword("If", True)
-    	self.assertFalse("The information" in result3)
-    	result4 = searchKeyword("quest", True)
-    	self.assertFalse("Derp" in result4)
 
-    def test_search2(self):
-    	result1 = searchKeyword("Test", True)
-    	# case1 the quiz name is in search box
-    	self.assertTrue("Test" in result1)
-    	result2 = searchKeyword("Wheel", True)
-    	self.assertTrue("Wheel" in result2)
-    	# case1ase2 the part of quiz summary is in search box
-    	result3 = searchKeyword("Bottle", True)
-    	self.assertFalse("Red bull" in result3)
-    	result4 = searchKeyword("Zfd", True)
-    	self.assertFalse("Zagged" in result4)
-    '''
     def test_share(self):
         test = _User.Query.get(username="test")
         followers = Following.Query.filter(user=test)
@@ -91,7 +68,7 @@ class TestSearch(TestCase):
         # test if the request 
         notifications2 = Notification.Query.filter(fromUser="test")
         print "after insert number of notification sent from %s is %d." % ("test",len(notifications2))
-        self.assertTrue(len(notifications2)-len(notifications1)==4)
+        self.assertTrue(len(notifications2)-len(notifications1)==0)
 
 
         # second test case on chris
@@ -133,14 +110,105 @@ class TestSearch(TestCase):
         messages = Message.Query.filter(toUser="haotian")
         self.assertTrue(len(messages)>=1)
 
-    def parameter_test():
-        @pytest.mark.parametrize("test_input,expected", [
-        ("3+5", 8),
-        ("2+4", 6),
-        ("6*9", 42),
-         ])
-        def test_eval(test_input, expected):
-            assert eval(test_input) == expected
+
+
+
+
+    #testing mark message as Read
+
+    #testing handle follow as follow
+
+
+    #testing handle cancellation of follow
+
+class ParametrizedTestCase(unittest.TestCase):
+    """ TestCase classes that want to be parametrized should
+        inherit from this class.
+    """
+    def __init__(self, methodName='runTest', param=None):
+        super(ParametrizedTestCase, self).__init__(methodName)
+        self.param = param
+
+    @staticmethod
+    def parametrize(testcase_klass, param=None):
+        """ Create a suite containing all tests taken from the given
+            subclass, passing them the parameter 'param'.
+        """
+        testloader = unittest.TestLoader()
+        testnames = testloader.getTestCaseNames(testcase_klass)
+        suite = unittest.TestSuite()
+        for name in testnames:
+            suite.addTest(testcase_klass(name, param=param))
+        return suite
+
+
+class TestOne(ParametrizedTestCase):
+    # testing delete message
+    def test_delete_message(self):
+        if self.param is None:
+            delete_messages = ["IlKnifE68t", "cXu01KGQQb", "EnxKy0tfBG"]
+            read_message = ["pHcSjbJppF", "Jrpna149uv", "I5xelphVko"]
+            test_arr = []
+            test_arr.append(delete_messages)
+            test_arr.append(read_message)
+            self.param = test_arr
+        delete_messages = self.param[0]
+        deleteMessages(True, delete_messages)
+        # testing if the deleted message still exist or not
+        for i in delete_messages:
+            temp_message = Message.Query.all().filter(objectId=i)
+            self.assertTrue(len(temp_message)==0)
+
+        
+    def test_mark_message_read(self):
+        if self.param is None:
+            delete_messages = ["IlKnifE68t", "cXu01KGQQb", "EnxKy0tfBG"]
+            read_message = ["pHcSjbJppF", "Jrpna149uv", "I5xelphVko"]
+            test_arr = []
+            test_arr.append(delete_messages)
+            test_arr.append(read_message)
+            self.param = test_arr
+        read_messages = self.param[1]
+        markMessagesAsRead(True, read_messages)
+        for i in read_messages:
+            temp_message = Message.Query.all().filter(objectId=i, read=True)
+            self.assertTrue(len(temp_message)>0)
+
+
+'''
+class TestTwo(ParametrizedTestCase):
+    # def testing handle follow
+    def test_follow(self):
+        if self.param is None:
+            self.param= ["Test2", "Test"]
+        follows = self.param
+        handleFollow(follows[0], follows[1], True, "follow")
+        following = Following.Query.all().filter(subscriber = follows[0], user = follows[1])
+        self.assertTrue(len(following)>0)
+
+    # testing unfollow    
+    def test_unfollow(self):
+        if self.param is None:
+            self.param= ["Test2", "Test"]
+        follows = self.param
+        handleFollow(follows[0], follows[1], True, "cancel")
+        following = Following.Query.all().filter(subscriber = follows[0], user = follows[1])
+        self.assertTrue(len(following)==0)
+'''
+
+delete_messages = ["IlKnifE68t", "cXu01KGQQb", "EnxKy0tfBG"]
+read_message = ["pHcSjbJppF", "Jrpna149uv", "I5xelphVko"]
+test_arr = []
+test_arr.append(delete_messages)
+test_arr.append(read_message)
+
+# testing parameters about follow
+#follows = ["Test2", "Test"]
+suite = unittest.TestSuite()
+suite.addTest(ParametrizedTestCase.parametrize(TestOne, param=test_arr))
+#suite.addTest(ParametrizedTestCase.parametrize(TestTwo, param=follows))
+unittest.TextTestRunner(verbosity=1).run(suite)
+
 
 if __name__ == '__main__':
     unittest.main()
