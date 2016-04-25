@@ -464,19 +464,34 @@ def getQuiz(organizationName):
     return quizzes;
 
 @manager.route("/follow/<organizationId>",methods=['POST'])
-def handleFollow(organizationId = None):
-    global follower, following
+def handleFollow(organizationId = None,sub_id=None,test=False, request_type=""):
+    if not test:
+        global follower, following
     print("=======================")
 
     organizationId = organizationId
-    subscriberId = request.cookies.get('user_objectId')
+    if not test:
+        subscriberId = request.cookies.get('user_objectId')
+    else:
+        subscriberId = sub_id
     #find subscriber and organization
-    organization = _User.Query.get(objectId = organizationId)
-    subscriber = _User.Query.get(objectId = subscriberId)
+    organization1 = _User.Query.filter(objectId=organizationId)
+    organization = None
+    for i in organization1:
+        organization = i
+    #organization = _User.Query.get(objectId = organizationId)
+    subscriber1 = _User.Query.filter(objectId=subscriberId)
+    subscriber = None
+    for i in subscriber1:
+        subscriber = i
+    #subscriber = _User.Query.get(objectId = subscriberId)
 
     #type = request.args.get('type', 0, type=str)
-    parsedRequest = json.loads(request.form.keys()[0])
-    type = parsedRequest["type"]
+    if not test:
+        parsedRequest = json.loads(request.form.keys()[0])
+        type = parsedRequest["type"]
+    else:
+        type = request_type
 
     # save the follow relation
     if type == "follow":
@@ -490,12 +505,15 @@ def handleFollow(organizationId = None):
     elif type == "cancel":
         followings = Following.Query.filter(subscriber = subscriber, user = organization)
         for fquery in followings:
-            for flocal in following:
-                if flocal.objectId == fquery.objectId:
-                    following.remove(flocal)
+            if not test:
+                for flocal in following:
+                    if flocal.objectId == fquery.objectId:
+                        following.remove(flocal)
             fquery.delete()
-
-    return jsonify(result = "success")
+    if not test:
+        return jsonify(result = "success")
+    else:
+        return "success"
 
 
 @manager.route("/deleteFollower/<userId>",methods=['POST'])
@@ -666,7 +684,7 @@ def inbox():
     return render_template('inbox.html',
                            notifications=notifications, messages=messages)
 
-
+'''
 @manager.route('/inbox/markasread',methods=['POST'])
 def markMessagesAsRead():
     global notifications, messages
@@ -682,19 +700,56 @@ def markMessagesAsRead():
             message.read = True
     return "success"
     # return redirect(url_for('inbox'))
+'''
+
+@manager.route('/inbox/markasread',methods=['POST'])
+def markMessagesAsRead(test=True, read_message=[]):
+    #global notifications, messages
+    if not test:
+        global notifications, messages
+        parsedMsg = json.loads(request.form.keys()[0])
+        readMessages = parsedMsg["result"]
+    else:
+        readMessages = read_message
+    for messageId in readMessages:
+        print messageId
+        message1 = Message.Query.filter(objectId=messageId)
+        message = None
+        for i in message1:
+            message = i
+        #message = Message.Query.get(objectId=messageId)
+        message.read = True
+        message.save()
+    if not test:
+        for message in messages:
+            if message.objectId in readMessages:
+                messages.read = True
+    return "success"
 
 
-@manager.route('/inbox/delete',methods=['POST'])
-def deleteMessages():
-    global notifications, messages
-    parsedMsg = json.loads(request.form.keys()[0])
-    deletedMessages = parsedMsg["result"]
+@manager.route('/inbox/delete',methods=['POST'] )
+def deleteMessages(test=False, delete_message=[]):
+    #global notifications, messages
+    if not test:
+        global notifications, messages
+        parsedMsg = json.loads(request.form.keys()[0])
+        deletedMessages = parsedMsg["result"]
+    else:
+        deletedMessages = delete_message
     for messageId in deletedMessages:
-        message = Message.Query.get(objectId=messageId)
-        message.delete()
-    for message in messages:
-        if message.objectId in deletedMessages:
-            messages.remove(message)
+        message1 = Message.Query.filter(objectId=messageId)
+        message = None
+        for i in message1:
+            message = i
+
+        #message = Message.Query.get(objectId=messageId)
+        if message is not None:
+            message.delete()
+    if not test:
+        for message in messages:
+            if message.objectId in deletedMessages:
+                messages.remove(message)
+
     return "success"
     # return redirect(url_for('inbox'))
 
