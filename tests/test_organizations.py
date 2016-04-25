@@ -73,47 +73,47 @@ class RecentlyVisited(Object):
     pass
 
 
-''' comment out previous code
+#comment out previous code
 class TestOrganizations(unittest.TestCase):
     def test_organizations1(self):
-    	self.assertTrue(True)
+        self.assertTrue(True)
 
     def test_organizations3(self):
-    	self.assertTrue(True)
-    	 # get the current user
-    	clientId = "tWv8MQspc5"
-    	client = _User.Query.get(objectId = clientId)
-    	#print client.username
+        self.assertTrue(True)
+         # get the current user
+        clientId = "tWv8MQspc5"
+        client = _User.Query.get(objectId = clientId)
+        #print client.username
 
     def test_organizations2(self):
-		# test quiz from specific organization
-		quizzes = Quizling.Query.all().filter(ownerName="dev10")
-		print len(quizzes)
-		name_arr = []
-		for i in quizzes:
-			name_arr.append(i.name)
-		self.assertTrue(any("Test" in s for s in name_arr))
-		self.assertTrue(any("Ct!ktvovylo" in s for s in name_arr))
-		self.assertTrue(any("Derp" in s for s in name_arr))	
-		# find the follow organizations
-		quizzes = Quizling.Query.all().filter(ownerName = "dev10")
-		result = serialize(quizzes)
-		self.assertFalse(result.has_key("BibkfMywdy"))
-		self.assertFalse(result.has_key("9dpqwKxgze"))
-		self.assertFalse(result.has_key("khiIVpFi8C"))
-		#test serialize function
-		organizationName = "dev10"
-		quizzes = Quizling.Query.all().filter(ownerName = organizationName)
-		result = serialize(quizzes)
-		self.assertTrue(result.has_key("idgtXmekx4"))
-		self.assertTrue(result.has_key("Y6I9zDbZHw"))
-		self.assertTrue(result.has_key("CiXSGRo3eI"))
-		#test getchannel function
-		channel_arr = getChannels(True);
-		self.assertTrue("channel_RzlZiu7ZA8" in channel_arr)
-		self.assertTrue("channel_Fu4XCipsP9" in channel_arr)
-		self.assertTrue("channel_6XAT3fA7wR" in channel_arr)
-'''
+        # test quiz from specific organization
+        quizzes = Quizling.Query.all().filter(ownerName="dev10")
+        print len(quizzes)
+        name_arr = []
+        for i in quizzes:
+            name_arr.append(i.name)
+        self.assertTrue(any("Test" in s for s in name_arr))
+        self.assertTrue(any("Ct!ktvovylo" in s for s in name_arr))
+        self.assertTrue(any("Derp" in s for s in name_arr)) 
+        # find the follow organizations
+        quizzes = Quizling.Query.all().filter(ownerName = "dev10")
+        result = serialize(quizzes)
+        self.assertFalse(result.has_key("BibkfMywdy"))
+        self.assertFalse(result.has_key("9dpqwKxgze"))
+        self.assertFalse(result.has_key("khiIVpFi8C"))
+        #test serialize function
+        organizationName = "dev10"
+        quizzes = Quizling.Query.all().filter(ownerName = organizationName)
+        result = serialize(quizzes)
+        self.assertTrue(result.has_key("idgtXmekx4"))
+        self.assertTrue(result.has_key("Y6I9zDbZHw"))
+        self.assertTrue(result.has_key("CiXSGRo3eI"))
+        #test getchannel function
+        channel_arr = getChannels(True);
+        self.assertTrue("channel_RzlZiu7ZA8" in channel_arr)
+        self.assertTrue("channel_Fu4XCipsP9" in channel_arr)
+        self.assertTrue("channel_6XAT3fA7wR" in channel_arr)
+
 
 class ParametrizedTestCase(unittest.TestCase):
     """ TestCase classes that want to be parametrized should
@@ -138,67 +138,48 @@ class ParametrizedTestCase(unittest.TestCase):
 
 class TestOne(ParametrizedTestCase):
     def test_quiz_information1(self):
-    	object_id = self.param
-    	print object_id
-    	names = quiz_inforamtion(object_id, True)
-    	self.assertIsNotNone(names)
-    	self.assertTrue(len(names)>=1)
+        object_id = self.param
+        print object_id
+        names = quiz_inforamtion(object_id, True)
+        self.assertIsNotNone(names)
+        self.assertTrue(len(names)>=1)
 
 
- 	def test_quiz_information2(self):
- 		object_id = self.param
-    	print object_id
-    	names = quiz_inforamtion(object_id, True)
-    	self.assertTrue("dev10" in names)
+    def test_quiz_information2(self):
+        object_id = self.param
+        print object_id
+        names = quiz_inforamtion(object_id, True)
+        self.assertTrue("dev10" in names)
 
-   	def test_quiz_information3(self):
-   		object_id = self.param
-    	print object_id
-    	names = quiz_inforamtion(object_id, True)
-    	self.assertTrue("dev9" not in names)
+    def test_quiz_information3(self):
+        object_id = self.param
+        print object_id
+        names = quiz_inforamtion(object_id, True)
+        self.assertTrue("dev9" not in names)
 
 
 
 class TestTwo(ParametrizedTestCase):
-	# testing on a existing one
+    # testing on a existing one
     def test_user_DashBoard1(self):
-    	if self.param is None:
-    		self.param = ["RzlZiu7ZA8", "qGU7Nd47kl"]
-    	print self.param[0]
-    	organization = _User.Query.get(objectId = self.param[0])
-    	prev_count = RecentlyVisited.Query.all().filter(target=organization).order_by("-visitCount").limit(1)
-    	if len(prev_count)==0:
-    		prev_count = 0
-    	else:
-    		prev_count = prev_count[0].visitCount
-    	userDashBoard(self.param[0], True, self.param[1])
-    	after_count= RecentlyVisited.Query.all().filter(target=organization).order_by("-visitCount").limit(1)
-    	after_count = after_count[0].visitCount
-    	# check if the target organization visit increase by 1 or not
-    	if prev_count==0:
-    		self.assertTrue(after_count==1)
-    	else:
-    		self.assertTrue(after_count-prev_count==1)
-    '''
-    # testing on a new one
- 	def test_user_DashBoard2(self):
- 		if self.param is None:
- 			self.param = ["RzlZiu7ZA8", "qGU7Nd47kl"]
- 		organization = _User.Query.get(objectId = self.param[0])
-    	prev_count = RecentlyVisited.Query.all().filter(target=organization).order_by("-visitCount").limit(1)
-    	if len(prev_count)==0:
-    		prev_count = 0
-    	else:
-    		prev_count = prev_count[0].visitCount
-    	userDashBoard(self.param[1], True, self.param[0])
-    	after_count= RecentlyVisited.Query.all().filter(target=organization).order_by("-visitCount").limit(1)
-    	after_count = after_count[0].visitCount
-    	# check if the target organization visit increase by 1 or not
-    	if prev_count==0:
-    		self.assertTrue(after_count==0)
-    	else:
-    		self.assertTrue(after_count==prev_count)
-   	'''
+        if self.param is None:
+            self.param = ["RzlZiu7ZA8", "qGU7Nd47kl"]
+        print self.param[0]
+        organization = _User.Query.get(objectId = self.param[0])
+        prev_count = RecentlyVisited.Query.all().filter(target=organization).order_by("-visitCount").limit(1)
+        if len(prev_count)==0:
+            prev_count = 0
+        else:
+            prev_count = prev_count[0].visitCount
+        userDashBoard(self.param[0], True, self.param[1])
+        after_count= RecentlyVisited.Query.all().filter(target=organization).order_by("-visitCount").limit(1)
+        after_count = after_count[0].visitCount
+        # check if the target organization visit increase by 1 or not
+        if prev_count==0:
+            self.assertTrue(after_count==1)
+        else:
+            self.assertTrue(after_count-prev_count==1)
+
 
 
 quiz_id = "CiXSGRo3eI"

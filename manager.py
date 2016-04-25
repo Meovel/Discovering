@@ -245,16 +245,21 @@ def quizzesOfFollowedOrgs(followedOrgs):
 
 
 
-def getChannels():
+def getChannels(test=False):
     superOrgs = []
-
+    test_arr = []
     for channel in Channel.Query.all():
         if hasattr(channel, 'user'):
-            if channel.user is not None:
-                print channel.channelName
-                superOrgs.append(channel.user)
-
-    return superOrgs
+            if not test:
+                if channel.user is not None:
+                    print channel.channelName
+                    superOrgs.append(channel.user)
+            else:
+                test_arr.append(channel.channelName)
+    if not test:
+        return superOrgs
+    else:
+        return test_arr
 
 ############################### End of Index ###############################
 
