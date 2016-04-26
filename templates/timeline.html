@@ -4,7 +4,7 @@
 <head>
 		<meta id="obj_id" style="visibility: hidden" objectId='{{objectId}}'>
 		<meta charset="utf-8"/>
-    <title>Discovering - Quizzes</title>
+    <title>Discovering - Timeline</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -70,6 +70,35 @@
 				</div>
 			</div>
 			<!-- END PORTLET : END CHART DIV-->
+
+			<!-- BEGIN PAGE HEADER-->
+			<div class="page-head">
+				<!-- BEGIN SUB-PAGE TITLE -->
+				<div class="page-title">
+					<h1>Achievements <small>shows user's achievements.</small></h1>
+				</div>
+				<div class="page-toolbar">
+				</div>
+			</div>
+			<!-- BEGIN PORTLET : BEGIN ACHIEVEMENTS CONTAINER DIV -->
+			<div class="portlet light tasks-widget">
+				<div class="portlet-body">
+					<div class="task-content">
+						<!-- BEGIN ACHIEVEMENTS DIV -->
+						<div id="achievements">
+							{% for achievement in achieve_data %}
+								<div id="achievementLabel{{loop.index}}">
+									<h4>{{achievement[0]}}</h4>
+										<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{achievement[1]}}</p>
+								</div>
+							{% endfor %}
+						</div>
+						<!-- END ACHIEVEMENTS DIV -->
+					</div>
+				</div>
+			</div>
+			<!-- END PORTLET : END ACHIEVEMENTS CONTAINER DIV -->
+
 			<!-- BEGIN PAGE HEAD -->
 			<div class="page-head">
 				<div class="page-title">
@@ -121,7 +150,7 @@
 											</div>
 											<div class="timeline-footer">
 												<a href="javascript:;" class="nav-link pull-right">
-												<input type='button' id='specifyGeolocations{{loop.index}}' value='Toggle' style='color:black'>
+												<input type='button' id='specifyGeolocations{{loop.index}}' value='Toggle Map' style='color:black'>
 												</a>
 												<!-- BEGIN MAP DIV -->
 												<div id='question_map{{loop.index}}' style='height:100px; width:300px' style='display: none'>
@@ -131,6 +160,14 @@
 													</style>
 												</div>
 												<!-- END MAP DIV -->
+												<!-- BEGIN COMMENT DIV -->
+												<div class='timeline-footer' style='color:black'>
+													<div>
+														<textarea name='comment'></textarea>
+													</div>
+													<input type='button' value='Add Comment' id='addComment{{loop.index}}'>
+												</div>
+												<!-- END COMMENT DIV -->
 											</div>
 										</div>
 									</li>
@@ -162,8 +199,16 @@
 											{% if data[5] %}
 												map{{loop.index}} = new google.maps.Map(document.getElementById('question_map{{loop.index}}'), {
 													center: {lat: {{data[5][1]}}, lng: {{data[5][2]}}},
-													zoom: 4
+													zoom: 4,
+													scrollwheel: false
 												});
+												map{{loop.index}}.addListener('click', function() {
+													if(map{{loop.index}}.get('scrollwheel')) {
+														map{{loop.index}}.set('scrollwheel', false);
+													} else {
+														map{{loop.index}}.set('scrollwheel', true);
+													}
+												})
 											{% endif %}
 										{% endfor %}
 									}
