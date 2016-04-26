@@ -4,7 +4,7 @@ from parse_rest.datatypes import Object
 from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.datastructures import ImmutableMultiDict
-import json
+import json, httplib, urllib
 
 # import pymongo
 # from pymongo import MongoClient
@@ -268,7 +268,7 @@ def getChannels(test=False):
 @manager.route('/user/<target_id>')
 def userDashBoard(target_id = None, test=False,temp_id= ""):
     '''
-        This page required organization basic information, follower, followed, 
+        This page required organization basic information, follower, followed,
         quizzes(if have any) and comment
     '''
     # iteration_6
@@ -301,6 +301,10 @@ def userDashBoard(target_id = None, test=False,temp_id= ""):
 
 
     comments = Comment.Query.all().filter(user = target_id)
+
+    # redundant line? Same line is above, but came with git merge. -- Riyad. Feel free to delete.
+    organization = _User.Query.get(objectId = target_id)
+
     followings = Following.Query.all().filter(user = organization).limit(12)
     followers = []
     for following in followings:
@@ -407,7 +411,7 @@ def unlike(target_id = None):
 @manager.route('/quiz_information/<quiz_id>', methods=['GET'] )
 def quiz_inforamtion(quiz_id = None, test=False):
     '''
-        Get the quiz id and find all the people who take this quiz, then rank the people and send back 
+        Get the quiz id and find all the people who take this quiz, then rank the people and send back
         the top 3 user
     '''
     if not test:
@@ -422,7 +426,7 @@ def quiz_inforamtion(quiz_id = None, test=False):
             # if no results return error, no one take this quiz
             if len(results) == 0:
                 return jsonify(result="Failed")
-            
+
             return render_template("quiz_detail.html",
                 results = results,
                 quiz = quiz)
@@ -465,7 +469,7 @@ def organizations():
 
 def getQuiz(organizationName):
     quizzes = Quizling.Query.all().filter(ownerName = organizationName)
-    
+
     return quizzes;
 
 @manager.route("/follow/<organizationId>",methods=['POST'])
@@ -612,46 +616,80 @@ def stats():
                            notifications=notifications, messages=messages)
 
 
+
+
+
+# Fetches data from QuizPersonalStatistics table using Parse REST API.
+# This is a helper method.
+def fetch_quiz_personal_stats(user_objectId):
+    # username = request.cookies.get('username')
+    connection = httplib.HTTPSConnection('api.parse.com', 443)
+    params = urllib.urlencode({"include":"quizling","include": "quizling.area","where":json.dumps({
+                                           "user": {
+                                             "__type": "Pointer",
+                                             "className": "_User",
+                                             "objectId": user_objectId
+                                           }
+                                    })})
+    connection.connect()
+    connection.request('GET', '/1/classes/QuizPersonalStatistics?%s' % params, '', {
+       "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
+       "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5"
+     })
+    quiz_obj = json.loads(connection.getresponse().read())
+    # print quiz_obj['results']
+    # for o in quiz_obj['results']:
+    #     print o
+    return quiz_obj['results']
+
+# Fetches data from QuestionPersonalStatistics table using PARSE REST API.
+# This is a helper method.
+def fetch_question_personal_stats(user_objectId):
+    # username = request.cookies.get('username')
+    connection = httplib.HTTPSConnection('api.parse.com', 443)
+    params = urllib.urlencode({"include":"quizling","where":json.dumps({
+                                           "person": {
+                                             "__type": "Pointer",
+                                             "className": "_User",
+                                             "objectId": user_objectId
+                                           }
+                                    })})
+    connection.connect()
+    connection.request('GET', '/1/classes/QuestionPersonalStatistics?%s' % params, '', {
+       "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
+       "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5"
+     })
+    quest_obj = json.loads(connection.getresponse().read())
+    return quest_obj['results']
+
 def fetch_timeline_data(user_objectId):
+    quiz_personal_stats = fetch_quiz_personal_stats(user_objectId)
+    quest_personal_stats = fetch_question_personal_stats(user_objectId)
     relevant_data = []
-    quiz_obj = QuizPersonalStatistics.Query.all().filter().limit(900)
-    question_obj = QuestionPersonalStatistics.Query.all().filter().limit(17000)
-    quizling_obj = Quizling.Query.all().filter().limit(500)
 
-    for quiz_stat in quiz_obj:
+    for quiz_stat in quiz_personal_stats:
         quiz_data = []
-        quiz_id = quiz_stat.quizling.objectId
-        quiz_name = ""
-        for q in quizling_obj:
-            if q.objectId == quiz_id:
-                quiz_name = q.name
+        if 'quizling' in quiz_stat:
+            quiz_data.append(quiz_stat['quizling']['name'])
+            quiz_data.append(quiz_stat['quizling']['objectId'])
+            quiz_data.append(quiz_stat['averageScore'])
+            quiz_data.append(quiz_stat['updatedAt'])
 
-        if (quiz_stat.user.objectId == user_objectId):
-            quiz_data.append(quiz_name)
-            quiz_data.append(quiz_id)
-            quiz_data.append(quiz_stat.averageScore)
-            quiz_data.append(quiz_stat.updatedAt)
+            # quiz_data.append(int(str(quiz_stat['updatedAt']).translate(None, string.punctuation).replace(' ', '')))
 
-            # convert datetime.datetime to string, take out punctuation,
-            # take out whitespace, finally convert to integer so it is a
-            # numeric date-timestamp
-            quiz_data.append(int(str(quiz_stat.updatedAt).translate(None, string.punctuation).replace(' ', '')))
-
-            for quest_stat in question_obj:
+            for quest_stat in quest_personal_stats:
                 quest_data = []
-                if (quest_stat.quizling.objectId == quiz_id) and (quest_stat.person.objectId == user_objectId):
-                    quest_data.append(quest_stat.objectId)
-                    quest_data.append(quest_stat.geolocation.latitude)
-                    quest_data.append(quest_stat.geolocation.longitude)
-                    if quest_data:
-                        quiz_data.append(quest_data)
-
-        if quiz_data: # data is sometimes empty. Discard those entries in relevant_data.
+                if 'quizling' in quest_stat:
+                    if (quest_stat['quizling']['objectId'] == quiz_stat['quizling']['objectId']) and (quest_stat['person']['objectId'] == user_objectId):
+                        quest_data.append(quest_stat['objectId'])
+                        quest_data.append(quest_stat['geolocation']['latitude'])
+                        quest_data.append(quest_stat['geolocation']['longitude'])
+                        if quest_data:
+                            quiz_data.append(quest_data)
+        if quiz_data:
             relevant_data.append(quiz_data)
 
-    # sorts the list, relevant_data, by the 3-th value in each sublist
-    # (a numeric date), in descending order.
-    relevant_data.sort(key=lambda x: x[4], reverse=True)
+    relevant_data.sort(key=lambda x: x[3], reverse=True)
 
     return relevant_data
 
@@ -670,11 +708,120 @@ def timeline():
 
     relevant_data = fetch_timeline_data(user_objectId)
 
+    achieve_data = compute_achievements(user_objectId)
+
     # send the data to timeline.html using Jinja2, built in to Flask.
     return render_template('timeline.html', org=org_info_parse,
+                        achieve_data=achieve_data,
                         relevant_data=relevant_data, objectId = user_objectId,
                         notifications=notifications, messages=messages)
 
+def fetch_achievements(user_objectId):
+    # username = request.cookies.get('username')
+    connection = httplib.HTTPSConnection('api.parse.com', 443)
+    params = urllib.urlencode({"where":json.dumps({
+                                           "name": {
+                                            "$regex": "*"
+                                           }
+
+                                    })})
+    connection.connect()
+    connection.request('GET', '/1/classes/Achievement', '', {
+       "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
+       "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5"
+     })
+    achieve_obj = json.loads(connection.getresponse().read())
+
+    return achieve_obj['results']
+
+def fetch_achievements_personal_stats(user_objectId):
+        # username = request.cookies.get('username')
+        connection = httplib.HTTPSConnection('api.parse.com', 443)
+        params = urllib.urlencode({"where":json.dumps({
+                                               "user": {
+                                                 "__type": "Pointer",
+                                                 "className": "_User",
+                                                 "objectId": user_objectId
+                                               }
+                                        })})
+        connection.connect()
+        connection.request('GET', '/1/classes/AchievementPersonalStatistics?%s' % params, '', {
+           "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
+           "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5"
+         })
+        achieve_stat_obj = json.loads(connection.getresponse().read())
+
+        # for b in achieve_stat_obj['results']:
+        #     print b
+        return achieve_stat_obj['results']
+
+def post_achievement(user_objectId, achievement):
+    connection = httplib.HTTPSConnection('api.parse.com', 443)
+    connection.connect()
+    connection.request('POST', '/1/classes/AchievementPersonalStatistics', json.dumps({
+           "user": user_objectId,
+           "achievement": achievement['objectId']
+         }), {
+           "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
+           "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5",
+           "Content-Type": "application/json"
+         })
+    results = json.loads(connection.getresponse().read())
+    print results
+
+def achieve_quiz_count(user_objectId, condition_value, quiz_stats, achievement):
+    quiz_count = 0
+    for q in quiz_stats:
+        quiz_count += q['playCount']
+
+    result = []
+    if quiz_count >= condition_value:
+        result.append(achievement['name'])
+        result.append(achievement['description'])
+        # post_achievement(user_objectId, achievement)
+        # print "Achievment Unlocked: ", achievement['name']
+        return result
+
+
+def achieve_area_count(user_objectId, condition_value, quiz_stats, achievement):
+    areas = {}
+    for q in quiz_stats:
+        if 'quizling' in q:
+            if 'area' in q['quizling']:
+                area_name = q['quizling']['area']['name']
+                areas[area_name] = ''
+
+    result = []
+    if len(areas) >= condition_value:
+        result.append(achievement['name'])
+        result.append(achievement['description'])
+
+        return result
+
+
+
+def compute_achievements(user_objectId):
+    achievements = fetch_achievements(user_objectId)
+    quiz_stats = fetch_quiz_personal_stats(user_objectId)
+
+    # This is a dictionary for selecting functions to compute achievements.
+    # The options represent general achievement categories.
+    achievement_options = {    0 : achieve_quiz_count,
+                               1 : achieve_area_count
+                          }
+    achieve_data = []
+    for achieve in achievements:
+        condition_value = achieve['conditionValue']
+        metric_type = achieve['metricType']
+
+        if metric_type == 'quiz_count':
+            achieve_data.append(achievement_options[0](user_objectId, condition_value, quiz_stats, achieve))
+        elif metric_type == 'area_count':
+            achieve_data.append(achievement_options[1](user_objectId, condition_value, quiz_stats, achieve))
+
+
+
+    return achieve_data
 
 @manager.route('/favourites')
 def bookmark():
