@@ -5,10 +5,7 @@ from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.datastructures import ImmutableMultiDict
 import json, httplib, urllib
-
-# import pymongo
-# from pymongo import MongoClient
-# from bson import json_util
+# import re
 
 import string
 
@@ -640,6 +637,10 @@ def fetch_quiz_personal_stats(user_objectId):
     # print quiz_obj['results']
     # for o in quiz_obj['results']:
     #     print o
+
+    print "quiz_obj, does it have 'results' key?"
+    print quiz_obj
+
     return quiz_obj['results']
 
 # Fetches data from QuestionPersonalStatistics table using PARSE REST API.
@@ -675,7 +676,7 @@ def fetch_timeline_data(user_objectId):
             quiz_data.append(quiz_stat['averageScore'])
             quiz_data.append(quiz_stat['updatedAt'])
 
-            # quiz_data.append(int(str(quiz_stat['updatedAt']).translate(None, string.punctuation).replace(' ', '')))
+            # quiz_data.append(int(re.sub('[^0-9]', '', str(quiz_stat['updatedAt']).translate(None, string.punctuation).replace(' ', ''))))
 
             for quest_stat in quest_personal_stats:
                 quest_data = []
