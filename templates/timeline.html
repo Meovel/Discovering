@@ -70,6 +70,35 @@
 				</div>
 			</div>
 			<!-- END PORTLET : END CHART DIV-->
+
+			<!-- BEGIN PAGE HEADER-->
+			<div class="page-head">
+				<!-- BEGIN SUB-PAGE TITLE -->
+				<div class="page-title">
+					<h1>Achievements <small>shows user's achievements.</small></h1>
+				</div>
+				<div class="page-toolbar">
+				</div>
+			</div>
+			<!-- BEGIN PORTLET : BEGIN ACHIEVEMENTS CONTAINER DIV -->
+			<div class="portlet light tasks-widget">
+				<div class="portlet-body">
+					<div class="task-content">
+						<!-- BEGIN ACHIEVEMENTS DIV -->
+						<div id="achievements">
+							{% for achievement in achieve_data %}
+								<div id="achievementLabel{{loop.index}}">
+									<h4>{{achievement[0]}}</h4>
+										<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{achievement[1]}}</p>
+								</div>
+							{% endfor %}
+						</div>
+						<!-- END ACHIEVEMENTS DIV -->
+					</div>
+				</div>
+			</div>
+			<!-- END PORTLET : END ACHIEVEMENTS CONTAINER DIV -->
+
 			<!-- BEGIN PAGE HEAD -->
 			<div class="page-head">
 				<div class="page-title">
