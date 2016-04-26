@@ -482,12 +482,16 @@ def stats():
                            org=org_info_parse, objectId=obj_id,
                            notifications=notifications, messages=messages)
 
+
+
+
+
 # Fetches data from QuizPersonalStatistics table using Parse REST API.
 # This is a helper method.
 def fetch_quiz_personal_stats(user_objectId):
     # username = request.cookies.get('username')
     connection = httplib.HTTPSConnection('api.parse.com', 443)
-    params = urllib.urlencode({"include":"quizling","where":json.dumps({
+    params = urllib.urlencode({"include":"quizling","include": "quizling.area","where":json.dumps({
                                            "user": {
                                              "__type": "Pointer",
                                              "className": "_User",
@@ -500,40 +504,18 @@ def fetch_quiz_personal_stats(user_objectId):
        "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5"
      })
     quiz_obj = json.loads(connection.getresponse().read())
-    print quiz_obj
-    return quiz_obj
-
-def parse_timeline_spike():
-    connection = httplib.HTTPSConnection('api.parse.com', 443)
-    connection.connect()
-    connection.request('POST', '/1/functions/timelineSpike?', '', {
-        "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
-        "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5",
-        "Content-Type": "application/json"
-    })
-    resp = json.loads(connection.getresponse().read())
-    print resp
-    # print resp['result']
-
-def parse_rest_cloudcode_spike():
-    connection = httplib.HTTPSConnection('api.parse.com', 443)
-    connection.connect()
-    connection.request('POST', '/1/functions/hello?', '', {
-        "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
-        "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5",
-        "Content-Type": "application/json"
-    })
-    resp = json.loads(connection.getresponse().read())
-    print resp
-    print resp['result']
+    # print quiz_obj['results']
+    # for o in quiz_obj['results']:
+    #     print o
+    return quiz_obj['results']
 
 # Fetches data from QuestionPersonalStatistics table using PARSE REST API.
 # This is a helper method.
 def fetch_question_personal_stats(user_objectId):
-    username = request.cookies.get('username')
+    # username = request.cookies.get('username')
     connection = httplib.HTTPSConnection('api.parse.com', 443)
-    params = urllib.urlencode({"where":json.dumps({
-                                           "user": {
+    params = urllib.urlencode({"include":"quizling","where":json.dumps({
+                                           "person": {
                                              "__type": "Pointer",
                                              "className": "_User",
                                              "objectId": user_objectId
@@ -545,108 +527,36 @@ def fetch_question_personal_stats(user_objectId):
        "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5"
      })
     quest_obj = json.loads(connection.getresponse().read())
-    # print quest_obj
-    return quest_obj
-
-def format_timeline_data(user_objectId):
-    quiz_personal_stats = fetch_quiz_personal_stats(user_objectId)
-    quest_personal_stats = fetch_question_personal_stats(user_objectId)
-
-# Design questions: should this be called in beginning when a user logs in?
-# Then, should we update these values using a synchronization system?
-# @description Fetches the data from Parse
-# @returns data... possibly as a dictionary OR as a Parse object...
-def fetch_quizling_data(user_objectId):
-    quizling_data = {} # Dictionary or Parse Object?? Design decision...
-
-    return quizling_data
-
-# Gets the average quiz scores, using fetch_quizling_data to first download the data.
-# @returns a dictionary of quiz name to average score
-# Note: a quiz_name can be retrieved from a Parse object
-def get_quizling_average_scores(quiz_name):
-    quiz_to_score = {}
-
-    return quiz_to_score
-
-# Note: a quiz_name can be retrieved from a Parse object
-def user_scored_above_average(user_score, quiz_name):
-    quizling_average_scores = get_quizling_average_scores(quiz_name)
-    # find if user scored above or below average score for the given quiz
-    return false
-
-# For each quiz the user takes, get the standings
-# @returns a dictionary of quiz to standing for the user passed in
-def get_user_quiz_standings(user_objectId):
-    user_standings = {}
-    #
-    return user_standings
-
-# @description May be called before get_user_quiz_scores
-def fetch_user_quiz_scores(user_objectId):
-    pass
-
-# Gets the user scores for the given quiz... Should this be achieved with a database
-# call once the user initially logs in?
-# @returns a dictionary of quiz to scores for the user passed in
-def get_user_quiz_scores(user_objectId):
-    user_scores = {}
-
-    return user_scores
-
-# This function may simply pass the data to HTML so that Jinja2 can populate the HTML
-# based on the simple conditions described in the comments.
-def update_timeline_stats(user_objectId):
-    user_standings = get_user_quiz_standings(user_objectId)
-    user_scores = get_user_quiz_scores(user_objectId)
-    # user_standing_results = {}
-    # loop through the user standings and compare with user scores:
-        # Save in timeline html for each quiz...
-            # "User above average with a score of X" OR "User below average with a score of Y"
-    pass
+    return quest_obj['results']
 
 def fetch_timeline_data(user_objectId):
+    quiz_personal_stats = fetch_quiz_personal_stats(user_objectId)
+    quest_personal_stats = fetch_question_personal_stats(user_objectId)
     relevant_data = []
-    quiz_obj = QuizPersonalStatistics.Query.all().filter().limit(900)
-    question_obj = QuestionPersonalStatistics.Query.all().filter().limit(17000)
-    quizling_obj = Quizling.Query.all().filter().limit(500)
-    # quiz_obj = fetch_quiz_personal_stats(user_objectId)
-    # question_obj = fetch_question_personal_stats(user_objectId)
 
-    for quiz_stat in quiz_obj:
+    for quiz_stat in quiz_personal_stats:
         quiz_data = []
-        quiz_id = quiz_stat.quizling.objectId
-        quiz_name = ""
-        for q in quizling_obj:
-            if q.objectId == quiz_id:
-                quiz_name = q.name
+        if 'quizling' in quiz_stat:
+            quiz_data.append(quiz_stat['quizling']['name'])
+            quiz_data.append(quiz_stat['quizling']['objectId'])
+            quiz_data.append(quiz_stat['averageScore'])
+            quiz_data.append(quiz_stat['updatedAt'])
 
-        if (quiz_stat.user.objectId == user_objectId):
-            quiz_data.append(quiz_name)
-            quiz_data.append(quiz_id)
-            quiz_data.append(quiz_stat.averageScore)
-            quiz_data.append(quiz_stat.updatedAt)
+            # quiz_data.append(int(str(quiz_stat['updatedAt']).translate(None, string.punctuation).replace(' ', '')))
 
-            # convert datetime.datetime to string, take out punctuation,
-            # take out whitespace, finally convert to integer so it is a
-            # numeric date-timestamp
-            quiz_data.append(int(str(quiz_stat.updatedAt).translate(None, string.punctuation).replace(' ', '')))
-
-            for quest_stat in question_obj:
+            for quest_stat in quest_personal_stats:
                 quest_data = []
-                if (quest_stat.quizling.objectId == quiz_id) and (quest_stat.person.objectId == user_objectId):
-                    quest_data.append(quest_stat.objectId)
-                    quest_data.append(quest_stat.geolocation.latitude)
-                    quest_data.append(quest_stat.geolocation.longitude)
-                    if quest_data:
-                        quiz_data.append(quest_data)
-
-        if quiz_data: # data is sometimes empty. Discard those entries in relevant_data.
+                if 'quizling' in quest_stat:
+                    if (quest_stat['quizling']['objectId'] == quiz_stat['quizling']['objectId']) and (quest_stat['person']['objectId'] == user_objectId):
+                        quest_data.append(quest_stat['objectId'])
+                        quest_data.append(quest_stat['geolocation']['latitude'])
+                        quest_data.append(quest_stat['geolocation']['longitude'])
+                        if quest_data:
+                            quiz_data.append(quest_data)
+        if quiz_data:
             relevant_data.append(quiz_data)
 
-    # sorts the list, relevant_data, by the 3-th value in each sublist
-    # (a numeric date), in descending order.
-    relevant_data.sort(key=lambda x: x[4], reverse=True)
+    relevant_data.sort(key=lambda x: x[3], reverse=True)
 
     return relevant_data
 
@@ -664,14 +574,136 @@ def timeline():
         # exit()
 
     relevant_data = fetch_timeline_data(user_objectId)
-    # parse_rest_cloudcode_spike()
-    parse_timeline_spike()
 
     # send the data to timeline.html using Jinja2, built in to Flask.
     return render_template('timeline.html', org=org_info_parse,
                         relevant_data=relevant_data, objectId = user_objectId,
                         notifications=notifications, messages=messages)
 
+def fetch_achievements(user_objectId):
+    # username = request.cookies.get('username')
+    connection = httplib.HTTPSConnection('api.parse.com', 443)
+    params = urllib.urlencode({"where":json.dumps({
+                                           "name": {
+                                            "$regex": "*"
+                                           }
+
+                                    })})
+    connection.connect()
+    connection.request('GET', '/1/classes/Achievement', '', {
+       "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
+       "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5"
+     })
+    achieve_obj = json.loads(connection.getresponse().read())
+
+    return achieve_obj['results']
+
+def fetch_achievements_personal_stats(user_objectId):
+        # username = request.cookies.get('username')
+        connection = httplib.HTTPSConnection('api.parse.com', 443)
+        params = urllib.urlencode({"where":json.dumps({
+                                               "user": {
+                                                 "__type": "Pointer",
+                                                 "className": "_User",
+                                                 "objectId": user_objectId
+                                               }
+                                        })})
+        connection.connect()
+        connection.request('GET', '/1/classes/AchievementPersonalStatistics?%s' % params, '', {
+           "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
+           "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5"
+         })
+        achieve_stat_obj = json.loads(connection.getresponse().read())
+
+        # for b in achieve_stat_obj['results']:
+        #     print b
+        return achieve_stat_obj['results']
+
+def post_achievement(user_objectId, achievement):
+    connection = httplib.HTTPSConnection('api.parse.com', 443)
+    connection.connect()
+    connection.request('POST', '/1/classes/AchievementPersonalStatistics', json.dumps({
+           "user": user_objectId,
+           "achievement": achievement['objectId']
+         }), {
+           "X-Parse-Application-Id": "1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD",
+           "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5",
+           "Content-Type": "application/json"
+         })
+    results = json.loads(connection.getresponse().read())
+    print results
+
+def achieve_quiz_count(user_objectId, condition_value, quiz_stats, achievement):
+    quiz_count = 0
+    for q in quiz_stats:
+        quiz_count += q['playCount']
+
+    result = []
+    if quiz_count >= condition_value:
+        result.append(achievement['name'])
+        result.append(achievement['description'])
+        # post_achievement(user_objectId, achievement)
+        # print "Achievment Unlocked: ", achievement['name']
+        return result
+
+
+def achieve_area_count(user_objectId, condition_value, quiz_stats, achievement):
+    areas = {}
+    for q in quiz_stats:
+        if 'quizling' in q:
+            if 'area' in q['quizling']:
+                area_name = q['quizling']['area']['name']
+                areas[area_name] = ''
+
+    result = []
+    if len(areas) >= condition_value:
+        result.append(achievement['name'])
+        result.append(achievement['description'])
+
+        return result
+
+
+
+def compute_achievements(user_objectId):
+    achievements = fetch_achievements(user_objectId)
+    quiz_stats = fetch_quiz_personal_stats(user_objectId)
+
+    # This is a dictionary for selecting functions to compute achievements.
+    # The options represent general achievement categories.
+    achievement_options = {    0 : achieve_quiz_count,
+                               1 : achieve_area_count
+                          }
+    achieve_data = []
+    for achieve in achievements:
+        condition_value = achieve['conditionValue']
+        metric_type = achieve['metricType']
+
+        if metric_type == 'quiz_count':
+            achieve_data.append(achievement_options[0](user_objectId, condition_value, quiz_stats, achieve))
+        elif metric_type == 'area_count':
+            achieve_data.append(achievement_options[1](user_objectId, condition_value, quiz_stats, achieve))
+
+
+
+    return achieve_data
+
+@manager.route('/achievements')
+def achievements():
+
+    username = request.cookies.get('username')
+    user_objectId = request.cookies.get('user_objectId')
+
+    if username is None:
+        print "Error: user returned None"
+        return redirect(url_for(''))
+        # exit()
+
+
+    achieve_data = compute_achievements(user_objectId)
+
+    return render_template('timeline.html', org=org_info_parse,
+                        achieve_data=achieve_data, objectId = user_objectId,
+                        notifications=notifications, messages=messages)
 
 
 @manager.route('/search')
