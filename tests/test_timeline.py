@@ -11,6 +11,7 @@ from manager import quizzes
 from manager import serialize
 from manager import getChannels
 from manager import fetch_timeline_data
+from manager import compute_achievements
 import datetime
 
 __author__ = 'Chris Riyad'
@@ -20,6 +21,12 @@ __author__ = 'Chris Riyad'
 application_id = '1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD'
 rest_api_key = 'SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5'
 register(application_id, rest_api_key)
+
+class Achievement(Object):
+    pass
+
+class AchievementPersonalStatistics(Object):
+    pass
 
 class QuestionPersonalStatistics(Object):
     pass
@@ -75,11 +82,14 @@ class TestOne(ParameterizedTestTimeline):
         timeline_data = fetch_timeline_data(self.objId)
         self.assertIsNotNone(timeline_data)
 
+    # NOTE: This test is no longer needed, since this variable was unnecessary.
+    # We're leaving the test here, in case we decided to use this again at some later point.
+    # @author chris and riyad
     # tests specifically that the date is correctly parsed as a long (converted from int by python) in timeline_data
-    def test_timeline_date_parsed_as_long(self):
-        timeline_data = fetch_timeline_data(self.objId)
-        for data in timeline_data:
-            self.assertTrue(type(data[4]) is long)
+    # def test_timeline_date_parsed_as_long(self):
+    #     timeline_data = fetch_timeline_data(self.objId)
+    #     for data in timeline_data:
+    #         self.assertTrue(type(data[4]) is long)
 
     # tests first dimension of timeline_data list
     def test_timeline_no_empty2(self):
@@ -92,7 +102,8 @@ class TestOne(ParameterizedTestTimeline):
     def test_timeline_correct_date_type(self):
         timeline_data = fetch_timeline_data(self.objId)
         for data in timeline_data:
-            self.assertTrue(type(data[3]) is datetime.datetime)
+            # self.assertTrue(type(data[3]) is datetime.datetime)
+            self.assertTrue(type(data[3]) is unicode)
 
 # Tests if the quiz affiliated with the question data actually exists in the database.
 class TestTwo(ParameterizedTestTimeline):
@@ -106,56 +117,34 @@ class TestTwo(ParameterizedTestTimeline):
                 quizling_obj = Quizling.Query.all().filter(objectId=quiz_id)
                 self.assertFalse(quizling_obj is None)
 
+class TestThree(ParameterizedTestTimeline):
+    # asserts first list exists in double-nested list
+    def test_achievement_proper_format1(self):
+        achieve_data = compute_achievements(self.objId)
+        if(achieve_data): # if not falsy, make sure this is an array
+            self.assertTrue(achieve_data[0])
+
+    # aserts second list exists in double-nested list
+    def test_achievement_proper_format2(self):
+        achieve_data = compute_achievements(self.objId)
+        if(achieve_data[0]):
+            # if not falsy, assert is an array with non-empty first elem
+            self.assertTrue(achieve_data[0][0])
+
+    def test_achievement_proper_format3(self):
+        achieve_data = compute_achievements(self.objId)
+        if(achieve_data[0]):
+            # if not falsy, assert is an array with non-empty second elem
+            self.assertTrue(achieve_data[0][1])
+
 
 objectId1 = "WrWZRnIDbv"
 # mostly from http://eli.thegreenplace.net/2011/08/02/python-unit-testing-parametrized-test-cases
 suite = unittest.TestSuite()
 suite.addTest(ParameterizedTestTimeline.parametrize(TestOne, objId=objectId1))
 suite.addTest(ParameterizedTestTimeline.parametrize(TestTwo, objId=objectId1))
+suite.addTest(ParameterizedTestTimeline.parametrize(TestThree, objId=objectId1))
 unittest.TextTestRunner(verbosity=2).run(suite)
-
-
-# class TestOrganizations(unittest.TestCase):
-#     def test_organizations1(self):
-#     	self.assertTrue(True)
-#
-#     def test_organizations3(self):
-#     	self.assertTrue(True)
-#     	 # get the current user
-#     	clientId = "tWv8MQspc5"
-#     	client = _User.Query.get(objectId = clientId)
-#     	#print client.username
-#
-#     def test_organizations2(self):
-# 		# test quiz from specific organization
-# 		quizzes = Quizling.Query.all().filter(ownerName="dev10")
-# 		print len(quizzes)
-# 		name_arr = []
-# 		for i in quizzes:
-# 			name_arr.append(i.name)
-# 		self.assertTrue(any("Test" in s for s in name_arr))
-# 		self.assertTrue(any("Ct!ktvovylo" in s for s in name_arr))
-# 		self.assertTrue(any("Derp" in s for s in name_arr))
-# 		# find the follow organizations
-# 		quizzes = Quizling.Query.all().filter(ownerName = "dev10")
-# 		result = serialize(quizzes)
-# 		self.assertFalse(result.has_key("BibkfMywdy"))
-# 		self.assertFalse(result.has_key("9dpqwKxgze"))
-# 		self.assertFalse(result.has_key("khiIVpFi8C"))
-# 		#test serialize function
-# 		organizationName = "dev10"
-# 		quizzes = Quizling.Query.all().filter(ownerName = organizationName)
-# 		result = serialize(quizzes)
-# 		self.assertTrue(result.has_key("idgtXmekx4"))
-# 		self.assertTrue(result.has_key("Y6I9zDbZHw"))
-# 		self.assertTrue(result.has_key("CiXSGRo3eI"))
-# 		#test getchannel function
-# 		channel_arr = getChannels(True);
-# 		self.assertTrue("channel_RzlZiu7ZA8" in channel_arr)
-# 		self.assertTrue("channel_Fu4XCipsP9" in channel_arr)
-# 		self.assertTrue("channel_6XAT3fA7wR" in channel_arr)
-#
-
 
 if __name__ == '__main__':
     unittest.main()
