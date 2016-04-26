@@ -575,8 +575,11 @@ def timeline():
 
     relevant_data = fetch_timeline_data(user_objectId)
 
+    achieve_data = compute_achievements(user_objectId)
+
     # send the data to timeline.html using Jinja2, built in to Flask.
     return render_template('timeline.html', org=org_info_parse,
+                        achieve_data=achieve_data,
                         relevant_data=relevant_data, objectId = user_objectId,
                         notifications=notifications, messages=messages)
 
@@ -686,24 +689,6 @@ def compute_achievements(user_objectId):
 
 
     return achieve_data
-
-@manager.route('/achievements')
-def achievements():
-
-    username = request.cookies.get('username')
-    user_objectId = request.cookies.get('user_objectId')
-
-    if username is None:
-        print "Error: user returned None"
-        return redirect(url_for(''))
-        # exit()
-
-
-    achieve_data = compute_achievements(user_objectId)
-
-    return render_template('timeline.html', org=org_info_parse,
-                        achieve_data=achieve_data, objectId = user_objectId,
-                        notifications=notifications, messages=messages)
 
 
 @manager.route('/search')
