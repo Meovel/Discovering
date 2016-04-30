@@ -12,24 +12,7 @@ Parse.initialize("1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD", "kRyIxZkeC08jvlwSwb
 */
 function initializeGoogleCharts(array, divId) {
 	google.charts.load('current', {'packages':['bar']});
-	// google.charts.setOnLoadCallback(buildBarGraph([], divId));
-	console.log('hello, initializing Google Charts');
-	// function(obj_id) {
-	// 	$(function(obj_id) {
-	// 		$(document).ready(function(obj_id) {
-	// 			console.log('Document is ready');
-	// 		})
-	// 	})
-	// }
 	google.charts.setOnLoadCallback(queryToChart);
-	// google.charts.setOnLoadCallback(function() {
-	// 	$(function() {
-	// 		$(document).ready(function() {
-	// 			console.log('Document is ready');
-	// 			queryToChart;
-	// 		})
-	// 	})
-	// });
 
 }
 initializeGoogleCharts([], "top_x_div");
@@ -43,16 +26,6 @@ initializeGoogleCharts([], "top_x_div");
 */
 function queryToChart(obj_id, str) {
 	console.log("queryToChart str is: " + str)
-	// console.log($('head'));
-	// $(document).ready(function() {
-	// 	console.log('Document is ready');
-	// })
-	// console.log('obj_id: '+$('#obj_id').get(0).innerHTML);
-	// document.addEventListener("DOMContentLoaded", function(event) {
-	//   //do work
-	// 	var obj = document.getElementById('obj_id');
-	// 	console.log('obj: ' + obj.innerHTML);
-	// });
 
 	var obj = document.getElementById('obj_id').getAttribute('objectId');
 	obj = obj.replace(/\<a\>/,'');
@@ -83,8 +56,6 @@ function queryToChart(obj_id, str) {
 	    for (var i = 0; i < results.length; i++) {
 	      var object = results[i];
 				if(object.get('quizling') == null) continue
-				// console.log("results[i].get('quizling'): " + results[i].get('quizling'))
-				// console.log("results[i].toJson: " + results[i].toJson)
 				data_array.push({user: object.get('user').get('username'), quizling: object.get('quizling').get('name'), averageScore: object.get('averageScore')})
 				var myUser = object.get('user')
 	      console.log(object.id + ' - ' + object.get('averageScore') + ' - ' + (object.get('user')).get('username') ) ;
@@ -92,7 +63,6 @@ function queryToChart(obj_id, str) {
 			console.log(data_array)
 			buildBarGraph(data_array, "quizling", "averageScore")
 			console.log("hello, this is the line after calling buildBarGraph in queryToChart")
-			// computeStats(data_array)
 			return data_array // simply for front-end testing
 	  },
 	  error: function(error) {
@@ -136,6 +106,10 @@ function buildBarGraph(json_array, key1, key2, divId) {
   chart3.draw(data, google.charts.Bar.convertOptions(options));
 };
 
+/**
+* @description This is simply a spike solution to retrieve/display some values
+* taken from the form.
+*/
 function riyadSpike() {
   var x = document.forms["chartBuilder"]["x-axis"].value;
   var y = document.forms["chartBuilder"]["y-axis"].value;
