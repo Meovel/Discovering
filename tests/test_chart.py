@@ -18,12 +18,22 @@ application_id = 'PoSB6H1T3fxmdTEPngtYGaDnaFZsQnvBicUZt5Rc'
 rest_api_key = 'q5sYZvNdnAA6S58Dx1qqzVLOgWRJYbOqCBrqSngy'
 register(application_id, rest_api_key)
 
+"""
+Begin Parse-specific class-declarations
+(needed to retrieve the related objects from Parse).
+"""
 class _User(Object):
     pass
 
 class Quizling(Object):
     pass
+"""
+End Parse-specific class-declarations
+"""
 
+"""
+Basic, self-explanatory tests to ensure charts.js is retrieving data, expectedly.
+"""
 class TestChart(TestCase):
     def test_chart1(self):
         ret = stats()
