@@ -30,33 +30,26 @@ class QuizPersonalStatistics(Object):
 class _User(Object):
     pass
 
-
 class Quizling(Object):
     pass
-
 
 class LearningAreas(Object):
     pass
 
-
 class LearningStage(Object):
     pass
-
 
 class Following(Object):
     pass
 
-
 class Channel(Object):
     pass
-
 
 class Comment(Object):
     pass
 
 class Like(Object):
     pass
-
 
 class Notification(Object):
     pass
@@ -71,7 +64,7 @@ class RecentlyVisited(Object):
     pass
 
 
-
+# Prefetch data
 org_info_parse = "Random"
 
 Quizzes = Quizling.Query.all().filter().limit(300)
@@ -91,7 +84,7 @@ user = None
 
 
 
-
+############################### Login ###############################
 @manager.route('/', methods=['GET', 'POST'])
 def login():
     global user, notifications, messages, following, follower
@@ -133,6 +126,7 @@ def login():
             return resp
 
     return make_response(render_template('login.html'))
+############################### End of Index ###############################
 
 
 ############################### Index ###############################
@@ -554,6 +548,7 @@ def serialize(quizzes):
 ############################### End Of Dashboard ###############################
 
 
+############################### User Summary ###############################
 def getQuizHistory(userName):
     results = QuestionPersonalStatistics.Query.filter(person=userName)
     print results
@@ -662,7 +657,10 @@ def fetch_question_personal_stats(user_objectId):
      })
     quest_obj = json.loads(connection.getresponse().read())
     return quest_obj['results']
+############################### End of User Summary ###############################
 
+
+############################### Timeline ###############################
 def fetch_timeline_data(user_objectId):
     quiz_personal_stats = fetch_quiz_personal_stats(user_objectId)
     quest_personal_stats = fetch_question_personal_stats(user_objectId)
@@ -823,7 +821,10 @@ def compute_achievements(user_objectId):
 
 
     return achieve_data
+############################### End of Timeline ###############################
 
+
+############################### Notifications ###############################
 @manager.route('/favourites')
 def bookmark():
     global notifications, messages, following, follower
@@ -905,8 +906,10 @@ def deleteMessages(test=False, delete_message=[]):
 
     return "success"
     # return redirect(url_for('inbox'))
+############################### End of Notifications ###############################
 
 
+############################### Search ###############################
 @manager.route('/search')
 def search():
     keyword = request.query_string[6:]
@@ -1046,6 +1049,8 @@ def sendMessage(test=False, userName ="", toUserName="", content=""):
     message.content = content
     message.save()
     return '{"result":1}'
+############################### End of Search ###############################
+
 
 if __name__ == '__main__':
     manager.run(debug=True)
