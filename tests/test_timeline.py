@@ -17,11 +17,17 @@ import datetime
 __author__ = 'Chris Riyad'
 # from manager import organizations
 
-# Parse setting
+"""
+Parse-specific API keys.
+"""
 application_id = '1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD'
 rest_api_key = 'SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5'
 register(application_id, rest_api_key)
 
+"""
+Begin Parse-specific class-declarations
+(needed to retrieve the related objects from Parse).
+"""
 class Achievement(Object):
     pass
 
@@ -40,7 +46,6 @@ class _User(Object):
 class Quizling(Object):
     pass
 
-
 class LearningAreas(Object):
     pass
 
@@ -54,9 +59,14 @@ class Following(Object):
 
 class Channel(Object):
     pass
+"""
+End Parse-specific class-declarations
+"""
 
-# Where we learnt about parameterized testing in Python:
-# http://eli.thegreenplace.net/2011/08/02/python-unit-testing-parametrized-test-cases
+"""
+Where we learnt about parameterized testing in Python:
+http://eli.thegreenplace.net/2011/08/02/python-unit-testing-parametrized-test-cases
+"""
 class ParameterizedTestTimeline(TestCase):
     def __init__(self, methodName='runTest', objId=None):
         super(ParameterizedTestTimeline, self).__init__(methodName)
