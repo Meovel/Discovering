@@ -561,41 +561,30 @@ def quizzes(org_name=None, user_list=None, quiz_list=None, keyword=None):
         return "error page"
 
 
-def getMongoQuizHistory(userName):
-    stuff = []
-    client = MongoClient('localhost',27017)
-    db = client['discovering_user_db']
-    collection = db['test_user_name']
-    results = collection.find({'type':'quiz_result'}).sort([('time', pymongo.DESCENDING)])
-    for result in results:
-        stuff.append(json_util.dumps(result,default=json_util.default))
-    return str({'result':stuff})
-
-
 @manager.route('/stats', methods=['GET', 'POST'])
 def stats():
     global notifications, messages
 
-    print 'cookie in stats: '
-    print request.cookies
-
     user = request.cookies.get('username')
-    # print "stats user: "
-    # print user
+
+    """
+    Retrieves the parse objectId of the logged in user to pass it to
+    the front-end, to be processed in HTML/JS using Flask.
+    """
     user_obj = _User.Query.all().filter().limit(300)
     if user_obj is None:
         print "Error: user_obj returned None"
         return "Error"
         exit()
-    print len(user_obj)
     obj_id = ''
     for obj in user_obj:
-        # print obj.username
         if obj.username == user:
             obj_id = obj.objectId
 
-    print obj_id
-
+    """
+    Passes objectId to stats.html, along with other stuff which may be needed
+    for other functionalities of the webpage.
+    """
     return render_template('stats.html',
                            org=org_info_parse, objectId=obj_id,
                            notifications=notifications, messages=messages)
@@ -603,11 +592,13 @@ def stats():
 
 
 
-
-# Fetches data from QuizPersonalStatistics table using Parse REST API.
-# This is a helper method.
+"""
+@description Fetches data from QuizPersonalStatistics table using Parse REST API.
+@helper for chart functionality within timeline.html and stats.html
+@param String user_objectId - the objectId retrieved from the cookie at some point.
+@returns Array of quiz data as a JSON fetched from Parse for the user.
+"""
 def fetch_quiz_personal_stats(user_objectId):
-    # username = request.cookies.get('username')
     connection = httplib.HTTPSConnection('api.parse.com', 443)
     params = urllib.urlencode({"include":"quizling","include": "quizling.area","where":json.dumps({
                                            "user": {
@@ -622,17 +613,19 @@ def fetch_quiz_personal_stats(user_objectId):
        "X-Parse-REST-API-Key": "SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5"
      })
     quiz_obj = json.loads(connection.getresponse().read())
-    # print quiz_obj['results']
-    # for o in quiz_obj['results']:
-    #     print o
 
+    # NOTE: I've left this print statement here out of curiousity for why this
+    # exact quiz_obj gets printed four times on one page load to timeline.html
     print "quiz_obj, does it have 'results' key?"
     print quiz_obj
 
     return quiz_obj['results']
-
-# Fetches data from QuestionPersonalStatistics table using PARSE REST API.
-# This is a helper method.
+"""
+@description Fetches data from QuestionPersonalStatistics table using PARSE REST API.
+@helper for chart functionality within timeline.html
+@param String user_objectId - the objectId retrieved from the cookie at some point.
+@returns Array of user-question stats as a JSON fetched from Parse for the user.
+"""
 def fetch_question_personal_stats(user_objectId):
     # username = request.cookies.get('username')
     connection = httplib.HTTPSConnection('api.parse.com', 443)
@@ -651,6 +644,13 @@ def fetch_question_personal_stats(user_objectId):
     quest_obj = json.loads(connection.getresponse().read())
     return quest_obj['results']
 
+"""
+@description Fetches and then parses all relevant data for timeline.html
+@param String user_objectId - the objectId retrieved from the cookie at some point.
+@returns relevant_data Array of arrays of timeline data to be accessed
+    and displayed from Flask in timeline.html.
+@summary This is called by the Flask '/timeline' manager.route routine.
+"""
 def fetch_timeline_data(user_objectId):
     quiz_personal_stats = fetch_quiz_personal_stats(user_objectId)
     quest_personal_stats = fetch_question_personal_stats(user_objectId)
@@ -678,6 +678,7 @@ def fetch_timeline_data(user_objectId):
         if quiz_data:
             relevant_data.append(quiz_data)
 
+    # sorts the timeline entries by date, in descending order
     relevant_data.sort(key=lambda x: x[3], reverse=True)
 
     return relevant_data
@@ -693,7 +694,6 @@ def timeline():
     if username is None:
         print "Error: user returned None"
         return redirect(url_for(''))
-        # exit()
 
     relevant_data = fetch_timeline_data(user_objectId)
 
@@ -705,8 +705,12 @@ def timeline():
                         relevant_data=relevant_data, objectId = user_objectId,
                         notifications=notifications, messages=messages)
 
+"""
+@description Fetches achievement data
+@param String user_objectId - the objectId retrieved from the cookie at some point.
+@returns Array of arrays of achievement data from Achievements table in Parse.
+"""
 def fetch_achievements(user_objectId):
-    # username = request.cookies.get('username')
     connection = httplib.HTTPSConnection('api.parse.com', 443)
     params = urllib.urlencode({"where":json.dumps({
                                            "name": {
@@ -723,8 +727,12 @@ def fetch_achievements(user_objectId):
 
     return achieve_obj['results']
 
+"""
+@description Fetches achievement stats for the given user
+@param String user_objectId - the objectId retrieved from the cookie at some point.
+@returns Array of arrays of data from AchievementPersonalStatistics table in Parse.
+"""
 def fetch_achievements_personal_stats(user_objectId):
-        # username = request.cookies.get('username')
         connection = httplib.HTTPSConnection('api.parse.com', 443)
         params = urllib.urlencode({"where":json.dumps({
                                                "user": {
@@ -740,10 +748,15 @@ def fetch_achievements_personal_stats(user_objectId):
          })
         achieve_stat_obj = json.loads(connection.getresponse().read())
 
-        # for b in achieve_stat_obj['results']:
-        #     print b
         return achieve_stat_obj['results']
 
+"""
+@description Should post the achievement data to the front-end
+@param String user_objectId - the objectId retrieved from the cookie at some point.
+@param achievement
+@helper for front-end methods.
+NOTE: May not be used.
+"""
 def post_achievement(user_objectId, achievement):
     connection = httplib.HTTPSConnection('api.parse.com', 443)
     connection.connect()
@@ -756,8 +769,19 @@ def post_achievement(user_objectId, achievement):
            "Content-Type": "application/json"
          })
     results = json.loads(connection.getresponse().read())
-    print results
 
+"""
+@description Retrieves a count of achievements for each quiz for the given user.
+@param String user_objectId - the objectId retrieved from the cookie at some point.
+@param condition_value - a condition_value abstractly
+    (i.e.: in practice, represents the number of quizzes needed to activate the
+     Achievement, as defined in the conditionValue column of the Achievements table)
+@param quiz_stats - the results of fetch_quiz_personal_stats(user_objectId)
+@param achievement - an achievement in the array of achievements, fetch_achievements(user_objectId)
+@helper for and called by compute_achievements
+@summary Used to retrieve data for timeline.html
+@returns Array of arrays representing the data.
+"""
 def achieve_quiz_count(user_objectId, condition_value, quiz_stats, achievement):
     quiz_count = 0
     for q in quiz_stats:
@@ -771,7 +795,19 @@ def achieve_quiz_count(user_objectId, condition_value, quiz_stats, achievement):
         # print "Achievment Unlocked: ", achievement['name']
         return result
 
-
+"""
+@description Retrieves the specific achievements for a given count in a certain
+    quizling area.
+@param String user_objectId - the objectId retrieved from the cookie at some point.
+@param condition_value - a condition_value abstractly
+    (i.e.: in practice, represents the number of quizzes needed to activate the
+     Achievement, as defined in the conditionValue column of the Achievements table)
+@param quiz_stats - the result of fetch_quiz_personal_stats(user_objectId)
+@param achievement - an achievement in the array of achievements, fetch_achievements(user_objectId)
+@helper for and called by compute_achievements
+@summary Used to retrieve data for timeline.html
+@returns Array of arrays representing the data.
+"""
 def achieve_area_count(user_objectId, condition_value, quiz_stats, achievement):
     areas = {}
     for q in quiz_stats:
@@ -788,7 +824,12 @@ def achieve_area_count(user_objectId, condition_value, quiz_stats, achievement):
         return result
 
 
-
+"""
+@description Fetches, parses, and computes the achievement data, which is an
+Array of arrays to be sent to the front-end, retrieved from Flask,
+ultimately in timeline.html
+@returns Array of arrays of achievements
+"""
 def compute_achievements(user_objectId):
     achievements = fetch_achievements(user_objectId)
     quiz_stats = fetch_quiz_personal_stats(user_objectId)
@@ -807,8 +848,6 @@ def compute_achievements(user_objectId):
             achieve_data.append(achievement_options[0](user_objectId, condition_value, quiz_stats, achieve))
         elif metric_type == 'area_count':
             achieve_data.append(achievement_options[1](user_objectId, condition_value, quiz_stats, achieve))
-
-
 
     return achieve_data
 
