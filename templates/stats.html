@@ -143,10 +143,6 @@
 
 			<!-- BEGIN User Stats Section -->
 
-			<!-- <script>
-				for(var i = 0; i < )
-			</script> -->
-
 			<div class="user-stats">
 				<p>User Stats:</p>
 				<div>Average Score over all Quizzes:
@@ -194,35 +190,13 @@
 								</form>
 							</div>
 						</div>
-						<!-- <div id="list">Hey, this is the area that we want the ...</div> -->
 						<div class="portlet-body">
 							<div class="task-content">
 								<div class="scroller" style="height: 282px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
 									<!-- START TASK LIST -->
 
-									<!--Div that will hold the pie chart-->
-							    <!-- <div id="chart_div"></div> -->
-
-
 									<!--Div that will hold the bar chart-->
 							    <div id="top_x_div"></div>
-
-
-									<!-- <div id="list">Hey, this is the area that we want the ...</div> -->
-									<!-- {% raw %} -->
-										<!-- <script id="people-template" type="text/x-handlebars-template">
-								      {{#people}}
-								        <div class="person">
-								          <h2>{{first_name}} {{last_name}}</h2>
-								          <div class="phone">{{phone}}</div>
-								          <div class="email"><a href="mailto:{{email}}">{{email}}</a></div>
-								          <div class="since">User since {{member_since}}</div>
-								        </div>
-								      {{/people}}
-								    </script> -->
-									<!-- {% endraw %} -->
-
-							    <!-- <script src="static/generate_people.js" type="text/javascript"></script> -->
 
 									<!-- END START TASK LIST -->
 								</div>
@@ -287,27 +261,6 @@
 									<!--Div that will hold the pie chart-->
 							    <div id="chart_div"></div>
 
-
-									<!--Div that will hold the bar chart-->
-							    <!-- <div id="top_x_div"></div> -->
-
-
-									<!-- <div id="list">Hey, this is the area that we want the ...</div> -->
-									<!-- {% raw %} -->
-										<!-- <script id="people-template" type="text/x-handlebars-template">
-								      {{#people}}
-								        <div class="person">
-								          <h2>{{first_name}} {{last_name}}</h2>
-								          <div class="phone">{{phone}}</div>
-								          <div class="email"><a href="mailto:{{email}}">{{email}}</a></div>
-								          <div class="since">User since {{member_since}}</div>
-								        </div>
-								      {{/people}}
-								    </script> -->
-									<!-- {% endraw %} -->
-
-							    <!-- <script src="static/generate_people.js" type="text/javascript"></script> -->
-
 									<!-- END START TASK LIST -->
 								</div>
 							</div>
@@ -325,28 +278,6 @@
 
 
 			<button type="button" onclick=queryToChart("helloFromStatsHTMLButton")>Click to Add Chart</button>
-
-
-			<!-- BEGIN HANDLEBARS SPIKE -->
-			<!-- taken as example code, straight from https://github.com/DaweiCheng/handlebarstutor -->
-			<div id="list">Hey, this is the area that we want the ...</div>
-			{% raw %}
-			<script id="people-template" type="text/x-handlebars-template">
-					{{#people}}
-						<div class="person">
-							<h2>{{first_name}} {{last_name}}</h2>
-							<div class="phone">{{phone}}</div>
-							<div class="email"><a href="mailto:{{email}}">{{email}}</a></div>
-							<div class="since">User since {{member_since}}</div>
-						</div>
-					{{/people}}
-			</script>
-			{% endraw %}
-
-			<script src="../static/global/plugins/jquery.min.js" type="text/javascript"></script>
-			<script src="../static/frontend/indexPage/scripts/generate_people.js" type="text/javascript"></script>
-			<!-- END HANDLEBARS SPIKE -->
-
 
 		</div>
 	</div>
@@ -415,6 +346,7 @@ jQuery(document).ready(function() {
    Metronic.init(); // init metronic core componets
    Layout.init(); // init layout
 //   Demo.init(); // init demo features
+
     Index.init(); // init index page
  Tasks.initDashboardWidget(); // init tash dashboard widget
 });
