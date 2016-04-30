@@ -10,67 +10,55 @@ import json, httplib, urllib
 import string
 
 
-# Parse setting
+"""
+Parse-specific API keys.
+"""
 application_id = '1piMFdtgp0tO1LPHXsSOG7uBGiDiuXTUAN91g7VD'
 rest_api_key = 'SPF588ITDAue5aFwT8XhZRqCph9iqLA2J86hncy5'
 register(application_id, rest_api_key)
 
-# Flask setting
+"""
+Flask-specific settings.
+"""
 manager = Flask(__name__)
 manager.secret_key = 'discoveringfalsksecretkey2016'
 
 
-# Parse classes
+"""
+Begin Parse-specific class-declarations
+(needed to retrieve the related objects from Parse).
+"""
 class QuestionPersonalStatistics(Object):
     pass
-
 class QuizPersonalStatistics(Object):
     pass
-
 class _User(Object):
     pass
-
-
 class Quizling(Object):
     pass
-
-
 class LearningAreas(Object):
     pass
-
-
 class LearningStage(Object):
     pass
-
-
 class Following(Object):
     pass
-
-
 class Channel(Object):
     pass
-
-
 class Comment(Object):
     pass
-
 class Like(Object):
     pass
-
-
 class Notification(Object):
     pass
-
 class Message(Object):
     pass
-
 class QuizPersonalStatistics(Object):
     pass
-
 class RecentlyVisited(Object):
     pass
-
-
+"""
+End Parse-specific class-declarations
+"""
 
 org_info_parse = "Random"
 
