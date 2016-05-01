@@ -9,6 +9,9 @@ A platform for organizations to share and people to discover - a new world
 * Search with filter and sorting
 * Timeline, milestone & achievement system
 
+## Demo
+[![Demo](https://github.com/zenithanu/Discovering/blob/master/Screenshot/Home.png)](https://youtu.be/6dpch_ZZY4A)
+
 ## Screentshots
 
 ### Home page
