@@ -5,7 +5,6 @@ from parse_rest.user import User
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.datastructures import ImmutableMultiDict
 import json, httplib, urllib
-# import re
 
 import string
 
@@ -941,6 +940,11 @@ def deleteMessages(test=False, delete_message=[]):
 
 
 ############################### Search ###############################
+'''
+@desc a search request handler. Given the query data from ajax,
+use the helper function searchKeyword() to find all quizzzes that
+has a matching substring. And return a html that has the quizzes.
+'''
 @manager.route('/search')
 def search():
     keyword = request.query_string[6:]
@@ -948,7 +952,11 @@ def search():
     users = _User.Query.filter(username=keyword)
     return quizzes(user_list=users, quiz_list=quiz_list, keyword=keyword)
 
-
+'''
+@desc for each word in the keyword variable, does
+substring matching to find all quizzes that contains the 
+word. A list of quizzes are sent back to the client.
+'''
 def searchKeyword(keyword):
     global kw
     global result
@@ -965,7 +973,13 @@ def searchKeyword(keyword):
                     result.append(quiz)
     return result
 
-
+'''
+@desc filterArea request handler.
+Recieves ajax data from the client. the data
+includes, the which area (subject) to filter. The function 
+goes through the cached user quizlist and outputs
+list of quizzes that were not filtered out.
+'''
 @manager.route('/filterArea', methods=['POST'])
 def filterArea():
     areaName = request.form.keys()[0]
@@ -980,7 +994,13 @@ def filterArea():
                 filteredResult.append(quiz)
     return makeJSONquizzes(filteredResult)
 
-
+'''
+@desc filterAge request handler.
+Recieves ajax data from the client. the data
+includes, the which age to filter. The function 
+goes through the cached user quizlist and outputs
+list of quizzes that were not filtered out.
+'''
 @manager.route('/filterAge', methods=['POST'])
 def filterAge():
     ageId = request.form.keys()[0]
@@ -994,7 +1014,12 @@ def filterAge():
                 filteredResult.append(quiz)
     return makeJSONquizzes(filteredResult)
 
-
+'''
+@param quizzes Parse object
+@return JSON string
+@desc serializes the quizzes so that quizzes can be sent
+back to the client
+'''
 def makeJSONquizzes(quizzes):
     response = dict()
     data = []
@@ -1018,7 +1043,11 @@ def makeJSONquizzes(quizzes):
     response['data'] = data
     return json.dumps(response)
 
-
+'''
+@desc a sortQuizzes request handler.
+After it gets the ajax data, it slects the attribute
+to sort on and sorts according to what the client requests
+'''
 @manager.route('/sortQuizzes', methods=['POST'])
 def sort():
     global result
@@ -1066,7 +1095,13 @@ def share(test=False, userName="", quizName="", quizId=""):
         return '{"result":1}'
     else:
         return userName
-
+'''
+@param form parameters from the client.
+message needs the userName (the sender),
+toUserName (the reciever), and content
+(message content).
+@desc saves the message to the parse database.
+'''
 @manager.route("/message", methods=['POST'])
 def sendMessage(test=False, userName ="", toUserName="", content=""):
     if not test:
