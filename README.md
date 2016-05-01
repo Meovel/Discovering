@@ -10,7 +10,7 @@ A platform for organizations to share and people to discover - a new world
 * Timeline, milestone & achievement system
 
 ## Demo
-[![Demo](https://github.com/zenithanu/Discovering/blob/master/Screenshot/Youtube.png)](https://youtu.be/6dpch_ZZY4A)
+[![Demo](https://raw.githubusercontent.com/zenithanu/Discovering/master/Screenshot/Youtube.png)](https://youtu.be/6dpch_ZZY4A)
 
 ## Screentshots
 
