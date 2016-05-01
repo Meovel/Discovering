@@ -25,3 +25,12 @@ A platform for organizations to share and people to discover - a new world
 
 ### User timeline & milestone
 #![Timeline](https://github.com/zenithanu/Discovering/blob/master/Screenshot/Timeline.png)
+
+## Requirement for running the project
+* Flask
+http://flask.pocoo.org/docs/0.10/
+* ParsePy
+https://github.com/dgrtwo/ParsePy
+
+## Team
+See contributor section
