@@ -87,7 +87,26 @@
 						<!-- BEGIN ACHIEVEMENTS DIV -->
 						<div id="achievements">
 							{% for achievement in achieve_data %}
-								<div id="achievementLabel{{loop.index}}">
+								<div id="achievementLabel{{loop.index}}" style="margin: 0 0 15px 0%;color: #fff;padding: 10px;font-weight: 300;position: relative;border-radius: 5px;
+									{% if loop.index % 6 == 1 %}
+										background: #ffb848;
+									{% endif %}
+									{% if loop.index % 6 == 2 %}
+										background: #4b8df8;
+									{% endif %}
+									{% if loop.index % 6 == 3 %}
+										background: #35aa47;
+									{% endif %}
+									{% if loop.index % 6 == 4 %}
+										background: #852b99;
+									{% endif %}
+									{% if loop.index % 6 == 5 %}
+										background: #e02222;
+									{% endif %}
+									{% if loop.index % 6 == 0 %}
+										background: #555555;
+									{% endif %}
+								">
 									<h4>{{achievement[0]}}</h4>
 										<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{achievement[1]}}</p>
 								</div>
